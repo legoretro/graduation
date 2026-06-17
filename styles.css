@@ -126,6 +126,7 @@ nav a:focus {
 }
 
 .hero-image,
+.hero-scene,
 .hero-overlay {
   inset: 0;
   position: absolute;
@@ -133,18 +134,256 @@ nav a:focus {
 
 .hero-image {
   background-image:
-    linear-gradient(135deg, rgba(0, 55, 103, 0.76), rgba(0, 56, 168, 0.26), rgba(0, 146, 70, 0.22)),
-    linear-gradient(135deg, var(--oit-blue), var(--green));
+    radial-gradient(circle at 83% 20%, rgba(255, 209, 102, 0.95) 0 4%, transparent 17%),
+    radial-gradient(circle at 76% 73%, rgba(206, 17, 38, 0.78) 0 7%, transparent 24%),
+    radial-gradient(circle at 93% 63%, rgba(0, 146, 70, 0.76) 0 8%, transparent 27%),
+    radial-gradient(circle at 58% 24%, rgba(0, 56, 168, 0.58) 0 12%, transparent 32%),
+    linear-gradient(115deg, rgba(0, 31, 63, 0.98) 0 42%, rgba(0, 55, 103, 0.94) 42% 58%, rgba(255, 250, 240, 0.95) 58% 64%, rgba(0, 146, 70, 0.82) 64% 77%, rgba(206, 17, 38, 0.86) 77% 100%);
   background-position: center;
   background-size: cover;
   transform: scale(1.02);
 }
 
+.hero-image::before,
+.hero-image::after {
+  content: "";
+  inset: 0;
+  position: absolute;
+}
+
+.hero-image::before {
+  background:
+    linear-gradient(90deg, rgba(244, 180, 0, 0.96) 0 10px, transparent 10px 30px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0 12px, transparent 12px 34px),
+    radial-gradient(circle at 62% 44%, rgba(255, 255, 255, 0.16) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 30%, rgba(255, 255, 255, 0.14) 0 1px, transparent 2px);
+  background-size: 40px 100%, 52px 100%, 42px 42px, 58px 58px;
+  clip-path: polygon(54% 0, 100% 0, 100% 100%, 64% 100%);
+  opacity: 0.7;
+}
+
+.hero-image::after {
+  background:
+    linear-gradient(160deg, transparent 0 58%, rgba(255, 209, 102, 0.7) 58% 60%, transparent 60%),
+    linear-gradient(22deg, transparent 0 66%, rgba(255, 255, 255, 0.34) 66% 67%, transparent 67%);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+}
+
+.hero-scene {
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-scene::before {
+  background:
+    conic-gradient(from 45deg, var(--oit-gold), var(--fiesta-red), var(--philippine-blue), var(--fiesta-green), var(--oit-gold));
+  border-radius: 999px;
+  content: "";
+  filter: blur(0.5px);
+  height: 18rem;
+  opacity: 0.32;
+  position: absolute;
+  right: 7%;
+  top: 12%;
+  width: 18rem;
+}
+
+.hero-scene::after {
+  background:
+    radial-gradient(circle, var(--oit-gold) 0 2px, transparent 2px),
+    radial-gradient(circle, var(--fiesta-red) 0 2px, transparent 2px),
+    radial-gradient(circle, var(--white) 0 1px, transparent 2px),
+    radial-gradient(circle, var(--fiesta-green) 0 2px, transparent 2px);
+  background-position: 0 0, 24px 18px, 42px 8px, 12px 38px;
+  background-size: 68px 54px;
+  content: "";
+  inset: 0 0 0 42%;
+  opacity: 0.55;
+  position: absolute;
+}
+
+.scene-piece {
+  display: block;
+  position: absolute;
+}
+
+.sunburst {
+  background:
+    repeating-conic-gradient(from 8deg, rgba(244, 180, 0, 0.92) 0 8deg, rgba(255, 209, 102, 0.24) 8deg 18deg);
+  border-radius: 999px;
+  height: 13rem;
+  right: 11%;
+  top: 16%;
+  width: 13rem;
+}
+
+.cap {
+  background: var(--oit-blue-dark);
+  height: 1.5rem;
+  transform: rotate(-12deg);
+  width: 5.4rem;
+}
+
+.cap::before {
+  background: var(--oit-blue-dark);
+  content: "";
+  height: 3rem;
+  left: 0.7rem;
+  position: absolute;
+  top: -1.35rem;
+  transform: rotate(45deg);
+  width: 3rem;
+}
+
+.cap::after {
+  background: var(--oit-gold);
+  border-radius: 999px;
+  content: "";
+  height: 0.55rem;
+  position: absolute;
+  right: -0.35rem;
+  top: 1.1rem;
+  width: 0.55rem;
+}
+
+.cap-one {
+  right: 26%;
+  top: 18%;
+}
+
+.cap-two {
+  opacity: 0.78;
+  right: 5%;
+  top: 53%;
+  transform: rotate(14deg) scale(0.8);
+}
+
+.scope {
+  border-bottom: 1.2rem solid rgba(255, 255, 255, 0.76);
+  border-left: 1.3rem solid transparent;
+  border-right: 1.3rem solid transparent;
+  bottom: 12%;
+  height: 0;
+  right: 33%;
+  width: 5.2rem;
+}
+
+.scope::before {
+  background: rgba(255, 255, 255, 0.74);
+  border-radius: 999px;
+  content: "";
+  height: 1rem;
+  left: 1rem;
+  position: absolute;
+  top: -5.2rem;
+  transform: rotate(-38deg);
+  transform-origin: center bottom;
+  width: 5.5rem;
+}
+
+.scope::after {
+  background: rgba(255, 255, 255, 0.64);
+  border-radius: 999px 999px 0 0;
+  content: "";
+  height: 4.7rem;
+  left: 3.3rem;
+  position: absolute;
+  top: -4.2rem;
+  width: 1.3rem;
+}
+
+.concha,
+.ube,
+.pan {
+  border-radius: 999px;
+  box-shadow: 0 12px 28px rgba(0, 31, 63, 0.18);
+}
+
+.concha {
+  background:
+    repeating-radial-gradient(ellipse at center, rgba(255, 250, 240, 0.78) 0 7px, transparent 7px 16px),
+    #f7b7a4;
+  height: 6.3rem;
+  right: 13%;
+  top: 46%;
+  transform: rotate(-10deg);
+  width: 7.4rem;
+}
+
+.ube {
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.7) 0 8px, transparent 9px),
+    linear-gradient(135deg, #5b2b82, #c88bff);
+  height: 5.2rem;
+  right: 37%;
+  top: 40%;
+  transform: rotate(12deg);
+  width: 5.2rem;
+}
+
+.lumpia {
+  background: linear-gradient(90deg, #ffd18c, #b86b20);
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(0, 31, 63, 0.16);
+  height: 1.35rem;
+  right: 23%;
+  top: 72%;
+  transform: rotate(-18deg);
+  width: 10rem;
+}
+
+.lumpia::after {
+  background: linear-gradient(90deg, #ffe0a9, #c98231);
+  border-radius: inherit;
+  content: "";
+  height: 1.35rem;
+  left: 1.7rem;
+  position: absolute;
+  top: 1.6rem;
+  width: 8.4rem;
+}
+
+.taco {
+  background: #ffd166;
+  border: 5px solid rgba(255, 250, 240, 0.85);
+  border-radius: 8rem 8rem 1rem 1rem;
+  box-shadow: inset 0 -16px 0 rgba(206, 17, 38, 0.45), 0 14px 28px rgba(0, 31, 63, 0.18);
+  height: 4.6rem;
+  right: 5.5%;
+  top: 69%;
+  transform: rotate(9deg);
+  width: 8.8rem;
+}
+
+.elote {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.34) 0 7px, transparent 7px 14px),
+    #ffcb3d;
+  border-radius: 999px;
+  height: 2.2rem;
+  right: 42%;
+  top: 66%;
+  transform: rotate(32deg);
+  width: 8.5rem;
+}
+
+.pan {
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0 8px, transparent 8px 17px),
+    #bf7a45;
+  height: 4.8rem;
+  right: 2%;
+  top: 27%;
+  transform: rotate(16deg);
+  width: 5.7rem;
+}
+
 .hero-overlay {
   background:
-    linear-gradient(120deg, rgba(0, 31, 63, 0.9) 0 38%, rgba(0, 56, 168, 0.48), rgba(206, 17, 38, 0.12)),
-    repeating-linear-gradient(90deg, rgba(244, 180, 0, 0.14) 0 16px, transparent 16px 68px),
-    linear-gradient(0deg, rgba(0, 31, 63, 0.82), rgba(0, 31, 63, 0));
+    linear-gradient(90deg, rgba(0, 31, 63, 0.97) 0 43%, rgba(0, 31, 63, 0.6) 43% 57%, rgba(0, 31, 63, 0.1) 57%),
+    linear-gradient(0deg, rgba(0, 31, 63, 0.88), rgba(0, 31, 63, 0.06) 45%);
+  z-index: 2;
 }
 
 .hero-copy {
@@ -154,6 +393,7 @@ nav a:focus {
   padding: 6.5rem 1.2rem 3.2rem;
   position: relative;
   width: 100%;
+  z-index: 3;
 }
 
 .kicker,
@@ -279,48 +519,6 @@ p {
 
 .culture-ribbon span:nth-child(6) {
   background: var(--fiesta-green);
-}
-
-.feast-strip {
-  background: #fffaf0;
-  border-bottom: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.feast-strip > div {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  min-height: 4rem;
-  padding: 0.8rem 1rem;
-}
-
-.feast-strip > div:first-child {
-  background: linear-gradient(90deg, rgba(0, 56, 168, 0.15), rgba(244, 180, 0, 0.15), rgba(255, 255, 255, 0.78));
-}
-
-.feast-strip > div:last-child {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.78), rgba(0, 146, 70, 0.14), rgba(206, 17, 38, 0.13));
-  justify-content: flex-end;
-}
-
-.feast-strip span {
-  color: var(--muted);
-  font-size: 0.75rem;
-  font-weight: 950;
-  text-transform: uppercase;
-}
-
-.feast-strip strong {
-  background: var(--white);
-  border: 1px solid rgba(10, 31, 51, 0.1);
-  border-radius: 999px;
-  box-shadow: 0 7px 18px rgba(10, 31, 51, 0.08);
-  color: var(--oit-blue-dark);
-  font-size: 0.82rem;
-  padding: 0.4rem 0.65rem;
 }
 
 .full {
@@ -867,7 +1065,7 @@ textarea:focus,
   max-width: calc(100% - 1.5rem);
   position: fixed;
   right: 0.75rem;
-  top: 0.75rem;
+  top: 4.35rem;
   width: auto;
   z-index: 30;
 }
@@ -1122,7 +1320,6 @@ footer a {
   }
 
   .quick-info,
-  .feast-strip,
   .counts,
   .form-grid,
   .choice,
@@ -1144,6 +1341,10 @@ footer a {
   .admin-dock details[open] .admin-dock-content,
   .admin-dock-content {
     padding-top: 7rem;
+  }
+
+  .admin-dock {
+    top: 7rem;
   }
 
   .invite-card {

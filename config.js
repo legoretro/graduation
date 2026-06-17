@@ -22,7 +22,7 @@ window.GRADUATION_CONFIG = {
   },
 
   assets: {
-    heroImage: "https://www.oit.edu/sites/default/files/2022-02/CampusDJI_0015.jpg",
+    heroImage: "",
     invitationImage: "",
     photos: [
       {
