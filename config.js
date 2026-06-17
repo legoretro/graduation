@@ -83,9 +83,9 @@ window.GRADUATION_CONFIG = {
   ],
 
   supabase: {
-    enabled: false,
-    url: "",
-    anonKey: "",
+    enabled: true,
+    url: "https://pjglmsyvcbbxlhkvznuh.supabase.co",
+    anonKey: "sb_publishable_S8jgBZP8N3_7HW9FmY2HSg_ib8Cgmh6",
     tablePrefix: "graduation_",
     adminEndpoint: ""
   }
