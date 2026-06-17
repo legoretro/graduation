@@ -18,9 +18,9 @@
         <strong>MLS Graduation</strong>
       </a>
       <nav aria-label="Main navigation">
-        <a href="#rsvp">Headcount</a>
+        <a href="#rsvp">RSVP</a>
         <a href="#board">Kind Notes</a>
-        <a href="#visit">Food + Map</a>
+        <a href="#visit">Helpful Info</a>
         <a href="#admin">Admin</a>
       </nav>
     </header>
@@ -31,8 +31,8 @@
         <div class="admin-dock-content">
           <div class="admin-intro">
             <p class="kicker">Private</p>
-            <h2>Command center.</h2>
-            <p>Edit the invite, export RSVPs, and sweep away test notes.</p>
+            <h2>Admin editor.</h2>
+            <p>Edit the invite, export RSVPs, and delete test notes or photos.</p>
           </div>
 
           <div class="panel admin-panel">
@@ -40,7 +40,7 @@
                   <label>
                     Admin password
                     <div class="inline">
-                  <input id="admin-password" type="text" autocomplete="off" placeholder="cats">
+                  <input id="admin-password" type="text" autocomplete="off" placeholder="Enter password">
                   <button class="button primary" type="submit">Log in</button>
                 </div>
                   </label>
@@ -90,6 +90,30 @@
                       <input data-setting="event.googleMapsUrl">
                     </label>
                     <label>
+                      E&A home label
+                      <input data-setting="event.homeLocationName">
+                    </label>
+                    <label>
+                      E&A home address
+                      <input data-setting="event.homeAddress">
+                    </label>
+                    <label class="wide">
+                      E&A home Google Maps link
+                      <input data-setting="event.homeGoogleMapsUrl">
+                    </label>
+                    <label>
+                      Graduation label
+                      <input data-setting="event.graduationLocationName">
+                    </label>
+                    <label>
+                      Graduation address
+                      <input data-setting="event.graduationAddress">
+                    </label>
+                    <label class="wide">
+                      Graduation Google Maps link
+                      <input data-setting="event.graduationGoogleMapsUrl">
+                    </label>
+                    <label>
                       Detail status
                       <input data-setting="event.statusText">
                     </label>
@@ -113,6 +137,66 @@
                       Canva invitation image URL or path
                       <input data-setting="assets.invitationImage" placeholder="assets/canva-invitation.png">
                     </label>
+                    <label>
+                      Hotel 1 name
+                      <input data-setting="stay.0.name">
+                    </label>
+                    <label>
+                      Hotel 1 address
+                      <input data-setting="stay.0.address">
+                    </label>
+                    <label class="wide">
+                      Hotel 1 image URL or path
+                      <input data-setting="stay.0.image" placeholder="assets/hotel-1.jpg">
+                    </label>
+                    <label>
+                      Hotel 2 name
+                      <input data-setting="stay.1.name">
+                    </label>
+                    <label>
+                      Hotel 2 address
+                      <input data-setting="stay.1.address">
+                    </label>
+                    <label class="wide">
+                      Hotel 2 image URL or path
+                      <input data-setting="stay.1.image" placeholder="assets/hotel-2.jpg">
+                    </label>
+                    <label>
+                      Food 1 name
+                      <input data-setting="food.0.name">
+                    </label>
+                    <label>
+                      Food 1 address
+                      <input data-setting="food.0.address">
+                    </label>
+                    <label class="wide">
+                      Food 1 image URL or path
+                      <input data-setting="food.0.image" placeholder="assets/food-1.jpg">
+                    </label>
+                    <label>
+                      Food 2 name
+                      <input data-setting="food.1.name">
+                    </label>
+                    <label>
+                      Food 2 address
+                      <input data-setting="food.1.address">
+                    </label>
+                    <label class="wide">
+                      Food 2 image URL or path
+                      <input data-setting="food.1.image" placeholder="assets/food-2.jpg">
+                    </label>
+                    <label>
+                      Helpful place name
+                      <input data-setting="more.0.name">
+                    </label>
+                    <label>
+                      Helpful place address
+                      <input data-setting="more.0.address">
+                    </label>
+                    <label class="wide">
+                      Helpful place image URL or path
+                      <input data-setting="more.0.image" placeholder="assets/helpful-1.jpg">
+                    </label>
                   </div>
                   <button class="button primary full" type="submit">Save page edits</button>
                   <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
@@ -127,7 +211,6 @@
                       <th>Name</th>
                       <th>Answer</th>
                       <th>Party</th>
-                      <th>Contact</th>
                       <th>Note</th>
                       <th>Updated</th>
                     </tr>
@@ -152,7 +235,7 @@
         <div class="hero-copy">
           <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
           <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and caring notes.</p>
+          <p id="event-subtitle">Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
@@ -167,19 +250,27 @@
 
       <section class="quick-info" aria-label="Event details">
         <article>
-          <span>When-ish</span>
+          <span>When</span>
           <strong id="event-date">December 2026</strong>
           <p id="event-time">Time TBA</p>
         </article>
         <article>
-          <span>Where to roll up</span>
-          <strong id="event-location">Oregon Tech - Klamath Falls Campus</strong>
-          <p id="event-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
+          <span>E&A's Home</span>
+          <strong id="quick-home-location">E&A's Home</strong>
+          <p id="quick-home-address">Home address coming soon</p>
+          <a class="mini-map" id="quick-home-map-link" target="_blank" rel="noreferrer">Open map</a>
         </article>
         <article>
-          <span>Little details</span>
-          <strong id="event-status">Editable page</strong>
-          <p id="event-note">Final date, room, and Canva invitation can be added later.</p>
+          <span>Graduation</span>
+          <strong id="quick-grad-location">Graduation at OHSU</strong>
+          <p id="quick-grad-address">OHSU, Portland, OR - exact room TBA</p>
+          <a class="mini-map" id="quick-grad-map-link" target="_blank" rel="noreferrer">Open map</a>
+        </article>
+        <article>
+          <span>Weather</span>
+          <strong id="weather-temp">⛅</strong>
+          <p><b id="weather-place">Portland-Metro / Wilsonville</b> <span id="weather-summary">Graduation-week forecast coming soon</span></p>
+          <p id="weather-extra">Weather will be updated during the week of graduation once the date is finalized.</p>
         </article>
       </section>
 
@@ -204,7 +295,7 @@
         <div class="section-inner two-col">
           <div>
             <p class="kicker">Headcount</p>
-            <h2>Pull up or cheer from afar?</h2>
+            <h2>Will your family be able to attend?</h2>
             <p>Guests see only the totals. Names and private notes stay tucked away in admin.</p>
             <div class="counts" aria-label="RSVP totals">
               <div><span>Yes</span><strong id="count-yes">0</strong></div>
@@ -220,23 +311,19 @@
             </label>
             <div class="form-grid">
               <label>
-                Crew count
+                Number attending
                 <input name="partyCount" type="number" min="1" max="20" value="1" required>
-              </label>
-              <label>
-                Phone or email
-                <input name="contact" autocomplete="email">
               </label>
             </div>
             <fieldset class="choice">
-              <legend>Vibe check</legend>
+              <legend>Answer</legend>
               <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
               <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
               <label><input type="radio" name="response" value="no"><span>No</span></label>
             </fieldset>
             <label>
-              Secret note to us
-              <textarea name="note" rows="4" placeholder="Allergy, travel question, or sweet chaos"></textarea>
+              Private note to us
+              <textarea name="note" rows="4" placeholder="Allergy, accessibility note, travel question, or anything we should know"></textarea>
             </label>
             <button class="button primary full" type="submit">Lock in RSVP</button>
             <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
@@ -272,30 +359,20 @@
 
       <section class="section visit-section" id="visit">
         <div class="section-inner">
-          <p class="kicker">Roll through</p>
-          <h2>Map, munchies, nap spots.</h2>
-          <div class="visit-grid">
-            <article class="panel">
-              <span class="mini">Address</span>
-              <h3 id="visit-location">Oregon Tech - Klamath Falls Campus</h3>
-              <p id="visit-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
-              <a class="button primary" id="visit-map-link" target="_blank" rel="noreferrer">Open in Google Maps</a>
-            </article>
-            <article class="panel">
-              <span class="mini">Weather</span>
-              <h3 id="weather-place">Klamath Falls</h3>
-              <p class="weather"><strong id="weather-temp">--</strong><span id="weather-summary">Loading weather...</span></p>
-              <p id="weather-extra">Forecast appears when the page is online.</p>
-            </article>
-          </div>
+          <p class="kicker">Other Helpful</p>
+          <h2>Hotels, food, and more.</h2>
           <div class="resource-grid">
             <div>
-              <h3>Crash pads nearby</h3>
+              <h3>Hotels</h3>
               <div class="resource-list" id="hotel-list"></div>
             </div>
             <div>
-              <h3>Snack missions nearby</h3>
+              <h3>Food</h3>
               <div class="resource-list" id="food-list"></div>
+            </div>
+            <div>
+              <h3>More</h3>
+              <div class="resource-list" id="more-list"></div>
             </div>
           </div>
         </div>
@@ -313,7 +390,7 @@
               </label>
               <label>
                 Tiny caption
-                <input name="caption" maxlength="100" placeholder="lab besties, family chaos, cap toss">
+                <input name="caption" maxlength="100" placeholder="family moment, cap toss, big smiles">
               </label>
               <button class="button fiesta full" type="submit">Add to strip</button>
               <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>

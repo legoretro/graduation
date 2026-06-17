@@ -2,6 +2,7 @@
   "use strict";
 
   const config = window.GRADUATION_CONFIG || {};
+  const defaultConfig = JSON.parse(JSON.stringify(config));
   const localKey = "graduation-invite-preview";
   const ownerTokenKey = "graduation-memory-owner-token";
   const ownedMemoryKey = "graduation-owned-memory-ids";
@@ -76,9 +77,62 @@
     target[last] = value;
   }
 
+  function applyCurrentDefaults(savedSettings) {
+    if (savedSettings?.contentVersion === defaultConfig.contentVersion) return;
+
+    deepMerge(config, {
+      contentVersion: defaultConfig.contentVersion,
+      event: {
+        subtitle: defaultConfig.event?.subtitle,
+        locationName: defaultConfig.event?.locationName,
+        address: defaultConfig.event?.address,
+        googleMapsUrl: defaultConfig.event?.googleMapsUrl,
+        homeLocationName: defaultConfig.event?.homeLocationName,
+        homeAddress: defaultConfig.event?.homeAddress,
+        homeGoogleMapsUrl: defaultConfig.event?.homeGoogleMapsUrl,
+        graduationLocationName: defaultConfig.event?.graduationLocationName,
+        graduationAddress: defaultConfig.event?.graduationAddress,
+        graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
+        statusText: defaultConfig.event?.statusText,
+        note: defaultConfig.event?.note
+      },
+      assets: {
+        heroImage: defaultConfig.assets?.heroImage,
+        photos: defaultConfig.assets?.photos
+      },
+      weather: defaultConfig.weather,
+      stay: defaultConfig.stay,
+      food: defaultConfig.food,
+      more: defaultConfig.more
+    });
+  }
+
   function setText(selector, value) {
     const node = $(selector);
     if (node) node.textContent = value === undefined || value === null ? "" : String(value);
+  }
+
+  function setHref(selector, value) {
+    const node = $(selector);
+    if (node) node.href = value || "#";
+  }
+
+  function mapsUrl(address) {
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+  }
+
+  function setHeroTitle(value) {
+    const node = $("#event-title");
+    if (!node) return;
+    const title = String(value || "");
+    const match = title.match(/^(.*?)(\s+OIT\s+.*)$/);
+    const lines = match ? [match[1], match[2].trim()] : [title];
+    node.textContent = "";
+    lines.forEach((line) => {
+      const span = document.createElement("span");
+      span.textContent = line;
+      node.append(span);
+    });
   }
 
   function friendlyError(error, fallback) {
@@ -151,7 +205,7 @@
   function hydrateContent() {
     const event = config.event || {};
     document.title = event.title || document.title;
-    setText("#event-title", event.title);
+    setHeroTitle(event.title);
     setText("#event-kicker", event.kicker);
     setText("#event-subtitle", event.subtitle);
     setText("#event-date", event.dateText);
@@ -160,13 +214,16 @@
     setText("#event-address", event.address);
     setText("#event-status", event.statusText);
     setText("#event-note", event.note);
-    setText("#visit-location", event.locationName);
-    setText("#visit-address", event.address);
+    setText("#quick-home-location", event.homeLocationName || "E&A's Home");
+    setText("#quick-home-address", event.homeAddress || "Home address coming soon");
+    setText("#quick-grad-location", event.graduationLocationName || event.locationName);
+    setText("#quick-grad-address", event.graduationAddress || event.address);
     setText("#invite-copy", event.inviteCopy);
     setText("#footer-title", event.title);
 
-    $("#hero-map-link").href = event.googleMapsUrl || "#";
-    $("#visit-map-link").href = event.googleMapsUrl || "#";
+    setHref("#hero-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
+    setHref("#quick-home-map-link", event.homeGoogleMapsUrl);
+    setHref("#quick-grad-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
 
     if (config.assets?.heroImage) {
       $(".hero").classList.add("custom-hero");
@@ -184,6 +241,7 @@
 
     renderResources("#hotel-list", config.stay || []);
     renderResources("#food-list", config.food || []);
+    renderResources("#more-list", config.more || []);
     renderPhotos(config.assets?.photos || []);
     fillEditor();
   }
@@ -251,6 +309,7 @@
 
     if (!error && data?.settings) {
       deepMerge(config, data.settings);
+      applyCurrentDefaults(data.settings);
     }
   }
 
@@ -309,18 +368,51 @@
     );
   }
 
+  function resourceItems(resources) {
+    if (Array.isArray(resources)) return resources;
+    if (isObject(resources)) return Object.values(resources);
+    return [];
+  }
+
   function renderResources(selector, resources) {
     const list = $(selector);
+    if (!list) return;
     list.innerHTML = "";
-    resources.forEach((resource) => {
+    const items = resourceItems(resources).filter((resource) =>
+      resource && (resource.name || resource.address || resource.image || resource.url)
+    );
+
+    if (!items.length) {
+      list.innerHTML = '<div class="empty small-empty">Add places in admin when you are ready.</div>';
+      return;
+    }
+
+    items.forEach((resource) => {
       const link = document.createElement("a");
       link.className = "resource-card";
-      link.href = resource.url || "#";
+      link.href = resource.url || (resource.address ? mapsUrl(resource.address) : "#");
       link.target = "_blank";
       link.rel = "noreferrer";
-      link.innerHTML = `<span><strong></strong><span></span></span><strong aria-hidden="true">Open</strong>`;
-      link.querySelector("strong").textContent = resource.name || "Nearby option";
-      link.querySelector("span span").textContent = resource.meta || "Open search";
+
+      if (resource.image) {
+        const image = document.createElement("img");
+        image.src = resource.image;
+        image.alt = "";
+        image.loading = "lazy";
+        link.append(image);
+      }
+
+      const copy = document.createElement("span");
+      const name = document.createElement("strong");
+      const meta = document.createElement("span");
+      name.textContent = resource.name || "Helpful place";
+      meta.textContent = resource.address || resource.meta || "Add an address in admin";
+      copy.append(name, meta);
+
+      const action = document.createElement("strong");
+      action.setAttribute("aria-hidden", "true");
+      action.textContent = "Map";
+      link.append(copy, action);
       list.append(link);
     });
   }
@@ -363,12 +455,12 @@
 
     visibleMessages.slice(0, 24).forEach((message) => {
       const note = document.createElement("article");
-      note.className = `sticky-note ${noteColor(message.noteColor)}`;
+      note.className = `sticky-note ${noteColor(message.noteColor)}${message.isPending ? " is-pending" : ""}`;
       const body = document.createElement("p");
       body.textContent = message.body;
       const time = document.createElement("time");
       time.dateTime = message.createdAt || "";
-      time.textContent = formatDate(message.createdAt) || "Just now";
+      time.textContent = message.isPending ? "Saving..." : formatDate(message.createdAt) || "Just now";
       note.append(body, time);
       board.append(note);
     });
@@ -419,11 +511,11 @@
     const rows = $("#admin-rsvp-rows");
     rows.innerHTML = "";
     if (!state.rsvps.length) {
-      rows.innerHTML = `<tr><td colspan="6">${state.usingSupabase ? "Add the admin Edge Function URL in config.js to read private RSVP rows." : "No RSVPs yet."}</td></tr>`;
+      rows.innerHTML = `<tr><td colspan="5">${state.usingSupabase ? "Add the admin Edge Function URL in config.js to read private RSVP rows." : "No RSVPs yet."}</td></tr>`;
     } else {
       state.rsvps.forEach((rsvp) => {
         const row = document.createElement("tr");
-        [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.contact, rsvp.note, formatDate(rsvp.updatedAt || rsvp.createdAt)].forEach((value) => {
+        [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.note, formatDate(rsvp.updatedAt || rsvp.createdAt)].forEach((value) => {
           const cell = document.createElement("td");
           cell.textContent = value || "";
           row.append(cell);
@@ -497,6 +589,28 @@
     renderMessages();
     renderMemories();
     renderAdmin();
+  }
+
+  function addPendingMessage(body, selectedColor) {
+    const pendingId = `pending-${Date.now()}`;
+    state.messages = [
+      {
+        id: pendingId,
+        body,
+        noteColor: noteColor(selectedColor),
+        createdAt: new Date().toISOString(),
+        isHidden: false,
+        isPending: true
+      },
+      ...state.messages
+    ];
+    renderMessages();
+    return pendingId;
+  }
+
+  function removePendingMessage(pendingId) {
+    state.messages = state.messages.filter((message) => message.id !== pendingId);
+    renderMessages();
   }
 
   async function saveRsvp(entry) {
@@ -656,7 +770,6 @@
       name: row.guest_name,
       partyCount: row.party_count,
       response: row.response,
-      contact: row.contact,
       note: row.note,
       createdAt: row.created_at,
       updatedAt: row.updated_at
@@ -678,6 +791,8 @@
   }
 
   async function saveSiteSettings(settings) {
+    settings.contentVersion = defaultConfig.contentVersion || config.contentVersion;
+
     if (!state.usingSupabase) {
       deepMerge(config, settings);
       setText("#editor-feedback", "Edit saved successfully in this browser preview.");
@@ -786,14 +901,13 @@
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const name = String(data.get("guestName") || "").trim();
-      const contact = String(data.get("contact") || "").trim();
       try {
         await saveRsvp({
-          guestKey: guestKey(name, contact),
+          guestKey: guestKey(name, ""),
           name,
           partyCount: Math.max(1, Number(data.get("partyCount") || 1)),
           response: String(data.get("response") || "yes"),
-          contact,
+          contact: "",
           note: String(data.get("note") || "").trim()
         });
         setText("#rsvp-feedback", "RSVP saved. Submit again with the same name if plans change.");
@@ -809,16 +923,21 @@
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const body = String(data.get("body") || "").trim();
+      const selectedColor = String(data.get("noteColor") || "pastel-yellow");
       if (!body) return;
+      const pendingId = addPendingMessage(body, selectedColor);
+      setText("#message-feedback", "Loading note, please hold...");
       try {
-        await saveMessage(body, String(data.get("noteColor") || "pastel-yellow"));
+        await saveMessage(body, selectedColor);
+        removePendingMessage(pendingId);
         event.currentTarget.reset();
         $("#message-form input[name='noteColor'][value='pastel-yellow']").checked = true;
-        setText("#message-feedback", "Your note stuck to the board.");
+        setText("#message-feedback", "Your caring note is on the board.");
         renderAll();
         burstConfetti(70);
       } catch (error) {
         console.error(error);
+        removePendingMessage(pendingId);
         setText(
           "#message-feedback",
           guestError(setupError(error, "Notes need the Supabase SQL update first. Run the setup block, then refresh.", "That note did not stick yet. Try again in a minute."))
@@ -902,11 +1021,11 @@
     });
 
     $("#export-rsvps").addEventListener("click", () => {
-      const headers = ["name", "response", "party_count", "contact", "note", "updated_at"];
+      const headers = ["name", "response", "party_count", "note", "updated_at"];
       const lines = [
         headers.join(","),
         ...state.rsvps.map((rsvp) =>
-          [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.contact, rsvp.note, rsvp.updatedAt || rsvp.createdAt]
+          [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.note, rsvp.updatedAt || rsvp.createdAt]
             .map((value) => `"${String(value || "").replace(/"/g, '""')}"`)
             .join(",")
         )
@@ -923,6 +1042,13 @@
 
   async function loadWeather() {
     const settings = config.weather || {};
+    if (settings.live === false) {
+      setText("#weather-place", settings.label || "Portland-Metro / Wilsonville");
+      setText("#weather-temp", settings.placeholderTemp || "Cloud icon");
+      setText("#weather-summary", settings.placeholderSummary || "Graduation-week forecast coming soon");
+      setText("#weather-extra", settings.placeholderExtra || "Weather will be updated during the week of graduation.");
+      return;
+    }
     if (!settings.latitude || !settings.longitude) return;
     setText("#weather-place", settings.label || "Weather");
     const url = new URL("https://api.open-meteo.com/v1/forecast");

@@ -1,15 +1,23 @@
 window.GRADUATION_CONFIG = {
+  contentVersion: "2026-06-17-ohsu-family-update",
+
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "OIT pride, Filipino joy, Mexican color, confetti, RSVPs, caring notes, and memory-strip chaos.",
+    subtitle: "Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.",
     dateText: "December 2026",
     timeText: "Time TBA",
-    locationName: "Oregon Tech - Klamath Falls Campus",
-    address: "3201 Campus Drive, Klamath Falls, OR 97601",
-    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=3201%20Campus%20Drive%2C%20Klamath%20Falls%2C%20OR%2097601",
-    statusText: "Details cooking",
-    note: "Final date, room, and the Canva invite can be swapped in anytime.",
+    locationName: "Graduation at OHSU",
+    address: "OHSU, Portland, OR - exact room TBA",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
+    homeLocationName: "E&A's Home",
+    homeAddress: "Home address coming soon",
+    homeGoogleMapsUrl: "#",
+    graduationLocationName: "Graduation at OHSU",
+    graduationAddress: "OHSU, Portland, OR - exact room TBA",
+    graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
+    statusText: "More details soon",
+    note: "Final date, exact OHSU room, and the Canva invite can be updated anytime.",
     inviteCopy: "Your 4x6 Canva invite gets the spotlight here once it is ready."
   },
 
@@ -28,46 +36,20 @@ window.GRADUATION_CONFIG = {
   },
 
   weather: {
-    label: "Klamath Falls",
-    latitude: 42.255,
-    longitude: -121.785
+    label: "Portland-Metro / Wilsonville",
+    latitude: 45.303,
+    longitude: -122.765,
+    live: false,
+    placeholderTemp: "⛅",
+    placeholderSummary: "Graduation-week forecast coming soon",
+    placeholderExtra: "Weather will be updated during the week of graduation once the date is finalized."
   },
 
-  stay: [
-    {
-      name: "Hotels near Oregon Tech",
-      meta: "Google Maps search",
-      url: "https://www.google.com/maps/search/hotels+near+Oregon+Tech+Klamath+Falls"
-    },
-    {
-      name: "Downtown Klamath Falls stays",
-      meta: "Good area to compare options",
-      url: "https://www.google.com/maps/search/hotels+in+downtown+Klamath+Falls"
-    },
-    {
-      name: "Running Y area lodging",
-      meta: "Resort area outside town",
-      url: "https://www.google.com/maps/search/Running+Y+Resort+lodging"
-    }
-  ],
+  stay: [],
 
-  food: [
-    {
-      name: "Food near Oregon Tech",
-      meta: "Google Maps search",
-      url: "https://www.google.com/maps/search/restaurants+near+Oregon+Tech+Klamath+Falls"
-    },
-    {
-      name: "Downtown Klamath Falls food",
-      meta: "Restaurants and coffee",
-      url: "https://www.google.com/maps/search/restaurants+in+downtown+Klamath+Falls"
-    },
-    {
-      name: "Coffee near campus",
-      meta: "Quick stops before the ceremony",
-      url: "https://www.google.com/maps/search/coffee+near+Oregon+Tech+Klamath+Falls"
-    }
-  ],
+  food: [],
+
+  more: [],
 
   supabase: {
     enabled: true,
