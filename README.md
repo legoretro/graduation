@@ -46,13 +46,13 @@ supabase: {
 
 The anon key is okay to put in GitHub Pages. Do not put the service role key in GitHub.
 
-The default admin password created by the SQL is `cats`.
+Set the admin password only in Supabase. Do not put it in `config.js`.
 
 ## Private Admin
 
-The preview password is `cats`, but that is not secure if the page is public.
+The admin password is stored as a hash in Supabase by the SQL setup. The site does not show it or store it in `config.js`.
 
-For the real private admin view, deploy `supabase-admin-function.ts` as a Supabase Edge Function and set these function secrets:
+Optional advanced path: deploy `supabase-admin-function.ts` as a Supabase Edge Function and set these function secrets:
 
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`

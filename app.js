@@ -79,7 +79,7 @@
     if (error?.code === "PGRST205" || message.includes("Could not find the table")) {
       return "Supabase tables are missing. Copy/paste and run the SQL setup block first.";
     }
-    if (error?.code === "PGRST202" || message.includes("function") || message.includes("schema cache")) {
+    if (error?.code === "PGRST202" || error?.code === "42883" || message.includes("function") || message.includes("schema cache") || message.includes("crypt")) {
       return "Supabase admin functions are missing. Copy/paste and run the updated SQL setup block first.";
     }
     return fallback;
@@ -404,8 +404,23 @@
 
   async function saveMessage(body) {
     if (state.usingSupabase) {
-      const { error } = await state.supabaseClient.from(table("messages")).insert({ body, is_hidden: false });
+      const { data, error } = await state.supabaseClient
+        .from(table("messages"))
+        .insert({ body, is_hidden: false })
+        .select("id, body, created_at")
+        .single();
       if (error) throw error;
+      if (data) {
+        state.messages = [
+          {
+            id: data.id,
+            body: data.body,
+            createdAt: data.created_at,
+            isHidden: false
+          },
+          ...state.messages.filter((message) => message.id !== data.id)
+        ];
+      }
       await loadPublicData();
       return;
     }
@@ -569,7 +584,12 @@
       const password = $("#admin-password").value;
       try {
         const usedEndpoint = await loadAdmin(password);
-        if (!usedEndpoint && password !== (config.admin?.previewPassword || "cats")) {
+        const previewPassword = config.admin?.previewPassword;
+        if (!usedEndpoint && !previewPassword) {
+          setText("#admin-feedback", "Run the Supabase setup SQL before using admin.");
+          return;
+        }
+        if (!usedEndpoint && password !== previewPassword) {
           setText("#admin-feedback", "Wrong password.");
           return;
         }
@@ -665,6 +685,25 @@
     }
   }
 
+  function startAutoRefresh() {
+    if (!state.usingSupabase) return;
+
+    const refresh = async () => {
+      try {
+        await loadPublicData();
+        renderCounts();
+        renderMessages();
+      } catch (error) {
+        console.warn("Auto-refresh skipped.", error);
+      }
+    };
+
+    window.setInterval(refresh, 8000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) refresh();
+    });
+  }
+
   function burstConfetti(amount) {
     const canvas = $("#confetti-canvas");
     if (!canvas) return;
@@ -732,6 +771,7 @@
     await loadPublicData();
     bindForms();
     initConfetti();
+    startAutoRefresh();
     renderAll();
     loadWeather();
   }

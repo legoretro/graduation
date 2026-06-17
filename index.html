@@ -25,168 +25,14 @@
       </nav>
     </header>
 
-    <main id="home">
-      <section class="hero">
-        <div class="hero-image" id="hero-image" aria-hidden="true"></div>
-        <div class="hero-overlay" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
-          <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and anonymous love notes.</p>
-          <div class="actions">
-            <a class="button primary" href="#rsvp">RSVP</a>
-            <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
-            <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
-          </div>
-        </div>
-      </section>
-
-      <div class="culture-ribbon" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-
-      <section class="quick-info" aria-label="Event details">
-        <article>
-          <span>When</span>
-          <strong id="event-date">December 2026</strong>
-          <p id="event-time">Time TBA</p>
-        </article>
-        <article>
-          <span>Where</span>
-          <strong id="event-location">Oregon Tech - Klamath Falls Campus</strong>
-          <p id="event-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
-        </article>
-        <article>
-          <span>Details</span>
-          <strong id="event-status">Editable page</strong>
-          <p id="event-note">Final date, room, and Canva invitation can be added later.</p>
-        </article>
-      </section>
-
-      <section class="section invite-section">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">Invitation</p>
-            <h2>The Canva invitation can live here.</h2>
-            <p id="invite-copy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
-          </div>
-          <figure class="invite-card">
-            <div id="invite-placeholder">
-              <span>Canva invitation image</span>
-              <strong>Drop in later</strong>
-            </div>
-            <img id="invite-image" alt="Graduation invitation" hidden>
-          </figure>
-        </div>
-      </section>
-
-      <section class="section rsvp-section" id="rsvp">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">RSVP</p>
-            <h2>Let us know if you can make it.</h2>
-            <p>Guests only see the totals. Names, contact info, and private notes stay in the admin view.</p>
-            <div class="counts" aria-label="RSVP totals">
-              <div><span>Yes</span><strong id="count-yes">0</strong></div>
-              <div><span>Maybe</span><strong id="count-maybe">0</strong></div>
-              <div><span>No</span><strong id="count-no">0</strong></div>
-            </div>
-          </div>
-
-          <form class="panel" id="rsvp-form">
-            <label>
-              Name
-              <input name="guestName" autocomplete="name" required>
-            </label>
-            <div class="form-grid">
-              <label>
-                How many?
-                <input name="partyCount" type="number" min="1" max="20" value="1" required>
-              </label>
-              <label>
-                Phone or email
-                <input name="contact" autocomplete="email">
-              </label>
-            </div>
-            <fieldset class="choice">
-              <legend>Answer</legend>
-              <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
-              <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
-              <label><input type="radio" name="response" value="no"><span>No</span></label>
-            </fieldset>
-            <label>
-              Private note
-              <textarea name="note" rows="4" placeholder="Food allergy, travel question, or anything we should know"></textarea>
-            </label>
-            <button class="button primary full" type="submit">Save RSVP</button>
-            <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </section>
-
-      <section class="section board-section" id="board">
-        <div class="section-inner">
-          <div class="board-head">
-            <div>
-              <p class="kicker">Anonymous notes</p>
-              <h2>Leave a little love on the board.</h2>
-            </div>
-            <form class="message-form" id="message-form">
-              <label class="sr-only" for="message-body">Anonymous message</label>
-              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="Congrats, we love you!" required></textarea>
-              <button class="button secondary" type="submit">Post note</button>
-            </form>
-          </div>
-          <div class="note-board" id="note-board" aria-live="polite"></div>
-          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
-        </div>
-      </section>
-
-      <section class="section visit-section" id="visit">
-        <div class="section-inner">
-          <p class="kicker">Visit</p>
-          <h2>Campus, food, hotels, and weather.</h2>
-          <div class="visit-grid">
-            <article class="panel">
-              <span class="mini">Address</span>
-              <h3 id="visit-location">Oregon Tech - Klamath Falls Campus</h3>
-              <p id="visit-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
-              <a class="button primary" id="visit-map-link" target="_blank" rel="noreferrer">Open in Google Maps</a>
-            </article>
-            <article class="panel">
-              <span class="mini">Weather</span>
-              <h3 id="weather-place">Klamath Falls</h3>
-              <p class="weather"><strong id="weather-temp">--</strong><span id="weather-summary">Loading weather...</span></p>
-              <p id="weather-extra">Forecast appears when the page is online.</p>
-            </article>
-          </div>
-          <div class="resource-grid">
-            <div>
-              <h3>Hotels nearby</h3>
-              <div class="resource-list" id="hotel-list"></div>
-            </div>
-            <div>
-              <h3>Food nearby</h3>
-              <div class="resource-list" id="food-list"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section gallery-section">
-        <div class="section-inner">
-          <p class="kicker">Photos</p>
-          <h2>Photo spots for graduation memories.</h2>
-          <div class="photo-grid" id="photo-grid"></div>
-        </div>
-      </section>
-
-      <section class="section admin-section" id="admin">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">Admin</p>
-            <h2>Private RSVP view.</h2>
-            <p>Preview password is <strong>cats</strong>. For the live Supabase setup, use the Edge Function so the real admin password is not stored in GitHub.</p>
+    <section class="admin-dock" id="admin" aria-label="Admin tools">
+      <details>
+        <summary>Admin tools</summary>
+        <div class="admin-dock-content">
+          <div class="admin-intro">
+            <p class="kicker">Private</p>
+            <h2>Edit, export, clean up.</h2>
+            <p>Use your admin password to manage RSVPs, page details, and test notes.</p>
           </div>
 
           <div class="panel admin-panel">
@@ -194,7 +40,7 @@
               <label>
                 Admin password
                 <div class="inline">
-                  <input id="admin-password" type="password" autocomplete="current-password" placeholder="cats">
+                  <input id="admin-password" type="password" autocomplete="current-password" placeholder="Admin password">
                   <button class="button primary" type="submit">Log in</button>
                 </div>
               </label>
@@ -208,7 +54,7 @@
               </div>
 
               <section class="admin-editor" aria-labelledby="editor-heading">
-                <h3 id="editor-heading">Editable page details</h3>
+                <h3 id="editor-heading">Page edits</h3>
                 <form id="site-editor">
                   <div class="editor-grid">
                     <label>
@@ -294,7 +140,165 @@
             </div>
           </div>
         </div>
+      </details>
+    </section>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-image" id="hero-image" aria-hidden="true"></div>
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
+          <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
+          <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and anonymous love notes.</p>
+          <div class="actions">
+            <a class="button primary" href="#rsvp">RSVP</a>
+            <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
+            <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
+          </div>
+        </div>
       </section>
+
+      <div class="culture-ribbon" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <section class="quick-info" aria-label="Event details">
+        <article>
+          <span>When</span>
+          <strong id="event-date">December 2026</strong>
+          <p id="event-time">Time TBA</p>
+        </article>
+        <article>
+          <span>Where</span>
+          <strong id="event-location">Oregon Tech - Klamath Falls Campus</strong>
+          <p id="event-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
+        </article>
+        <article>
+          <span>Details</span>
+          <strong id="event-status">Editable page</strong>
+          <p id="event-note">Final date, room, and Canva invitation can be added later.</p>
+        </article>
+      </section>
+
+      <section class="section invite-section">
+        <div class="section-inner two-col">
+          <div>
+            <p class="kicker">Invitation</p>
+            <h2>Tiny 4x6 invite goes here.</h2>
+            <p id="invite-copy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
+          </div>
+          <figure class="invite-card">
+            <div id="invite-placeholder">
+              <span>Canva invitation image</span>
+              <strong>Drop in later</strong>
+            </div>
+            <img id="invite-image" alt="Graduation invitation" hidden>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section rsvp-section" id="rsvp">
+        <div class="section-inner two-col">
+          <div>
+            <p class="kicker">RSVP</p>
+            <h2>Are you in?</h2>
+            <p>Guests see only the totals. Names and private notes stay tucked away in admin.</p>
+            <div class="counts" aria-label="RSVP totals">
+              <div><span>Yes</span><strong id="count-yes">0</strong></div>
+              <div><span>Maybe</span><strong id="count-maybe">0</strong></div>
+              <div><span>No</span><strong id="count-no">0</strong></div>
+            </div>
+          </div>
+
+          <form class="panel" id="rsvp-form">
+            <label>
+              Name
+              <input name="guestName" autocomplete="name" required>
+            </label>
+            <div class="form-grid">
+              <label>
+                Crew count
+                <input name="partyCount" type="number" min="1" max="20" value="1" required>
+              </label>
+              <label>
+                Phone or email
+                <input name="contact" autocomplete="email">
+              </label>
+            </div>
+            <fieldset class="choice">
+              <legend>Answer</legend>
+              <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
+              <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
+              <label><input type="radio" name="response" value="no"><span>No</span></label>
+            </fieldset>
+            <label>
+              Secret note to us
+              <textarea name="note" rows="4" placeholder="Allergy, travel question, or sweet chaos"></textarea>
+            </label>
+            <button class="button primary full" type="submit">Lock in RSVP</button>
+            <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section board-section" id="board">
+        <div class="section-inner">
+          <div class="board-head">
+            <div>
+              <p class="kicker">Anonymous notes</p>
+              <h2>Drop a tiny love note.</h2>
+            </div>
+            <form class="message-form" id="message-form">
+              <label class="sr-only" for="message-body">Anonymous message</label>
+              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="Congrats, we love you!" required></textarea>
+              <button class="button secondary" type="submit">Stick it up</button>
+            </form>
+          </div>
+          <div class="note-board" id="note-board" aria-live="polite"></div>
+          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="section visit-section" id="visit">
+        <div class="section-inner">
+          <p class="kicker">Visit</p>
+          <h2>Map, munchies, sleep spots.</h2>
+          <div class="visit-grid">
+            <article class="panel">
+              <span class="mini">Address</span>
+              <h3 id="visit-location">Oregon Tech - Klamath Falls Campus</h3>
+              <p id="visit-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
+              <a class="button primary" id="visit-map-link" target="_blank" rel="noreferrer">Open in Google Maps</a>
+            </article>
+            <article class="panel">
+              <span class="mini">Weather</span>
+              <h3 id="weather-place">Klamath Falls</h3>
+              <p class="weather"><strong id="weather-temp">--</strong><span id="weather-summary">Loading weather...</span></p>
+              <p id="weather-extra">Forecast appears when the page is online.</p>
+            </article>
+          </div>
+          <div class="resource-grid">
+            <div>
+              <h3>Hotels nearby</h3>
+              <div class="resource-list" id="hotel-list"></div>
+            </div>
+            <div>
+              <h3>Food nearby</h3>
+              <div class="resource-list" id="food-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery-section">
+        <div class="section-inner">
+          <p class="kicker">Photos</p>
+          <h2>Tiny memory strip.</h2>
+          <div class="photo-grid" id="photo-grid"></div>
+        </div>
+      </section>
+
     </main>
 
     <footer>

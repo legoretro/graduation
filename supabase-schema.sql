@@ -2,7 +2,8 @@
 -- These names are intentionally prefixed with "graduation_" so this can live
 -- beside another app such as Arbolito without table or policy collisions.
 
-create extension if not exists pgcrypto;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
 create table if not exists public.graduation_rsvps (
   id uuid primary key default gen_random_uuid(),
@@ -36,8 +37,10 @@ create table if not exists public.graduation_admin_config (
 );
 
 insert into public.graduation_admin_config (id, password_hash)
-values (true, crypt('cats', gen_salt('bf')))
-on conflict (id) do nothing;
+values (true, extensions.crypt('CHANGE_THIS_ADMIN_PASSWORD', extensions.gen_salt('bf')))
+on conflict (id) do update
+set password_hash = excluded.password_hash,
+    updated_at = now();
 
 alter table public.graduation_rsvps enable row level security;
 alter table public.graduation_messages enable row level security;
@@ -99,7 +102,7 @@ create or replace function public.graduation_assert_admin(admin_password text)
 returns void
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   stored_hash text;
@@ -108,7 +111,7 @@ begin
   from public.graduation_admin_config
   where id = true;
 
-  if stored_hash is null or stored_hash <> crypt(coalesce(admin_password, ''), stored_hash) then
+  if stored_hash is null or stored_hash <> extensions.crypt(coalesce(admin_password, ''), stored_hash) then
     raise exception 'Invalid graduation admin password';
   end if;
 end;
