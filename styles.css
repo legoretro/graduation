@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Baloo+2:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap");
 
 :root {
   --oit-blue: #003767;
@@ -22,7 +22,7 @@
   --note-peach: #ffd9c8;
   --shadow: 0 18px 45px rgba(10, 31, 51, 0.13);
   --radius: 8px;
-  font-family: "Baloo 2", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Nunito", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -56,6 +56,10 @@ a {
 img {
   display: block;
   max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 #confetti-canvas {
@@ -428,9 +432,9 @@ nav a:focus {
 }
 
 h1 {
-  font-family: "Bagel Fat One", "Cooper Black", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
-  font-size: 3.8rem;
-  font-weight: 900;
+  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-size: 3.55rem;
+  font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
   margin: 0.65rem 0 1rem;
@@ -444,17 +448,17 @@ h1 span {
 }
 
 h2 {
-  font-family: "Bagel Fat One", "Cooper Black", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
-  font-size: 1.85rem;
-  font-weight: 900;
+  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.78rem;
+  font-weight: 700;
   letter-spacing: 0;
   line-height: 1.08;
   margin: 0.45rem 0 1rem;
 }
 
 h3 {
-  font-family: "Bagel Fat One", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
-  font-weight: 800;
+  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
   margin: 0 0 0.7rem;
 }
 
@@ -483,7 +487,8 @@ p {
   border-radius: var(--radius);
   cursor: pointer;
   display: inline-flex;
-  font-weight: 900;
+  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
   justify-content: center;
   min-height: 2.9rem;
   padding: 0.78rem 1rem;
@@ -633,6 +638,12 @@ p {
   width: min(100%, 340px);
 }
 
+.invite-download {
+  grid-column: 2;
+  justify-self: end;
+  width: min(100%, 340px);
+}
+
 .invite-card img {
   height: 100%;
   object-fit: cover;
@@ -772,7 +783,7 @@ textarea:focus,
   border-radius: var(--radius);
   color: var(--muted);
   display: grid;
-  min-height: 3.1rem;
+  min-height: 2.85rem;
   place-items: center;
 }
 
@@ -1326,7 +1337,7 @@ footer a {
 
 @media (max-width: 920px) {
   h1 {
-    font-size: 3rem;
+    font-size: 2.75rem;
   }
 
   .two-col,
@@ -1343,6 +1354,11 @@ footer a {
   .photo-grid,
   .quick-info {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .invite-download {
+    grid-column: auto;
+    justify-self: center;
   }
 }
 
@@ -1373,38 +1389,96 @@ footer a {
   }
 
   .hero-copy {
-    padding-top: 9.5rem;
+    padding: 8.25rem 1rem 2rem;
+  }
+
+  .hero {
+    min-height: min(58svh, 560px);
   }
 
   h1 {
-    font-size: 1.68rem;
+    font-size: 2rem;
     max-width: 100%;
   }
 
   h2 {
-    font-size: 1.75rem;
+    font-size: 1.55rem;
   }
 
   .hero p {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
     max-width: 100%;
   }
 
   .button {
-    font-size: 0.88rem;
+    font-size: 0.84rem;
+    min-height: 2.65rem;
     padding-left: 0.78rem;
     padding-right: 0.78rem;
   }
 
   .quick-info,
-  .counts,
   .form-grid,
-  .choice,
   .editor-grid,
   .note-board,
   .memory-grid,
   .photo-grid {
     grid-template-columns: 1fr;
+  }
+
+  .counts,
+  .choice {
+    gap: 0.45rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .counts {
+    margin-top: 0.85rem;
+  }
+
+  .counts div {
+    min-height: 3.5rem;
+    padding: 0.55rem;
+  }
+
+  .counts span {
+    font-size: 0.72rem;
+  }
+
+  .counts strong {
+    font-size: 1.28rem;
+  }
+
+  .panel {
+    padding: 0.85rem;
+  }
+
+  label + label,
+  .form-grid + .choice,
+  .choice + label {
+    margin-top: 0.78rem;
+  }
+
+  input,
+  textarea {
+    min-height: 2.6rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  textarea {
+    min-height: 4.2rem;
+  }
+
+  .choice {
+    margin-top: 0.78rem;
+  }
+
+  .choice span {
+    min-height: 2.45rem;
+  }
+
+  .rsvp-section .two-col {
+    gap: 0.9rem;
   }
 
   .quick-info article {

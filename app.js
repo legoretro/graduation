@@ -237,6 +237,17 @@
       image.src = config.assets.invitationImage;
       image.hidden = false;
       $("#invite-placeholder").hidden = true;
+      const download = $("#invite-download");
+      if (download) {
+        download.href = config.assets.invitationImage;
+        download.hidden = false;
+      }
+    } else {
+      const image = $("#invite-image");
+      const download = $("#invite-download");
+      if (image) image.hidden = true;
+      if ($("#invite-placeholder")) $("#invite-placeholder").hidden = false;
+      if (download) download.hidden = true;
     }
 
     renderResources("#hotel-list", config.stay || []);
@@ -615,15 +626,35 @@
 
   async function saveRsvp(entry) {
     if (state.usingSupabase) {
-      const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", {
+      const payload = {
         p_guest_key: entry.guestKey,
         p_guest_name: entry.name,
         p_party_count: entry.partyCount,
         p_response: entry.response,
         p_contact: entry.contact,
         p_note: entry.note
-      });
-      if (error) throw error;
+      };
+      const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", payload);
+      if (error) {
+        const message = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`;
+        if (/PGRST202|schema cache|Could not find the function/i.test(message)) {
+          const { error: directError } = await state.supabaseClient.from(table("rsvps")).upsert(
+            {
+              guest_key: entry.guestKey,
+              guest_name: entry.name,
+              party_count: entry.partyCount,
+              response: entry.response,
+              contact: entry.contact || null,
+              note: entry.note || null,
+              updated_at: new Date().toISOString()
+            },
+            { onConflict: "guest_key" }
+          );
+          if (directError) throw error;
+        } else {
+          throw error;
+        }
+      }
       await loadPublicData();
       return;
     }
@@ -915,7 +946,7 @@
         burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", guestError("Could not save that RSVP yet. Try again in a minute."));
+        setText("#rsvp-feedback", guestError(setupError(error, "RSVP needs the Supabase SQL setup first. Run the RSVP setup block, then refresh.", "Could not save that RSVP yet. Try again in a minute.")));
       }
     });
 
