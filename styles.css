@@ -3,11 +3,11 @@
 :root {
   --oit-blue: #003767;
   --oit-blue-dark: #001f3f;
-  --oit-gold: #f4b400;
+  --oit-gold: #d9a21a;
   --green: #245642;
   --fiesta-red: #ce1126;
   --fiesta-green: #009246;
-  --sun: #ffd166;
+  --sun: #f0c56a;
   --philippine-blue: #0038a8;
   --ink: #17212b;
   --muted: #5c6874;
@@ -37,8 +37,8 @@ body {
   margin: 0;
   overflow-x: clip;
   background:
-    linear-gradient(90deg, rgba(0, 56, 168, 0.14) 0 50%, rgba(0, 146, 70, 0.12) 50%),
-    linear-gradient(115deg, rgba(244, 180, 0, 0.16), transparent 42%, rgba(206, 17, 38, 0.12)),
+    linear-gradient(90deg, rgba(0, 56, 168, 0.09) 0 50%, rgba(0, 146, 70, 0.08) 50%),
+    linear-gradient(115deg, rgba(217, 162, 26, 0.1), transparent 42%, rgba(206, 17, 38, 0.07)),
     linear-gradient(180deg, #fffaf0, #eef7f0 42%, #e7f1f8);
   color: var(--ink);
 }
@@ -579,9 +579,10 @@ p {
 }
 
 .fiesta {
-  background: linear-gradient(135deg, var(--fiesta-red), var(--sun));
-  color: #221400;
-  box-shadow: 0 10px 0 rgba(0, 31, 63, 0.2);
+  background: linear-gradient(135deg, var(--oit-blue), #2c668d);
+  border-color: rgba(217, 162, 26, 0.7);
+  color: var(--white);
+  box-shadow: 0 10px 0 rgba(0, 31, 63, 0.16);
 }
 
 .culture-ribbon {
@@ -914,7 +915,7 @@ textarea:focus,
 
 .board-section {
   background:
-    linear-gradient(135deg, rgba(0, 146, 70, 0.12), rgba(255, 209, 102, 0.16), rgba(206, 17, 38, 0.07)),
+    linear-gradient(135deg, rgba(0, 146, 70, 0.08), rgba(240, 197, 106, 0.1), rgba(206, 17, 38, 0.045)),
     #eef7f0;
 }
 
@@ -1004,40 +1005,45 @@ textarea:focus,
 
 .note-board {
   display: grid;
-  gap: 0.85rem;
-  grid-template-columns: repeat(5, minmax(132px, 1fr));
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 146px));
+  justify-content: start;
   margin-top: 1.25rem;
 }
 
 .sticky-note {
   animation: note-pop 360ms ease both, note-wiggle 7s ease-in-out infinite;
-  background: var(--note-yellow);
+  aspect-ratio: 1;
+  background: var(--sticky-bg, var(--note-yellow));
   border: 1px solid rgba(118, 89, 0, 0.18);
   border-radius: 4px;
   box-shadow: 0 10px 25px rgba(31, 39, 47, 0.1);
-  min-height: 6rem;
-  padding: 0.78rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  padding: 0.7rem;
   transform: rotate(-1.5deg);
 }
 
 .sticky-note.pastel-yellow {
-  background: var(--note-yellow);
+  background: var(--sticky-bg, var(--note-yellow));
 }
 
 .sticky-note.pastel-blue {
-  background: var(--note-blue);
+  background: var(--sticky-bg, var(--note-blue));
 }
 
 .sticky-note.pastel-mint {
-  background: var(--note-mint);
+  background: var(--sticky-bg, var(--note-mint));
 }
 
 .sticky-note.pastel-pink {
-  background: var(--note-pink);
+  background: var(--sticky-bg, var(--note-pink));
 }
 
 .sticky-note.pastel-peach {
-  background: var(--note-peach);
+  background: var(--sticky-bg, var(--note-peach));
 }
 
 .sticky-note:nth-child(3n + 2) {
@@ -1061,15 +1067,18 @@ textarea:focus,
 
 .sticky-note p {
   color: var(--ink);
-  font-weight: 750;
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1.15;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .sticky-note time {
   color: rgba(23, 33, 43, 0.58);
   display: block;
-  font-size: 0.78rem;
-  margin-top: 0.75rem;
+  font-size: 0.68rem;
+  margin-top: 0.5rem;
 }
 
 .sticky-note.is-pending {
@@ -1192,7 +1201,7 @@ textarea:focus,
 
 .memory-strip {
   background:
-    linear-gradient(90deg, rgba(0, 56, 168, 0.08), rgba(244, 180, 0, 0.12), rgba(206, 17, 38, 0.08)),
+    linear-gradient(90deg, rgba(0, 56, 168, 0.055), rgba(217, 162, 26, 0.08), rgba(206, 17, 38, 0.05)),
     var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -1541,7 +1550,6 @@ footer a {
     grid-template-columns: 1fr;
   }
 
-  .note-board,
   .memory-grid,
   .photo-grid,
   .quick-info {
@@ -1622,10 +1630,18 @@ footer a {
 
   .quick-info,
   .form-grid,
-  .note-board,
   .memory-grid,
   .photo-grid {
     grid-template-columns: 1fr;
+  }
+
+  .note-board {
+    gap: 0.7rem;
+    grid-template-columns: repeat(2, minmax(124px, 142px));
+  }
+
+  .sticky-note p {
+    font-size: 1.02rem;
   }
 
   .counts,

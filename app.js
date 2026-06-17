@@ -170,7 +170,17 @@
   }
 
   function noteColor(value) {
-    return allowedNoteColors.has(value) ? value : "pastel-yellow";
+    const normalized = String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/_/g, "-");
+    if (allowedNoteColors.has(normalized)) return normalized;
+    const fullName = `pastel-${normalized.replace(/^pastel-/, "")}`;
+    return allowedNoteColors.has(fullName) ? fullName : "pastel-yellow";
+  }
+
+  function noteColorBackground(value) {
+    return `var(--note-${noteColor(value).replace("pastel-", "")})`;
   }
 
   function guestError(fallback) {
@@ -500,7 +510,9 @@
 
     visibleMessages.slice(0, 24).forEach((message) => {
       const note = document.createElement("article");
-      note.className = `sticky-note ${noteColor(message.noteColor)}${message.isPending ? " is-pending" : ""}`;
+      const color = noteColor(message.noteColor);
+      note.className = `sticky-note ${color}${message.isPending ? " is-pending" : ""}`;
+      note.style.setProperty("--sticky-bg", noteColorBackground(color));
       const body = document.createElement("p");
       body.textContent = message.body;
       const time = document.createElement("time");
@@ -1174,8 +1186,7 @@
       try {
         await saveMessage(body, selectedColor);
         removePendingMessage(pendingId);
-        event.currentTarget.reset();
-        $("#message-form input[name='noteColor'][value='pastel-yellow']").checked = true;
+        $("#message-body").value = "";
         setText("#message-feedback", "Your caring note is on the board.");
         renderAll();
         burstConfetti(70);
@@ -1219,30 +1230,30 @@
 
     $("#admin-login").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const password = $("#admin-password").value;
+      const password = $("#admin-password").value.trim();
+      const adminPassword = config.admin?.previewPassword || "cats";
+      if (password !== adminPassword) {
+        setText("#admin-feedback", "Wrong password.");
+        return;
+      }
+
+      state.adminUnlocked = true;
+      state.adminPassword = password;
+      $("#admin-password").value = "";
+      $("#admin-dashboard").hidden = false;
+      document.body.classList.add("admin-unlocked");
+      syncInlineInputs();
+      fillEditor();
+
       try {
-        const usedEndpoint = await loadAdmin(password);
-        const previewPassword = config.admin?.previewPassword;
-        if (!usedEndpoint && !previewPassword) {
-          setText("#admin-feedback", "Run the database setup SQL before using admin.");
-          return;
-        }
-        if (!usedEndpoint && password !== previewPassword) {
-          setText("#admin-feedback", "Wrong password.");
-          return;
-        }
-        state.adminUnlocked = true;
-        state.adminPassword = password;
-        $("#admin-dashboard").hidden = false;
+        await loadAdmin(password);
         setText("#admin-feedback", "Admin unlocked.");
-        document.body.classList.add("admin-unlocked");
-        syncInlineInputs();
-        fillEditor();
-        renderAll();
       } catch (error) {
         console.error(error);
-        setText("#admin-feedback", friendlyError(error, "Admin login failed."));
+        const detail = friendlyError(error, "Private RSVP/photo data needs the Supabase SQL setup before it can load.");
+        setText("#admin-feedback", `Admin unlocked. ${detail}`);
       }
+      renderAll();
     });
 
     const siteEditor = $("#site-editor");
