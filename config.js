@@ -1,10 +1,10 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-ohsu-family-update",
+  contentVersion: "2026-06-17-inline-admin-rsvp-photos",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.",
+    subtitle: "Welcome! RSVP below, grab directions to E&A's home and OHSU, leave a note, find nearby hotels and food, and upload graduation-day photos during the celebration.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Graduation at OHSU",
@@ -18,7 +18,7 @@ window.GRADUATION_CONFIG = {
     graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
     statusText: "More details soon",
     note: "Final date, exact OHSU room, and the Canva invite can be updated anytime.",
-    inviteCopy: "Your 4x6 Canva invite gets the spotlight here once it is ready."
+    inviteCopy: "Your 4x6 Canva invitation will live here once it is ready, with a download button for family who want to save it."
   },
 
   admin: {

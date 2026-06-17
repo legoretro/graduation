@@ -17,6 +17,8 @@
     totals: null,
     adminUnlocked: false,
     adminPassword: "",
+    inlineEditMode: false,
+    inlineSnapshot: null,
     confettiFrame: null,
     confettiPieces: [],
     supabaseClient: null,
@@ -71,9 +73,28 @@
     const parts = path.split(".");
     const last = parts.pop();
     const target = parts.reduce((current, key) => {
-      if (!isObject(current[key])) current[key] = {};
+      if (/^\d+$/.test(key)) {
+        return current[Number(key)];
+      }
+      if (!isObject(current[key]) && !Array.isArray(current[key])) current[key] = /^\d+$/.test(parts[0]) ? [] : {};
       return current[key];
     }, config);
+    target[last] = value;
+  }
+
+  function setPathInObject(targetObject, path, value) {
+    const parts = path.split(".");
+    const last = parts.pop();
+    const target = parts.reduce((current, key, index) => {
+      const nextKey = parts[index + 1] || last;
+      if (/^\d+$/.test(key)) {
+        return current[Number(key)];
+      }
+      if (current[key] === undefined) {
+        current[key] = /^\d+$/.test(nextKey) ? [] : {};
+      }
+      return current[key];
+    }, targetObject);
     target[last] = value;
   }
 
@@ -94,7 +115,8 @@
         graduationAddress: defaultConfig.event?.graduationAddress,
         graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
         statusText: defaultConfig.event?.statusText,
-        note: defaultConfig.event?.note
+        note: defaultConfig.event?.note,
+        inviteCopy: defaultConfig.event?.inviteCopy
       },
       assets: {
         heroImage: defaultConfig.assets?.heroImage,
@@ -128,7 +150,8 @@
     const match = title.match(/^(.*?)(\s+OIT\s+.*)$/);
     const lines = match ? [match[1], match[2].trim()] : [title];
     node.textContent = "";
-    lines.forEach((line) => {
+    lines.forEach((line, index) => {
+      if (index) node.append(document.createTextNode(" "));
       const span = document.createElement("span");
       span.textContent = line;
       node.append(span);
@@ -172,6 +195,10 @@
 
   function shareUrl() {
     return config.links?.liveSiteUrl || window.location.href.split("#")[0];
+  }
+
+  function qrImageUrl() {
+    return `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=12&data=${encodeURIComponent(shareUrl())}`;
   }
 
   function formatDate(value) {
@@ -254,7 +281,14 @@
     renderResources("#food-list", config.food || []);
     renderResources("#more-list", config.more || []);
     renderPhotos(config.assets?.photos || []);
+    hydrateShareTools();
+    syncInlineInputs();
     fillEditor();
+  }
+
+  function hydrateShareTools() {
+    const qr = $("#qr-image");
+    if (qr) qr.src = qrImageUrl();
   }
 
   function initSupabase() {
@@ -517,20 +551,35 @@
     if (!state.adminUnlocked) return;
     const current = totals();
     const mode = state.usingSupabase ? "Supabase" : "local preview storage";
-    setText("#admin-summary", `${current.yes} yes, ${current.maybe} maybe, ${current.no} no. Data source: ${mode}.`);
+    setText("#admin-summary", `${state.rsvps.length} RSVP entries. Totals: ${current.yes} yes, ${current.maybe} maybe, ${current.no} no. Data source: ${mode}.`);
 
     const rows = $("#admin-rsvp-rows");
     rows.innerHTML = "";
     if (!state.rsvps.length) {
-      rows.innerHTML = `<tr><td colspan="5">${state.usingSupabase ? "Add the admin Edge Function URL in config.js to read private RSVP rows." : "No RSVPs yet."}</td></tr>`;
+      rows.innerHTML = `<tr><td colspan="5">${state.usingSupabase ? "No RSVP rows loaded yet. If guests have RSVP'd, run the Supabase admin SQL setup so this private list can load." : "No RSVPs yet."}</td></tr>`;
     } else {
       state.rsvps.forEach((rsvp) => {
         const row = document.createElement("tr");
-        [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.note, formatDate(rsvp.updatedAt || rsvp.createdAt)].forEach((value) => {
-          const cell = document.createElement("td");
-          cell.textContent = value || "";
-          row.append(cell);
-        });
+        const name = document.createElement("td");
+        name.innerHTML = "<strong></strong>";
+        name.querySelector("strong").textContent = rsvp.name || "Unnamed";
+
+        const response = document.createElement("td");
+        const badge = document.createElement("span");
+        badge.className = `response-badge response-${rsvp.response || "yes"}`;
+        badge.textContent = rsvp.response || "yes";
+        response.append(badge);
+
+        const party = document.createElement("td");
+        party.textContent = rsvp.partyCount || "1";
+
+        const note = document.createElement("td");
+        note.textContent = rsvp.note || "";
+
+        const updated = document.createElement("td");
+        updated.textContent = formatDate(rsvp.updatedAt || rsvp.createdAt);
+
+        row.append(name, response, party, note, updated);
         rows.append(row);
       });
     }
@@ -562,12 +611,43 @@
       state.memories.forEach((memory) => {
         const item = document.createElement("article");
         item.className = "admin-memory";
-        item.innerHTML = '<img alt=""><div><p></p><time></time></div><button class="button quiet delete-memory" type="button">Delete</button>';
-        item.querySelector("img").src = memory.imageData;
-        item.querySelector("img").alt = memory.caption || "Uploaded memory";
-        item.querySelector("p").textContent = memory.caption || "No caption";
-        item.querySelector("time").textContent = formatDate(memory.createdAt);
-        item.querySelector(".delete-memory").addEventListener("click", () => deleteMemory(memory.id, true));
+
+        const selectLabel = document.createElement("label");
+        selectLabel.className = "admin-memory-check";
+        const checkbox = document.createElement("input");
+        checkbox.className = "admin-memory-select";
+        checkbox.type = "checkbox";
+        checkbox.value = memory.id;
+        const selectText = document.createElement("span");
+        selectText.textContent = "Select";
+        selectLabel.append(checkbox, selectText);
+
+        const image = document.createElement("img");
+        image.src = memory.imageData;
+        image.alt = memory.caption || "Uploaded memory";
+
+        const copy = document.createElement("div");
+        const caption = document.createElement("p");
+        caption.textContent = memory.caption || "No caption";
+        const time = document.createElement("time");
+        time.textContent = formatDate(memory.createdAt);
+        copy.append(caption, time);
+
+        const actions = document.createElement("div");
+        actions.className = "admin-memory-actions";
+        const download = document.createElement("button");
+        download.className = "button secondary";
+        download.type = "button";
+        download.textContent = "Download";
+        download.addEventListener("click", () => downloadMemory(memory));
+        const del = document.createElement("button");
+        del.className = "button quiet delete-memory";
+        del.type = "button";
+        del.textContent = "Delete";
+        del.addEventListener("click", () => deleteMemory(memory.id, true));
+        actions.append(download, del);
+
+        item.append(selectLabel, image, copy, actions);
         memories.append(item);
       });
     }
@@ -581,16 +661,76 @@
     });
   }
 
+  function inlineEditFields() {
+    return Array.from(document.querySelectorAll("[data-inline-setting]"));
+  }
+
+  function inlineInputFields() {
+    return Array.from(document.querySelectorAll("[data-inline-input]"));
+  }
+
+  function syncInlineInputs() {
+    inlineInputFields().forEach((field) => {
+      field.value = getPath(field.dataset.inlineInput) || "";
+    });
+  }
+
+  function setInlineEditing(enabled) {
+    state.inlineEditMode = enabled;
+    document.body.classList.toggle("admin-editing", enabled);
+
+    inlineEditFields().forEach((field) => {
+      field.contentEditable = enabled ? "true" : "false";
+      field.spellcheck = true;
+    });
+
+    document.querySelectorAll("[data-admin-edit-panel]").forEach((panel) => {
+      panel.hidden = !enabled;
+    });
+
+    const editButton = $("#toggle-page-edit");
+    const saveButton = $("#save-inline-edits");
+    const cancelButton = $("#cancel-inline-edits");
+    if (editButton) editButton.textContent = enabled ? "Editing page" : "Edit page";
+    if (saveButton) saveButton.hidden = !enabled;
+    if (cancelButton) cancelButton.hidden = !enabled;
+
+    if (enabled) {
+      state.inlineSnapshot = JSON.parse(JSON.stringify(config));
+      syncInlineInputs();
+      setText("#editor-feedback", "Click the page text you want to edit, then save.");
+    } else {
+      setText("#editor-feedback", "");
+    }
+  }
+
+  function collectInlineSettings() {
+    const settings = {};
+
+    inlineEditFields().forEach((field) => {
+      setPathInObject(settings, field.dataset.inlineSetting, field.textContent.trim());
+    });
+
+    inlineInputFields().forEach((field) => {
+      setPathInObject(settings, field.dataset.inlineInput, field.value.trim());
+    });
+
+    return settings;
+  }
+
+  function restoreInlineSnapshot() {
+    if (!state.inlineSnapshot) return;
+    Object.keys(config).forEach((key) => delete config[key]);
+    deepMerge(config, state.inlineSnapshot);
+    hydrateContent();
+  }
+
   function collectEditorSettings() {
     const settings = {};
-    $("#site-editor").querySelectorAll("[data-setting]").forEach((field) => {
-      const parts = field.dataset.setting.split(".");
-      const last = parts.pop();
-      const target = parts.reduce((current, key) => {
-        if (!isObject(current[key])) current[key] = {};
-        return current[key];
-      }, settings);
-      target[last] = field.value.trim();
+    const form = $("#site-editor");
+    if (!form) return settings;
+    form.querySelectorAll("[data-setting]").forEach((field) => {
+      setPathInObject(settings, field.dataset.setting, field.value.trim());
     });
     return settings;
   }
@@ -821,11 +961,27 @@
     }));
   }
 
+  function publicSettingsSnapshot(overrides) {
+    const snapshot = JSON.parse(
+      JSON.stringify({
+        contentVersion: defaultConfig.contentVersion || config.contentVersion,
+        event: config.event || {},
+        links: config.links || {},
+        assets: config.assets || {},
+        weather: config.weather || {},
+        stay: config.stay || [],
+        food: config.food || [],
+        more: config.more || []
+      })
+    );
+    return deepMerge(snapshot, overrides || {});
+  }
+
   async function saveSiteSettings(settings) {
-    settings.contentVersion = defaultConfig.contentVersion || config.contentVersion;
+    const mergedSettings = publicSettingsSnapshot(settings);
 
     if (!state.usingSupabase) {
-      deepMerge(config, settings);
+      deepMerge(config, mergedSettings);
       setText("#editor-feedback", "Edit saved successfully in this browser preview.");
       return;
     }
@@ -835,18 +991,18 @@
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "save_settings", password: state.adminPassword, settings })
+        body: JSON.stringify({ action: "save_settings", password: state.adminPassword, settings: mergedSettings })
       });
       if (!response.ok) throw new Error("Could not save settings.");
     } else {
       const { error } = await state.supabaseClient.rpc("graduation_admin_save_settings", {
         admin_password: state.adminPassword,
-        new_settings: settings
+        new_settings: mergedSettings
       });
       if (error) throw error;
     }
 
-    deepMerge(config, settings);
+    deepMerge(config, mergedSettings);
     hydrateContent();
     setText("#editor-feedback", "Edit saved successfully.");
     burstConfetti(120);
@@ -924,6 +1080,63 @@
     } catch (error) {
       console.error(error);
       setText(adminMode ? "#admin-feedback" : "#memory-feedback", adminMode ? friendlyError(error, "Could not delete that memory yet.") : guestError("Could not delete that memory from this phone."));
+    }
+  }
+
+  function safeFileName(value, fallback) {
+    const safe = String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 42);
+    return safe || fallback;
+  }
+
+  function downloadMemory(memory) {
+    if (!memory?.imageData) return;
+    const link = document.createElement("a");
+    const name = safeFileName(memory.caption, "graduation-memory");
+    link.href = memory.imageData;
+    link.download = `${name}-${String(memory.id || Date.now()).slice(0, 8)}.jpg`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+  }
+
+  function selectedMemories() {
+    const ids = new Set(Array.from(document.querySelectorAll(".admin-memory-select:checked")).map((input) => input.value));
+    return state.memories.filter((memory) => ids.has(String(memory.id)));
+  }
+
+  function downloadMemoryBatch(memories) {
+    if (!memories.length) {
+      setText("#admin-feedback", "Select at least one photo first.");
+      return;
+    }
+    memories.forEach((memory, index) => {
+      window.setTimeout(() => downloadMemory(memory), index * 180);
+    });
+    setText("#admin-feedback", `${memories.length} photo download${memories.length === 1 ? "" : "s"} started.`);
+  }
+
+  async function shareQrCode() {
+    const url = shareUrl();
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: config.event?.title || "Graduation invitation",
+          text: "Elizabeth & Angela's graduation invitation",
+          url
+        });
+        setText("#qr-feedback", "Shared.");
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      setText("#qr-feedback", "Link copied.");
+    } catch (error) {
+      console.warn(error);
+      setText("#qr-feedback", url);
     }
   }
 
@@ -1022,6 +1235,8 @@
         state.adminPassword = password;
         $("#admin-dashboard").hidden = false;
         setText("#admin-feedback", "Admin unlocked.");
+        document.body.classList.add("admin-unlocked");
+        syncInlineInputs();
         fillEditor();
         renderAll();
       } catch (error) {
@@ -1030,14 +1245,38 @@
       }
     });
 
-    $("#site-editor").addEventListener("submit", async (event) => {
-      event.preventDefault();
+    const siteEditor = $("#site-editor");
+    if (siteEditor) {
+      siteEditor.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        try {
+          await saveSiteSettings(collectEditorSettings());
+        } catch (error) {
+          console.error(error);
+          setText("#editor-feedback", friendlyError(error, "Could not save edits yet."));
+        }
+      });
+    }
+
+    $("#toggle-page-edit").addEventListener("click", () => {
+      setInlineEditing(!state.inlineEditMode);
+    });
+
+    $("#save-inline-edits").addEventListener("click", async () => {
       try {
-        await saveSiteSettings(collectEditorSettings());
+        await saveSiteSettings(collectInlineSettings());
+        setInlineEditing(false);
+        setText("#admin-feedback", "Page edits saved.");
       } catch (error) {
         console.error(error);
         setText("#editor-feedback", friendlyError(error, "Could not save edits yet."));
       }
+    });
+
+    $("#cancel-inline-edits").addEventListener("click", () => {
+      restoreInlineSnapshot();
+      setInlineEditing(false);
+      setText("#admin-feedback", "Page edits canceled.");
     });
 
     $("#clear-demo-data").addEventListener("click", () => {
@@ -1069,6 +1308,16 @@
       link.click();
       URL.revokeObjectURL(url);
     });
+
+    $("#download-selected-memories").addEventListener("click", () => {
+      downloadMemoryBatch(selectedMemories());
+    });
+
+    $("#download-all-memories").addEventListener("click", () => {
+      downloadMemoryBatch(state.memories);
+    });
+
+    $("#share-qr-button").addEventListener("click", shareQrCode);
   }
 
   async function loadWeather() {

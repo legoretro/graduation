@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap");
 
 :root {
   --oit-blue: #003767;
@@ -22,7 +22,7 @@
   --note-peach: #ffd9c8;
   --shadow: 0 18px 45px rgba(10, 31, 51, 0.13);
   --radius: 8px;
-  font-family: "Nunito", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Manrope", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -35,6 +35,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: clip;
   background:
     linear-gradient(90deg, rgba(0, 56, 168, 0.14) 0 50%, rgba(0, 146, 70, 0.12) 50%),
     linear-gradient(115deg, rgba(244, 180, 0, 0.16), transparent 42%, rgba(206, 17, 38, 0.12)),
@@ -185,6 +186,63 @@ nav a:focus {
 .hero.custom-hero .hero-image::before,
 .hero.custom-hero .hero-image::after {
   display: none;
+}
+
+.hero-science {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.hero-science::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 46px 46px;
+  content: "";
+  inset: 0;
+  mask-image: linear-gradient(90deg, transparent, black 34%, transparent 76%);
+  opacity: 0.38;
+  position: absolute;
+}
+
+.hero-science span {
+  border: 2px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  position: absolute;
+}
+
+.hero-science span:nth-child(1) {
+  height: 7rem;
+  left: 8%;
+  top: 18%;
+  width: 7rem;
+}
+
+.hero-science span:nth-child(2) {
+  height: 1rem;
+  left: 14%;
+  top: 30%;
+  transform: rotate(33deg);
+  width: 11rem;
+}
+
+.hero-science span:nth-child(3) {
+  height: 5rem;
+  right: 34%;
+  top: 28%;
+  width: 5rem;
+}
+
+.hero-science span:nth-child(4) {
+  border-radius: 12px;
+  bottom: 17%;
+  height: 8.5rem;
+  right: 28%;
+  transform: rotate(-18deg);
+  width: 2.3rem;
 }
 
 .hero-scene {
@@ -405,15 +463,16 @@ nav a:focus {
 
 .hero.custom-hero .hero-overlay {
   background:
-    radial-gradient(ellipse at 29% 51%, rgba(0, 31, 63, 0.24) 0 30%, rgba(0, 31, 63, 0.1) 50%, transparent 73%),
-    linear-gradient(90deg, rgba(0, 31, 63, 0.22) 0 32%, rgba(0, 31, 63, 0.08) 32% 52%, rgba(0, 31, 63, 0.02) 52%),
-    linear-gradient(0deg, rgba(0, 31, 63, 0.18), transparent 48%);
+    radial-gradient(ellipse at 33% 52%, rgba(0, 31, 63, 0.28) 0 26%, rgba(0, 31, 63, 0.1) 54%, transparent 76%),
+    linear-gradient(90deg, rgba(0, 31, 63, 0.08) 0 30%, rgba(0, 31, 63, 0.05) 30% 58%, transparent 70%),
+    linear-gradient(0deg, rgba(0, 31, 63, 0.08), transparent 48%);
 }
 
 .hero-copy {
   color: var(--white);
   margin: 0 auto;
   max-width: 1180px;
+  overflow-wrap: break-word;
   padding: 6.5rem 1.2rem 3.2rem;
   position: relative;
   width: 100%;
@@ -432,7 +491,7 @@ nav a:focus {
 }
 
 h1 {
-  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
   font-size: 3.55rem;
   font-weight: 700;
   letter-spacing: 0;
@@ -448,7 +507,7 @@ h1 span {
 }
 
 h2 {
-  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
   font-size: 1.78rem;
   font-weight: 700;
   letter-spacing: 0;
@@ -457,7 +516,7 @@ h2 {
 }
 
 h3 {
-  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   margin: 0 0 0.7rem;
 }
@@ -487,7 +546,7 @@ p {
   border-radius: var(--radius);
   cursor: pointer;
   display: inline-flex;
-  font-family: "Fredoka", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
   font-weight: 700;
   justify-content: center;
   min-height: 2.9rem;
@@ -607,6 +666,12 @@ p {
   grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
 }
 
+.invite-tools {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: end;
+}
+
 .invite-card,
 .panel {
   background: var(--white);
@@ -639,7 +704,6 @@ p {
 }
 
 .invite-download {
-  grid-column: 2;
   justify-self: end;
   width: min(100%, 340px);
 }
@@ -667,6 +731,56 @@ p {
   color: var(--oit-blue);
   display: block;
   font-size: 2rem;
+}
+
+.inline-admin-card,
+.qr-share-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 30px rgba(10, 31, 51, 0.08);
+}
+
+.inline-admin-card {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.qr-share-card {
+  align-items: center;
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: 86px minmax(0, 1fr);
+  padding: 0.85rem;
+  width: min(100%, 340px);
+}
+
+.qr-share-card img {
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  width: 86px;
+}
+
+.qr-share-card strong {
+  color: var(--oit-blue);
+  display: block;
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+}
+
+.qr-share-card p {
+  font-size: 0.82rem;
+  line-height: 1.35;
+  margin: 0.2rem 0 0.55rem;
+}
+
+.qr-share-card .qr-feedback {
+  color: var(--muted);
+  font-size: 0.76rem;
+  margin: 0.4rem 0 0;
+  min-height: 1rem;
 }
 
 .rsvp-section,
@@ -906,6 +1020,26 @@ textarea:focus,
   transform: rotate(-1.5deg);
 }
 
+.sticky-note.pastel-yellow {
+  background: var(--note-yellow);
+}
+
+.sticky-note.pastel-blue {
+  background: var(--note-blue);
+}
+
+.sticky-note.pastel-mint {
+  background: var(--note-mint);
+}
+
+.sticky-note.pastel-pink {
+  background: var(--note-pink);
+}
+
+.sticky-note.pastel-peach {
+  background: var(--note-peach);
+}
+
 .sticky-note:nth-child(3n + 2) {
   transform: rotate(1.4deg);
   animation-delay: 90ms, 400ms;
@@ -1135,7 +1269,7 @@ textarea:focus,
   position: fixed;
   right: 0.75rem;
   top: 4.35rem;
-  width: max-content;
+  width: min(620px, calc(100vw - 1.5rem));
   z-index: 30;
 }
 
@@ -1161,20 +1295,6 @@ textarea:focus,
   width: fit-content;
 }
 
-.admin-dock details[open] {
-  inset: 0;
-  position: fixed;
-  pointer-events: none;
-}
-
-.admin-dock details[open] summary {
-  position: fixed;
-  right: 0.9rem;
-  top: 0.9rem;
-  z-index: 42;
-  pointer-events: auto;
-}
-
 .admin-dock summary::-webkit-details-marker {
   display: none;
 }
@@ -1182,26 +1302,59 @@ textarea:focus,
 .admin-dock-content {
   background: rgba(255, 250, 240, 0.98);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: var(--radius);
   box-shadow: 0 24px 60px rgba(10, 31, 51, 0.22);
-  display: grid;
+  display: block;
   gap: 1rem;
-  grid-template-columns: minmax(220px, 0.32fr) minmax(0, 1fr);
-  inset: 0;
-  margin: 0;
-  max-height: none;
+  margin-top: 0.7rem;
+  max-height: min(76vh, 720px);
   overflow: auto;
-  padding: 5rem 1rem 2rem;
+  padding: 0.9rem;
   pointer-events: auto;
-  position: fixed;
-}
-
-.admin-intro h2 {
-  font-size: 1.35rem;
 }
 
 .inline {
   flex-wrap: nowrap;
+}
+
+.admin-login {
+  margin: 0 0 0.85rem;
+}
+
+.admin-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 26px rgba(10, 31, 51, 0.08);
+  margin-top: 0.85rem;
+  padding: 0.85rem;
+}
+
+.admin-card > summary {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--oit-blue);
+  font-size: 0.92rem;
+  padding: 0;
+  text-align: left;
+  width: auto;
+}
+
+.admin-card-head {
+  align-items: center;
+  display: flex;
+  gap: 0.85rem;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.admin-card h3 {
+  margin-bottom: 0;
+}
+
+.admin-actions.compact {
+  gap: 0.45rem;
 }
 
 .admin-summary {
@@ -1211,26 +1364,10 @@ textarea:focus,
   padding: 0.9rem;
 }
 
-.admin-editor {
-  border-top: 1px solid var(--line);
-  margin-top: 0.8rem;
-  padding-top: 0.8rem;
-}
-
-.editor-grid {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.editor-grid .wide {
-  grid-column: 1 / -1;
-}
-
 .table-wrap {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  max-height: 420px;
+  max-height: 360px;
   overflow: auto;
 }
 
@@ -1256,6 +1393,30 @@ th {
   color: var(--muted);
   font-size: 0.78rem;
   text-transform: uppercase;
+}
+
+.response-badge {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding: 0.28rem 0.55rem;
+  text-transform: uppercase;
+}
+
+.response-yes {
+  background: rgba(0, 146, 70, 0.12);
+  color: #006b36;
+}
+
+.response-maybe {
+  background: rgba(244, 180, 0, 0.18);
+  color: #7a5700;
+}
+
+.response-no {
+  background: rgba(206, 17, 38, 0.1);
+  color: #a20e1d;
 }
 
 .admin-message {
@@ -1285,9 +1446,22 @@ th {
   border-radius: var(--radius);
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: 72px minmax(0, 1fr) auto;
+  grid-template-columns: auto 72px minmax(0, 1fr) auto;
   margin-top: 0.75rem;
   padding: 0.75rem;
+}
+
+.admin-memory-check {
+  align-items: center;
+  display: flex;
+  font-size: 0.78rem;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.admin-memory-check input {
+  min-height: auto;
+  width: auto;
 }
 
 .admin-memory img {
@@ -1303,11 +1477,30 @@ th {
   margin: 0 0 0.25rem;
 }
 
+.admin-memory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: end;
+}
+
 .message-status {
   color: var(--muted);
   display: block;
   font-size: 0.8rem;
   margin-top: 0.35rem;
+}
+
+body.admin-editing [data-inline-setting][contenteditable="true"] {
+  background: rgba(255, 250, 240, 0.18);
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px rgba(244, 180, 0, 0.72), 0 0 0 6px rgba(0, 55, 103, 0.18);
+  cursor: text;
+  outline: 0;
+}
+
+body.admin-editing [data-inline-setting][contenteditable="true"]:focus {
+  box-shadow: 0 0 0 3px var(--oit-gold), 0 0 0 7px rgba(255, 255, 255, 0.32);
 }
 
 footer {
@@ -1344,8 +1537,7 @@ footer a {
   .board-head,
   .visit-grid,
   .resource-grid,
-  .memory-layout,
-  .admin-dock-content {
+  .memory-layout {
     grid-template-columns: 1fr;
   }
 
@@ -1357,8 +1549,11 @@ footer a {
   }
 
   .invite-download {
-    grid-column: auto;
     justify-self: center;
+  }
+
+  .invite-tools {
+    justify-items: center;
   }
 }
 
@@ -1377,15 +1572,22 @@ footer a {
     display: grid;
     gap: 0.35rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    min-width: 0;
+    overflow: hidden;
     width: 100%;
   }
 
   nav a {
-    font-size: 0.82rem;
+    align-items: center;
+    display: flex;
+    font-size: 0.76rem;
+    justify-content: center;
+    line-height: 1.15;
     min-width: 0;
     padding: 0.5rem 0.45rem;
     text-align: center;
     white-space: normal;
+    word-break: normal;
   }
 
   .hero-copy {
@@ -1408,6 +1610,7 @@ footer a {
   .hero p {
     font-size: 0.92rem;
     max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .button {
@@ -1419,7 +1622,6 @@ footer a {
 
   .quick-info,
   .form-grid,
-  .editor-grid,
   .note-board,
   .memory-grid,
   .photo-grid {
@@ -1489,16 +1691,16 @@ footer a {
     padding: 2.35rem 1rem;
   }
 
-  .admin-dock details[open] .admin-dock-content,
   .admin-dock-content {
-    padding-top: 7rem;
+    max-height: 68vh;
+    padding: 0.75rem;
   }
 
   .admin-dock {
     max-width: calc(100vw - 1.5rem);
     right: 0.6rem;
     top: 7rem;
-    width: max-content;
+    width: min(420px, calc(100vw - 1.2rem));
   }
 
   .admin-dock summary {
@@ -1520,6 +1722,37 @@ footer a {
 
   .inline {
     flex-direction: column;
+  }
+
+  .admin-card-head,
+  .admin-memory {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-card-head {
+    flex-direction: column;
+  }
+
+  .admin-memory img {
+    height: auto;
+    width: 100%;
+  }
+
+  .admin-memory-actions {
+    justify-content: stretch;
+  }
+
+  .admin-memory-actions .button {
+    flex: 1;
+  }
+
+  .qr-share-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .qr-share-card img {
+    width: 72px;
   }
 
   footer {

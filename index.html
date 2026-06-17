@@ -19,190 +19,43 @@
       </a>
       <nav aria-label="Main navigation">
         <a href="#rsvp">RSVP</a>
-        <a href="#board">Kind Notes</a>
-        <a href="#visit">Helpful Info</a>
+        <a href="#board">Leave a Note!</a>
+        <a href="#visit">Places Nearby</a>
         <a href="#admin">Admin</a>
       </nav>
     </header>
 
     <section class="admin-dock" id="admin" aria-label="Admin tools">
       <details>
-        <summary>Admin tools</summary>
+        <summary>Admin</summary>
         <div class="admin-dock-content">
-          <div class="admin-intro">
-            <p class="kicker">Private</p>
-            <h2>Admin editor.</h2>
-            <p>Edit the invite, export RSVPs, and delete test notes or photos.</p>
-          </div>
-
-          <div class="panel admin-panel">
-            <form id="admin-login">
-                  <label>
-                    Admin password
-                    <div class="inline">
-                  <input id="admin-password" type="text" autocomplete="off" placeholder="Enter password">
-                  <button class="button primary" type="submit">Log in</button>
-                </div>
-                  </label>
-              <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
-            </form>
-
-            <div id="admin-dashboard" hidden>
-              <div class="admin-actions">
-                <button class="button secondary" id="export-rsvps" type="button">Export RSVPs</button>
-                <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
+          <form id="admin-login" class="admin-login">
+            <label>
+              Admin password
+              <div class="inline">
+                <input id="admin-password" type="text" autocomplete="off" placeholder="cats">
+                <button class="button primary" type="submit">Log in</button>
               </div>
+            </label>
+            <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
+          </form>
 
-              <section class="admin-editor" aria-labelledby="editor-heading">
-                <h3 id="editor-heading">Page edits</h3>
-                <form id="site-editor">
-                  <div class="editor-grid">
-                    <label>
-                      Page title
-                      <input data-setting="event.title">
-                    </label>
-                    <label>
-                      Small heading
-                      <input data-setting="event.kicker">
-                    </label>
-                    <label class="wide">
-                      Subtitle
-                      <textarea data-setting="event.subtitle" rows="3"></textarea>
-                    </label>
-                    <label>
-                      Date
-                      <input data-setting="event.dateText">
-                    </label>
-                    <label>
-                      Time
-                      <input data-setting="event.timeText">
-                    </label>
-                    <label>
-                      Location name
-                      <input data-setting="event.locationName">
-                    </label>
-                    <label>
-                      Address
-                      <input data-setting="event.address">
-                    </label>
-                    <label class="wide">
-                      Google Maps link
-                      <input data-setting="event.googleMapsUrl">
-                    </label>
-                    <label>
-                      E&A home label
-                      <input data-setting="event.homeLocationName">
-                    </label>
-                    <label>
-                      E&A home address
-                      <input data-setting="event.homeAddress">
-                    </label>
-                    <label class="wide">
-                      E&A home Google Maps link
-                      <input data-setting="event.homeGoogleMapsUrl">
-                    </label>
-                    <label>
-                      Graduation label
-                      <input data-setting="event.graduationLocationName">
-                    </label>
-                    <label>
-                      Graduation address
-                      <input data-setting="event.graduationAddress">
-                    </label>
-                    <label class="wide">
-                      Graduation Google Maps link
-                      <input data-setting="event.graduationGoogleMapsUrl">
-                    </label>
-                    <label>
-                      Detail status
-                      <input data-setting="event.statusText">
-                    </label>
-                    <label>
-                      Live website URL
-                      <input data-setting="links.liveSiteUrl">
-                    </label>
-                    <label class="wide">
-                      Detail note
-                      <textarea data-setting="event.note" rows="3"></textarea>
-                    </label>
-                    <label class="wide">
-                      Invitation copy
-                      <textarea data-setting="event.inviteCopy" rows="3"></textarea>
-                    </label>
-                    <label class="wide">
-                      Hero image URL
-                      <input data-setting="assets.heroImage">
-                    </label>
-                    <label class="wide">
-                      Canva invitation image URL or path
-                      <input data-setting="assets.invitationImage" placeholder="assets/canva-invitation.png">
-                    </label>
-                    <label>
-                      Hotel 1 name
-                      <input data-setting="stay.0.name">
-                    </label>
-                    <label>
-                      Hotel 1 address
-                      <input data-setting="stay.0.address">
-                    </label>
-                    <label class="wide">
-                      Hotel 1 image URL or path
-                      <input data-setting="stay.0.image" placeholder="assets/hotel-1.jpg">
-                    </label>
-                    <label>
-                      Hotel 2 name
-                      <input data-setting="stay.1.name">
-                    </label>
-                    <label>
-                      Hotel 2 address
-                      <input data-setting="stay.1.address">
-                    </label>
-                    <label class="wide">
-                      Hotel 2 image URL or path
-                      <input data-setting="stay.1.image" placeholder="assets/hotel-2.jpg">
-                    </label>
-                    <label>
-                      Food 1 name
-                      <input data-setting="food.0.name">
-                    </label>
-                    <label>
-                      Food 1 address
-                      <input data-setting="food.0.address">
-                    </label>
-                    <label class="wide">
-                      Food 1 image URL or path
-                      <input data-setting="food.0.image" placeholder="assets/food-1.jpg">
-                    </label>
-                    <label>
-                      Food 2 name
-                      <input data-setting="food.1.name">
-                    </label>
-                    <label>
-                      Food 2 address
-                      <input data-setting="food.1.address">
-                    </label>
-                    <label class="wide">
-                      Food 2 image URL or path
-                      <input data-setting="food.1.image" placeholder="assets/food-2.jpg">
-                    </label>
-                    <label>
-                      Helpful place name
-                      <input data-setting="more.0.name">
-                    </label>
-                    <label>
-                      Helpful place address
-                      <input data-setting="more.0.address">
-                    </label>
-                    <label class="wide">
-                      Helpful place image URL or path
-                      <input data-setting="more.0.image" placeholder="assets/helpful-1.jpg">
-                    </label>
-                  </div>
-                  <button class="button primary full" type="submit">Save page edits</button>
-                  <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
-                </form>
-              </section>
+          <div id="admin-dashboard" hidden>
+            <div class="admin-actions">
+              <button class="button secondary" id="toggle-page-edit" type="button">Edit page</button>
+              <button class="button primary" id="save-inline-edits" type="button" hidden>Save edits</button>
+              <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
+            </div>
+            <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
 
+            <section class="admin-card">
+              <div class="admin-card-head">
+                <div>
+                  <p class="kicker">RSVP List</p>
+                  <h3>Who has RSVP'd</h3>
+                </div>
+                <button class="button secondary" id="export-rsvps" type="button">Export CSV</button>
+              </div>
               <p class="admin-summary" id="admin-summary"></p>
               <div class="table-wrap">
                 <table>
@@ -210,19 +63,38 @@
                     <tr>
                       <th>Name</th>
                       <th>Answer</th>
-                      <th>Party</th>
-                      <th>Note</th>
+                      <th>People</th>
+                      <th>Private note</th>
                       <th>Updated</th>
                     </tr>
                   </thead>
                   <tbody id="admin-rsvp-rows"></tbody>
                 </table>
               </div>
-              <h3>Anonymous messages</h3>
-              <div id="admin-message-list"></div>
-              <h3>Memory uploads</h3>
+            </section>
+
+            <section class="admin-card">
+              <div class="admin-card-head">
+                <div>
+                  <p class="kicker">Photos</p>
+                  <h3>Memory downloads</h3>
+                </div>
+                <div class="admin-actions compact">
+                  <button class="button secondary" id="download-selected-memories" type="button">Download selected</button>
+                  <button class="button quiet" id="download-all-memories" type="button">Download all</button>
+                </div>
+              </div>
               <div id="admin-memory-list"></div>
-            </div>
+            </section>
+
+            <details class="admin-card">
+              <summary>Notes and local preview tools</summary>
+              <div class="admin-actions compact">
+                <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
+              </div>
+              <h3>Caring notes</h3>
+              <div id="admin-message-list"></div>
+            </details>
           </div>
         </div>
       </details>
@@ -231,11 +103,14 @@
     <main id="home">
       <section class="hero">
         <div class="hero-image" id="hero-image" aria-hidden="true"></div>
+        <div class="hero-science" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-copy">
-          <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
-          <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle">Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.</p>
+          <p class="kicker" id="event-kicker" data-inline-setting="event.kicker">OIT Medical Laboratory Science</p>
+          <h1 id="event-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</h1>
+          <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
@@ -251,19 +126,19 @@
       <section class="quick-info" aria-label="Event details">
         <article>
           <span>When</span>
-          <strong id="event-date">December 2026</strong>
-          <p id="event-time">Time TBA</p>
+          <strong id="event-date" data-inline-setting="event.dateText">December 2026</strong>
+          <p id="event-time" data-inline-setting="event.timeText">Time TBA</p>
         </article>
         <article>
           <span>E&A's Home</span>
-          <strong id="quick-home-location">E&A's Home</strong>
-          <p id="quick-home-address">Home address coming soon</p>
+          <strong id="quick-home-location" data-inline-setting="event.homeLocationName">E&A's Home</strong>
+          <p id="quick-home-address" data-inline-setting="event.homeAddress">Home address coming soon</p>
           <a class="mini-map" id="quick-home-map-link" target="_blank" rel="noreferrer">Open map</a>
         </article>
         <article>
           <span>Graduation</span>
-          <strong id="quick-grad-location">Graduation at OHSU</strong>
-          <p id="quick-grad-address">OHSU, Portland, OR - exact room TBA</p>
+          <strong id="quick-grad-location" data-inline-setting="event.graduationLocationName">Graduation at OHSU</strong>
+          <p id="quick-grad-address" data-inline-setting="event.graduationAddress">OHSU, Portland, OR - exact room TBA</p>
           <a class="mini-map" id="quick-grad-map-link" target="_blank" rel="noreferrer">Open map</a>
         </article>
         <article>
@@ -279,16 +154,49 @@
           <div>
             <p class="kicker">4x6 magic</p>
             <h2>Tiny 4x6 invite goes here.</h2>
-            <p id="invite-copy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
-          </div>
-          <figure class="invite-card">
-            <div id="invite-placeholder">
-              <span>Canva invitation image</span>
-              <strong>Drop in later</strong>
+            <p id="invite-copy" data-inline-setting="event.inviteCopy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
+            <div class="inline-admin-card" data-admin-edit-panel hidden>
+              <label>
+                Invitation image URL or asset path
+                <input data-inline-input="assets.invitationImage" placeholder="assets/canva-invitation.png">
+              </label>
+              <label>
+                Hero image URL or asset path
+                <input data-inline-input="assets.heroImage" placeholder="assets/hero-celebration.png">
+              </label>
+              <label>
+                E&A home map link
+                <input data-inline-input="event.homeGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
+              </label>
+              <label>
+                Graduation map link
+                <input data-inline-input="event.graduationGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
+              </label>
+              <label>
+                Live QR / website URL
+                <input data-inline-input="links.liveSiteUrl" placeholder="https://legoretro.github.io/graduation/">
+              </label>
             </div>
-            <img id="invite-image" alt="Graduation invitation" hidden>
-          </figure>
-          <a class="button secondary invite-download" id="invite-download" href="#" download hidden>Download invitation</a>
+          </div>
+          <div class="invite-tools">
+            <figure class="invite-card">
+              <div id="invite-placeholder">
+                <span>Canva invitation image</span>
+                <strong>Drop in later</strong>
+              </div>
+              <img id="invite-image" alt="Graduation invitation" hidden>
+            </figure>
+            <a class="button secondary invite-download" id="invite-download" href="#" download hidden>Download invitation</a>
+            <div class="qr-share-card">
+              <img id="qr-image" alt="QR code for the graduation website">
+              <div>
+                <strong>Share QR code</strong>
+                <p>For the invitation, family texts, or quick phone scans.</p>
+                <button class="button secondary" id="share-qr-button" type="button">Share QR</button>
+                <p class="qr-feedback" id="qr-feedback" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -336,7 +244,7 @@
           <div class="board-head">
             <div>
               <p class="kicker">Caring notes</p>
-              <h2>Leave a note! Make their day.</h2>
+              <h2>Leave a note!</h2>
             </div>
             <form class="message-form" id="message-form">
               <label class="sr-only" for="message-body">Anonymous message</label>
@@ -359,8 +267,8 @@
 
       <section class="section visit-section" id="visit">
         <div class="section-inner">
-          <p class="kicker">Other Helpful</p>
-          <h2>Hotels, food, and more.</h2>
+          <p class="kicker">Places Nearby</p>
+          <h2>Hotels, food, and useful stops.</h2>
           <div class="resource-grid">
             <div>
               <h3>Hotels</h3>
@@ -381,7 +289,7 @@
       <section class="section gallery-section">
         <div class="section-inner">
           <p class="kicker">Memory strip</p>
-          <h2>Photos, smiles, proof we made it.</h2>
+          <h2>Proof we made it! Share the graduation moments.</h2>
           <div class="memory-layout">
             <form class="panel memory-uploader" id="memory-form">
               <label>
