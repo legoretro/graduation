@@ -18,9 +18,9 @@
         <strong>MLS Graduation</strong>
       </a>
       <nav aria-label="Main navigation">
-        <a href="#rsvp">RSVP</a>
-        <a href="#board">Notes</a>
-        <a href="#visit">Visit</a>
+        <a href="#rsvp">Headcount</a>
+        <a href="#board">Love Notes</a>
+        <a href="#visit">Food + Map</a>
         <a href="#admin">Admin</a>
       </nav>
     </header>
@@ -31,8 +31,8 @@
         <div class="admin-dock-content">
           <div class="admin-intro">
             <p class="kicker">Private</p>
-            <h2>Edit, export, clean up.</h2>
-            <p>Use your admin password to manage RSVPs, page details, and test notes.</p>
+            <h2>Command center.</h2>
+            <p>Edit the invite, export RSVPs, and sweep away test notes.</p>
           </div>
 
           <div class="panel admin-panel">
@@ -137,6 +137,8 @@
               </div>
               <h3>Anonymous messages</h3>
               <div id="admin-message-list"></div>
+              <h3>Memory uploads</h3>
+              <div id="admin-memory-list"></div>
             </div>
           </div>
         </div>
@@ -163,19 +165,38 @@
         <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
 
+      <section class="feast-strip" aria-label="Filipino and Mexican celebration foods">
+        <div>
+          <span>Filipino table</span>
+          <strong>Lumpia</strong>
+          <strong>Pancit</strong>
+          <strong>Adobo</strong>
+          <strong>Ube treats</strong>
+          <strong>Leche flan</strong>
+        </div>
+        <div>
+          <span>Mexican table</span>
+          <strong>Tacos</strong>
+          <strong>Tamales</strong>
+          <strong>Pan dulce</strong>
+          <strong>Elote</strong>
+          <strong>Agua fresca</strong>
+        </div>
+      </section>
+
       <section class="quick-info" aria-label="Event details">
         <article>
-          <span>When</span>
+          <span>When-ish</span>
           <strong id="event-date">December 2026</strong>
           <p id="event-time">Time TBA</p>
         </article>
         <article>
-          <span>Where</span>
+          <span>Where to roll up</span>
           <strong id="event-location">Oregon Tech - Klamath Falls Campus</strong>
           <p id="event-address">3201 Campus Drive, Klamath Falls, OR 97601</p>
         </article>
         <article>
-          <span>Details</span>
+          <span>Little details</span>
           <strong id="event-status">Editable page</strong>
           <p id="event-note">Final date, room, and Canva invitation can be added later.</p>
         </article>
@@ -184,7 +205,7 @@
       <section class="section invite-section">
         <div class="section-inner two-col">
           <div>
-            <p class="kicker">Invitation</p>
+            <p class="kicker">4x6 magic</p>
             <h2>Tiny 4x6 invite goes here.</h2>
             <p id="invite-copy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
           </div>
@@ -201,8 +222,8 @@
       <section class="section rsvp-section" id="rsvp">
         <div class="section-inner two-col">
           <div>
-            <p class="kicker">RSVP</p>
-            <h2>Are you in?</h2>
+            <p class="kicker">Headcount</p>
+            <h2>Pull up or cheer from afar?</h2>
             <p>Guests see only the totals. Names and private notes stay tucked away in admin.</p>
             <div class="counts" aria-label="RSVP totals">
               <div><span>Yes</span><strong id="count-yes">0</strong></div>
@@ -227,7 +248,7 @@
               </label>
             </div>
             <fieldset class="choice">
-              <legend>Answer</legend>
+              <legend>Vibe check</legend>
               <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
               <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
               <label><input type="radio" name="response" value="no"><span>No</span></label>
@@ -252,6 +273,14 @@
             <form class="message-form" id="message-form">
               <label class="sr-only" for="message-body">Anonymous message</label>
               <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="Congrats, we love you!" required></textarea>
+              <fieldset class="note-colors" aria-label="Sticky note color">
+                <legend>Pick a pastel</legend>
+                <label><input type="radio" name="noteColor" value="pastel-yellow" checked><span class="swatch pastel-yellow">Yellow</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-blue"><span class="swatch pastel-blue">Blue</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-mint"><span class="swatch pastel-mint">Mint</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-pink"><span class="swatch pastel-pink">Pink</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-peach"><span class="swatch pastel-peach">Peach</span></label>
+              </fieldset>
               <button class="button secondary" type="submit">Stick it up</button>
             </form>
           </div>
@@ -262,8 +291,8 @@
 
       <section class="section visit-section" id="visit">
         <div class="section-inner">
-          <p class="kicker">Visit</p>
-          <h2>Map, munchies, sleep spots.</h2>
+          <p class="kicker">Roll through</p>
+          <h2>Map, munchies, nap spots.</h2>
           <div class="visit-grid">
             <article class="panel">
               <span class="mini">Address</span>
@@ -280,11 +309,11 @@
           </div>
           <div class="resource-grid">
             <div>
-              <h3>Hotels nearby</h3>
+              <h3>Crash pads nearby</h3>
               <div class="resource-list" id="hotel-list"></div>
             </div>
             <div>
-              <h3>Food nearby</h3>
+              <h3>Snack missions nearby</h3>
               <div class="resource-list" id="food-list"></div>
             </div>
           </div>
@@ -293,9 +322,26 @@
 
       <section class="section gallery-section">
         <div class="section-inner">
-          <p class="kicker">Photos</p>
-          <h2>Tiny memory strip.</h2>
-          <div class="photo-grid" id="photo-grid"></div>
+          <p class="kicker">Memory strip</p>
+          <h2>Photos, smiles, proof we made it.</h2>
+          <div class="memory-layout">
+            <form class="panel memory-uploader" id="memory-form">
+              <label>
+                Share a memory
+                <input name="memoryImage" type="file" accept="image/*" required>
+              </label>
+              <label>
+                Tiny caption
+                <input name="caption" maxlength="100" placeholder="lab besties, family chaos, cap toss">
+              </label>
+              <button class="button fiesta full" type="submit">Add to strip</button>
+              <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>
+            </form>
+            <div class="memory-strip">
+              <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
+            </div>
+          </div>
+          <div class="photo-grid starter-photos" id="photo-grid"></div>
         </div>
       </section>
 

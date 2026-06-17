@@ -3,9 +3,16 @@
 
   const config = window.GRADUATION_CONFIG || {};
   const localKey = "graduation-invite-preview";
+  const ownerTokenKey = "graduation-memory-owner-token";
+  const ownedMemoryKey = "graduation-owned-memory-ids";
+  const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
+  const maxMemoryImageLength = 1800000;
   const state = {
     rsvps: [],
     messages: [],
+    memories: [],
+    ownerToken: "",
+    ownedMemoryIds: new Set(),
     totals: null,
     adminUnlocked: false,
     adminPassword: "",
@@ -77,11 +84,19 @@
   function friendlyError(error, fallback) {
     const message = `${error?.message || ""} ${error?.details || ""}`;
     if (error?.code === "PGRST205" || message.includes("Could not find the table")) {
-      return "Supabase tables are missing. Copy/paste and run the SQL setup block first.";
+      return "Database tables are missing. Copy/paste and run the SQL setup block first.";
     }
     if (error?.code === "PGRST202" || error?.code === "42883" || message.includes("function") || message.includes("schema cache") || message.includes("crypt")) {
-      return "Supabase admin functions are missing. Copy/paste and run the updated SQL setup block first.";
+      return "Database functions are missing. Copy/paste and run the updated SQL setup block first.";
     }
+    return fallback;
+  }
+
+  function noteColor(value) {
+    return allowedNoteColors.has(value) ? value : "pastel-yellow";
+  }
+
+  function guestError(fallback) {
     return fallback;
   }
 
@@ -171,14 +186,43 @@
       const stored = JSON.parse(localStorage.getItem(localKey) || "{}");
       state.rsvps = Array.isArray(stored.rsvps) ? stored.rsvps : [];
       state.messages = Array.isArray(stored.messages) ? stored.messages : [];
+      state.memories = Array.isArray(stored.memories) ? stored.memories : [];
     } catch (error) {
       state.rsvps = [];
       state.messages = [];
+      state.memories = [];
     }
   }
 
   function writeLocal() {
-    localStorage.setItem(localKey, JSON.stringify({ rsvps: state.rsvps, messages: state.messages }));
+    localStorage.setItem(localKey, JSON.stringify({ rsvps: state.rsvps, messages: state.messages, memories: state.memories }));
+  }
+
+  function initMemoryOwner() {
+    let token = localStorage.getItem(ownerTokenKey);
+    if (!token) {
+      token = crypto.randomUUID?.() || `guest-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      localStorage.setItem(ownerTokenKey, token);
+    }
+    state.ownerToken = token;
+
+    try {
+      const owned = JSON.parse(localStorage.getItem(ownedMemoryKey) || "[]");
+      state.ownedMemoryIds = new Set(Array.isArray(owned) ? owned : []);
+    } catch (error) {
+      state.ownedMemoryIds = new Set();
+    }
+  }
+
+  function rememberOwnedMemory(memoryId) {
+    if (!memoryId) return;
+    state.ownedMemoryIds.add(memoryId);
+    localStorage.setItem(ownedMemoryKey, JSON.stringify([...state.ownedMemoryIds]));
+  }
+
+  function forgetOwnedMemory(memoryId) {
+    state.ownedMemoryIds.delete(memoryId);
+    localStorage.setItem(ownedMemoryKey, JSON.stringify([...state.ownedMemoryIds]));
   }
 
   async function loadSiteSettings() {
@@ -212,7 +256,7 @@
 
     const messagesResult = await state.supabaseClient
       .from(table("messages"))
-      .select("id, body, created_at")
+      .select("id, body, note_color, created_at")
       .eq("is_hidden", false)
       .order("created_at", { ascending: false })
       .limit(60);
@@ -221,6 +265,17 @@
       state.messages = messagesResult.data.map((row) => ({
         id: row.id,
         body: row.body,
+        noteColor: noteColor(row.note_color),
+        createdAt: row.created_at
+      }));
+    }
+
+    const { data: memoryData, error: memoryError } = await state.supabaseClient.rpc("graduation_public_memories");
+    if (!memoryError) {
+      state.memories = (memoryData || []).map((row) => ({
+        id: row.id,
+        imageData: row.image_data,
+        caption: row.caption,
         createdAt: row.created_at
       }));
     }
@@ -292,7 +347,7 @@
 
     visibleMessages.slice(0, 24).forEach((message) => {
       const note = document.createElement("article");
-      note.className = "sticky-note";
+      note.className = `sticky-note ${noteColor(message.noteColor)}`;
       const body = document.createElement("p");
       body.textContent = message.body;
       const time = document.createElement("time");
@@ -300,6 +355,42 @@
       time.textContent = formatDate(message.createdAt) || "Just now";
       note.append(body, time);
       board.append(note);
+    });
+  }
+
+  function renderMemories() {
+    const grid = $("#memory-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    if (!state.memories.length) {
+      grid.innerHTML = '<div class="empty">No shared memories yet.</div>';
+      return;
+    }
+
+    state.memories.slice(0, 48).forEach((memory) => {
+      const card = document.createElement("figure");
+      card.className = "memory-card";
+      const img = document.createElement("img");
+      img.src = memory.imageData;
+      img.alt = memory.caption || "Shared graduation memory";
+      img.loading = "lazy";
+      card.append(img);
+
+      if (memory.caption) {
+        const caption = document.createElement("figcaption");
+        caption.textContent = memory.caption;
+        card.append(caption);
+      }
+
+      if (state.ownedMemoryIds.has(memory.id)) {
+        const button = document.createElement("button");
+        button.className = "memory-delete";
+        button.type = "button";
+        button.textContent = "Delete";
+        button.addEventListener("click", () => deleteMemory(memory.id, false));
+        card.append(button);
+      }
+      grid.append(card);
     });
   }
 
@@ -342,6 +433,25 @@
         list.append(item);
       });
     }
+
+    const memories = $("#admin-memory-list");
+    if (!memories) return;
+    memories.innerHTML = "";
+    if (!state.memories.length) {
+      memories.innerHTML = '<div class="empty">No memory uploads yet.</div>';
+    } else {
+      state.memories.forEach((memory) => {
+        const item = document.createElement("article");
+        item.className = "admin-memory";
+        item.innerHTML = '<img alt=""><div><p></p><time></time></div><button class="button quiet delete-memory" type="button">Delete</button>';
+        item.querySelector("img").src = memory.imageData;
+        item.querySelector("img").alt = memory.caption || "Uploaded memory";
+        item.querySelector("p").textContent = memory.caption || "No caption";
+        item.querySelector("time").textContent = formatDate(memory.createdAt);
+        item.querySelector(".delete-memory").addEventListener("click", () => deleteMemory(memory.id, true));
+        memories.append(item);
+      });
+    }
   }
 
   function fillEditor() {
@@ -369,24 +479,20 @@
   function renderAll() {
     renderCounts();
     renderMessages();
+    renderMemories();
     renderAdmin();
   }
 
   async function saveRsvp(entry) {
     if (state.usingSupabase) {
-      const now = new Date().toISOString();
-      const { error } = await state.supabaseClient.from(table("rsvps")).upsert(
-        {
-          guest_key: entry.guestKey,
-          guest_name: entry.name,
-          party_count: entry.partyCount,
-          response: entry.response,
-          contact: entry.contact,
-          note: entry.note,
-          updated_at: now
-        },
-        { onConflict: "guest_key" }
-      );
+      const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", {
+        p_guest_key: entry.guestKey,
+        p_guest_name: entry.name,
+        p_party_count: entry.partyCount,
+        p_response: entry.response,
+        p_contact: entry.contact,
+        p_note: entry.note
+      });
       if (error) throw error;
       await loadPublicData();
       return;
@@ -402,12 +508,13 @@
     writeLocal();
   }
 
-  async function saveMessage(body) {
+  async function saveMessage(body, selectedColor) {
+    const color = noteColor(selectedColor);
     if (state.usingSupabase) {
       const { data, error } = await state.supabaseClient
         .from(table("messages"))
-        .insert({ body, is_hidden: false })
-        .select("id, body, created_at")
+        .insert({ body, is_hidden: false, note_color: color })
+        .select("id, body, note_color, created_at")
         .single();
       if (error) throw error;
       if (data) {
@@ -415,6 +522,7 @@
           {
             id: data.id,
             body: data.body,
+            noteColor: noteColor(data.note_color),
             createdAt: data.created_at,
             isHidden: false
           },
@@ -424,7 +532,74 @@
       await loadPublicData();
       return;
     }
-    state.messages.unshift({ id: crypto.randomUUID?.() || String(Date.now()), body, createdAt: new Date().toISOString() });
+    state.messages.unshift({ id: crypto.randomUUID?.() || String(Date.now()), body, noteColor: color, createdAt: new Date().toISOString() });
+    writeLocal();
+  }
+
+  function canvasDataUrl(file, maxEdge, quality) {
+    return new Promise((resolve, reject) => {
+      if (!file.type.startsWith("image/")) {
+        reject(new Error("Choose an image file."));
+        return;
+      }
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Could not read that image."));
+      reader.onload = () => {
+        const image = new Image();
+        image.onerror = () => reject(new Error("Try a JPG, PNG, or WebP image."));
+        image.onload = () => {
+          const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
+          const width = Math.max(1, Math.round(image.width * scale));
+          const height = Math.max(1, Math.round(image.height * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const context = canvas.getContext("2d");
+          context.drawImage(image, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function compressMemoryImage(file) {
+    const attempts = [
+      { maxEdge: 1280, quality: 0.78 },
+      { maxEdge: 1000, quality: 0.72 },
+      { maxEdge: 820, quality: 0.66 }
+    ];
+    for (const attempt of attempts) {
+      const dataUrl = await canvasDataUrl(file, attempt.maxEdge, attempt.quality);
+      if (dataUrl.length <= maxMemoryImageLength) return dataUrl;
+    }
+    throw new Error("That photo is still too big. Try a smaller image.");
+  }
+
+  async function saveMemory(file, caption) {
+    const imageData = await compressMemoryImage(file);
+    if (state.usingSupabase) {
+      const { data, error } = await state.supabaseClient.rpc("graduation_add_memory", {
+        p_owner_token: state.ownerToken,
+        p_image_data: imageData,
+        p_caption: caption
+      });
+      if (error) throw error;
+      if (data?.id) rememberOwnedMemory(data.id);
+      await loadPublicData();
+      return;
+    }
+
+    const memory = {
+      id: crypto.randomUUID?.() || String(Date.now()),
+      imageData,
+      caption,
+      ownerToken: state.ownerToken,
+      createdAt: new Date().toISOString()
+    };
+    state.memories.unshift(memory);
+    rememberOwnedMemory(memory.id);
     writeLocal();
   }
 
@@ -473,7 +648,15 @@
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
       body: row.body,
+      noteColor: noteColor(row.note_color),
       createdAt: row.created_at,
+      isHidden: row.is_hidden
+    }));
+    state.memories = (payload.memories || state.memories || []).map((row) => ({
+      id: row.id,
+      imageData: row.image_data || row.imageData,
+      caption: row.caption,
+      createdAt: row.created_at || row.createdAt,
       isHidden: row.is_hidden
     }));
   }
@@ -539,6 +722,49 @@
     }
   }
 
+  async function deleteMemory(memoryId, adminMode) {
+    if (!memoryId) return;
+    try {
+      if (state.usingSupabase) {
+        if (adminMode) {
+          const endpoint = config.supabase?.adminEndpoint;
+          if (endpoint) {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ action: "delete_memory", password: state.adminPassword, memoryId })
+            });
+            if (!response.ok) throw new Error("Could not delete memory.");
+          } else {
+            const { error } = await state.supabaseClient.rpc("graduation_admin_delete_memory", {
+              admin_password: state.adminPassword,
+              memory_id: memoryId
+            });
+            if (error) throw error;
+          }
+          await loadAdmin(state.adminPassword);
+        } else {
+          const { error } = await state.supabaseClient.rpc("graduation_delete_memory", {
+            p_owner_token: state.ownerToken,
+            memory_id: memoryId
+          });
+          if (error) throw error;
+          forgetOwnedMemory(memoryId);
+          await loadPublicData();
+        }
+      } else {
+        state.memories = state.memories.filter((memory) => memory.id !== memoryId);
+        forgetOwnedMemory(memoryId);
+        writeLocal();
+      }
+      setText(adminMode ? "#admin-feedback" : "#memory-feedback", "Memory deleted.");
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setText(adminMode ? "#admin-feedback" : "#memory-feedback", adminMode ? friendlyError(error, "Could not delete that memory yet.") : guestError("Could not delete that memory from this phone."));
+    }
+  }
+
   function bindForms() {
     $("#rsvp-form").addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -559,23 +785,49 @@
         burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", friendlyError(error, "Could not save RSVP yet. Check Supabase setup and try again."));
+        setText("#rsvp-feedback", guestError("Could not save that RSVP yet. Try again in a minute."));
       }
     });
 
     $("#message-form").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const body = String(new FormData(event.currentTarget).get("body") || "").trim();
+      const data = new FormData(event.currentTarget);
+      const body = String(data.get("body") || "").trim();
       if (!body) return;
       try {
-        await saveMessage(body);
+        await saveMessage(body, String(data.get("noteColor") || "pastel-yellow"));
         event.currentTarget.reset();
-        setText("#message-feedback", "Anonymous note posted.");
+        $("#message-form input[name='noteColor'][value='pastel-yellow']").checked = true;
+        setText("#message-feedback", "Your note stuck to the board.");
         renderAll();
         burstConfetti(70);
       } catch (error) {
         console.error(error);
-        setText("#message-feedback", friendlyError(error, "Could not post the note yet. Check Supabase setup and try again."));
+        setText("#message-feedback", guestError("That note did not stick yet. Try again in a minute."));
+      }
+    });
+
+    $("#memory-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const file = data.get("memoryImage");
+      const caption = String(data.get("caption") || "").trim().slice(0, 100);
+      if (!(file instanceof File) || !file.size) return;
+      try {
+        setText("#memory-feedback", "Uploading memory...");
+        await saveMemory(file, caption);
+        form.reset();
+        setText("#memory-feedback", "Memory added to the strip.");
+        renderAll();
+        burstConfetti(100);
+      } catch (error) {
+        console.error(error);
+        const message = String(error?.message || "");
+        const safeMessage = /photo|image|jpg|jpeg|png|webp|big|smaller/i.test(message)
+          ? message
+          : "Could not upload that memory yet. Try again in a minute.";
+        setText("#memory-feedback", guestError(safeMessage));
       }
     });
 
@@ -586,7 +838,7 @@
         const usedEndpoint = await loadAdmin(password);
         const previewPassword = config.admin?.previewPassword;
         if (!usedEndpoint && !previewPassword) {
-          setText("#admin-feedback", "Run the Supabase setup SQL before using admin.");
+          setText("#admin-feedback", "Run the database setup SQL before using admin.");
           return;
         }
         if (!usedEndpoint && password !== previewPassword) {
@@ -693,6 +945,7 @@
         await loadPublicData();
         renderCounts();
         renderMessages();
+        renderMemories();
       } catch (error) {
         console.warn("Auto-refresh skipped.", error);
       }
@@ -765,6 +1018,7 @@
   }
 
   async function boot() {
+    initMemoryOwner();
     initSupabase();
     await loadSiteSettings();
     hydrateContent();

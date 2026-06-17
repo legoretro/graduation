@@ -34,20 +34,37 @@ serve(async (req) => {
   const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   if (body.action === "list") {
-    const [rsvps, messages] = await Promise.all([
+    const [rsvps, messages, memories, settings] = await Promise.all([
       supabase
         .from("graduation_rsvps")
         .select("id, guest_key, guest_name, party_count, response, contact, note, created_at, updated_at")
         .order("updated_at", { ascending: false }),
       supabase
         .from("graduation_messages")
-        .select("id, body, is_hidden, created_at")
+        .select("id, body, note_color, is_hidden, created_at")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("graduation_memories")
+        .select("id, image_data, caption, is_hidden, created_at")
         .order("created_at", { ascending: false })
+        .limit(100),
+      supabase
+        .from("graduation_site_settings")
+        .select("settings")
+        .eq("setting_key", "site")
+        .maybeSingle()
     ]);
 
     if (rsvps.error) return json({ error: rsvps.error.message }, 500);
     if (messages.error) return json({ error: messages.error.message }, 500);
-    return json({ rsvps: rsvps.data, messages: messages.data });
+    if (memories.error) return json({ error: memories.error.message }, 500);
+    if (settings.error) return json({ error: settings.error.message }, 500);
+    return json({
+      rsvps: rsvps.data,
+      messages: messages.data,
+      memories: memories.data,
+      settings: settings.data?.settings || {}
+    });
   }
 
   if (body.action === "save_settings") {
@@ -78,6 +95,16 @@ serve(async (req) => {
       .from("graduation_messages")
       .delete()
       .eq("id", body.messageId);
+
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true });
+  }
+
+  if (body.action === "delete_memory") {
+    const { error } = await supabase
+      .from("graduation_memories")
+      .delete()
+      .eq("id", body.memoryId);
 
     if (error) return json({ error: error.message }, 500);
     return json({ ok: true });

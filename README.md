@@ -4,12 +4,13 @@ Static GitHub Pages invitation site with:
 
 - RSVP form
 - Public yes/maybe/no totals
-- Anonymous message board
-- Admin preview login
+- Anonymous pastel message board
+- Guest memory-strip photo uploads
+- Admin login
 - Address, hotel, food, weather, and photos
 - Confetti celebration animation
 - Admin page editor for site text/details
-- Optional Supabase storage for the real live site
+- Supabase-backed live data for the real site
 
 ## Shared Supabase Project
 
@@ -19,11 +20,12 @@ This project uses only prefixed objects:
 
 - `graduation_rsvps`
 - `graduation_messages`
+- `graduation_memories`
 - `graduation_rsvp_totals`
 - `graduation_site_settings`
 - `graduation_admin_config`
 - policies whose names start with `graduation`
-- password-protected SQL functions whose names start with `graduation_admin`
+- SQL functions whose names start with `graduation`
 
 That keeps it separate from Arbolito as long as Arbolito uses different table names.
 
@@ -47,6 +49,10 @@ supabase: {
 The anon key is okay to put in GitHub Pages. Do not put the service role key in GitHub.
 
 Set the admin password only in Supabase. Do not put it in `config.js`.
+
+Guest photo uploads are compressed in the browser and saved to `graduation_memories`.
+Each phone gets a private browser token so guests can delete only the memories they
+uploaded from that same phone. Admin can delete any memory from the dashboard.
 
 ## Private Admin
 

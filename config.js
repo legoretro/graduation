@@ -2,15 +2,15 @@ window.GRADUATION_CONFIG = {
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "OIT pride, Filipino joy, Mexican color, confetti, RSVPs, and tiny love notes.",
+    subtitle: "OIT pride, Filipino joy, Mexican color, confetti, RSVPs, love notes, and memory-strip chaos.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Oregon Tech - Klamath Falls Campus",
     address: "3201 Campus Drive, Klamath Falls, OR 97601",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=3201%20Campus%20Drive%2C%20Klamath%20Falls%2C%20OR%2097601",
-    statusText: "Party details loading",
+    statusText: "Details cooking",
     note: "Final date, room, and the Canva invite can be swapped in anytime.",
-    inviteCopy: "Your 4x6 Canva invite will sit right here once it is ready."
+    inviteCopy: "Your 4x6 Canva invite gets the spotlight here once it is ready."
   },
 
   admin: {
