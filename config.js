@@ -2,7 +2,7 @@ window.GRADUATION_CONFIG = {
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "OIT pride, Filipino joy, Mexican color, confetti, RSVPs, love notes, and memory-strip chaos.",
+    subtitle: "OIT pride, Filipino joy, Mexican color, confetti, RSVPs, caring notes, and memory-strip chaos.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Oregon Tech - Klamath Falls Campus",
@@ -22,22 +22,9 @@ window.GRADUATION_CONFIG = {
   },
 
   assets: {
-    heroImage: "",
+    heroImage: "assets/hero-celebration.png",
     invitationImage: "",
-    photos: [
-      {
-        src: "https://www.oit.edu/sites/default/files/2022-02/CampusDJI_0015.jpg",
-        alt: "Oregon Tech Klamath Falls campus"
-      },
-      {
-        src: "https://www.oit.edu/sites/default/files/2020/images/OIT-Sign.jpg",
-        alt: "Oregon Institute of Technology campus sign"
-      },
-      {
-        src: "https://www.oit.edu/sites/default/files/styles/full_width_image/public/full-width/kfalls_Rural%20Phto.jpg.webp?h=2c9f97a4&itok=er1y1IZ3",
-        alt: "Klamath Falls lake view from Oregon Tech"
-      }
-    ]
+    photos: []
   },
 
   weather: {

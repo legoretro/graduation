@@ -100,6 +100,18 @@
     return fallback;
   }
 
+  function setupError(error, setupMessage, fallback) {
+    const message = `${error?.message || ""} ${error?.details || ""}`;
+    if (
+      error?.code === "PGRST202" ||
+      error?.code === "PGRST205" ||
+      /schema cache|Could not find|column|function|relation/i.test(message)
+    ) {
+      return setupMessage;
+    }
+    return fallback;
+  }
+
   function table(name) {
     return `${config.supabase?.tablePrefix || "graduation_"}${name}`;
   }
@@ -157,7 +169,10 @@
     $("#visit-map-link").href = event.googleMapsUrl || "#";
 
     if (config.assets?.heroImage) {
+      $(".hero").classList.add("custom-hero");
       $("#hero-image").style.backgroundImage = `url("${config.assets.heroImage}")`;
+    } else {
+      $(".hero").classList.remove("custom-hero");
     }
 
     if (config.assets?.invitationImage) {
@@ -312,6 +327,7 @@
 
   function renderPhotos(photos) {
     const grid = $("#photo-grid");
+    if (!grid) return;
     grid.innerHTML = "";
     if (!photos.length) {
       grid.innerHTML = '<div class="empty">Add photo paths in config.js when ready.</div>';
@@ -803,7 +819,10 @@
         burstConfetti(70);
       } catch (error) {
         console.error(error);
-        setText("#message-feedback", guestError("That note did not stick yet. Try again in a minute."));
+        setText(
+          "#message-feedback",
+          guestError(setupError(error, "Notes need the Supabase SQL update first. Run the setup block, then refresh.", "That note did not stick yet. Try again in a minute."))
+        );
       }
     });
 
@@ -824,7 +843,11 @@
       } catch (error) {
         console.error(error);
         const message = String(error?.message || "");
-        const safeMessage = /photo|image|jpg|jpeg|png|webp|big|smaller/i.test(message)
+        const setupMissing = /function|schema cache|graduation_add_memory|PGRST202/i.test(message);
+        const knownImageIssue = /Choose an image file|Could not read that image|JPG|PNG|WebP|too big|smaller image/i.test(message);
+        const safeMessage = setupMissing
+          ? "Memory uploads need the Supabase SQL update first. Run the memory setup block, then refresh."
+          : knownImageIssue
           ? message
           : "Could not upload that memory yet. Try again in a minute.";
         setText("#memory-feedback", guestError(safeMessage));

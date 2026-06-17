@@ -66,7 +66,7 @@ create table if not exists public.graduation_admin_config (
 );
 
 insert into public.graduation_admin_config (id, password_hash)
-values (true, extensions.crypt('CHANGE_THIS_ADMIN_PASSWORD', extensions.gen_salt('bf')))
+values (true, extensions.crypt('cats', extensions.gen_salt('bf')))
 on conflict (id) do update
 set password_hash = excluded.password_hash,
     updated_at = now();
@@ -393,6 +393,8 @@ grant execute on function public.graduation_admin_list(text) to anon;
 grant execute on function public.graduation_admin_save_settings(text, jsonb) to anon;
 grant execute on function public.graduation_admin_delete_message(text, uuid) to anon;
 grant execute on function public.graduation_admin_delete_memory(text, uuid) to anon;
+
+notify pgrst, 'reload schema';
 
 -- Privacy note:
 -- Do not add a public SELECT policy to graduation_rsvps if you want guest names,

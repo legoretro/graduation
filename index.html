@@ -19,7 +19,7 @@
       </a>
       <nav aria-label="Main navigation">
         <a href="#rsvp">Headcount</a>
-        <a href="#board">Love Notes</a>
+        <a href="#board">Kind Notes</a>
         <a href="#visit">Food + Map</a>
         <a href="#admin">Admin</a>
       </nav>
@@ -37,13 +37,13 @@
 
           <div class="panel admin-panel">
             <form id="admin-login">
-              <label>
-                Admin password
-                <div class="inline">
-                  <input id="admin-password" type="password" autocomplete="current-password" placeholder="Admin password">
+                  <label>
+                    Admin password
+                    <div class="inline">
+                  <input id="admin-password" type="text" autocomplete="off" placeholder="cats">
                   <button class="button primary" type="submit">Log in</button>
                 </div>
-              </label>
+                  </label>
               <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
             </form>
 
@@ -148,23 +148,11 @@
     <main id="home">
       <section class="hero">
         <div class="hero-image" id="hero-image" aria-hidden="true"></div>
-        <div class="hero-scene" aria-hidden="true">
-          <span class="scene-piece sunburst"></span>
-          <span class="scene-piece cap cap-one"></span>
-          <span class="scene-piece cap cap-two"></span>
-          <span class="scene-piece scope"></span>
-          <span class="scene-piece concha"></span>
-          <span class="scene-piece ube"></span>
-          <span class="scene-piece lumpia"></span>
-          <span class="scene-piece taco"></span>
-          <span class="scene-piece elote"></span>
-          <span class="scene-piece pan"></span>
-        </div>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-copy">
           <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
           <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and anonymous love notes.</p>
+          <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and caring notes.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
@@ -260,12 +248,12 @@
         <div class="section-inner">
           <div class="board-head">
             <div>
-              <p class="kicker">Anonymous notes</p>
-              <h2>Drop a tiny love note.</h2>
+              <p class="kicker">Caring notes</p>
+              <h2>Leave a tiny kind note.</h2>
             </div>
             <form class="message-form" id="message-form">
               <label class="sr-only" for="message-body">Anonymous message</label>
-              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="Congrats, we love you!" required></textarea>
+              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="So proud of you!" required></textarea>
               <fieldset class="note-colors" aria-label="Sticky note color">
                 <legend>Pick a pastel</legend>
                 <label><input type="radio" name="noteColor" value="pastel-yellow" checked><span class="swatch pastel-yellow">Yellow</span></label>
@@ -334,7 +322,6 @@
               <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
             </div>
           </div>
-          <div class="photo-grid starter-photos" id="photo-grid"></div>
         </div>
       </section>
 
