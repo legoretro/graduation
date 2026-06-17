@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#003767">
-    <title>Elizabeth & Angel's OIT MLS Graduation</title>
+    <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="config.js"></script>
     <script defer src="app.js"></script>
   </head>
   <body>
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
     <header class="topbar">
       <a class="brand" href="#home">
         <span>OIT</span>
@@ -30,14 +31,19 @@
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-copy">
           <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
-          <h1 id="event-title">Elizabeth & Angel's OIT MLS Graduation</h1>
+          <h1 id="event-title">Elizabeth & Angela's OIT MLS Graduation</h1>
           <p id="event-subtitle">A December graduation celebration page for RSVPs, travel details, and anonymous love notes.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
+            <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
           </div>
         </div>
       </section>
+
+      <div class="culture-ribbon" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
 
       <section class="quick-info" aria-label="Event details">
         <article>
@@ -181,12 +187,6 @@
             <p class="kicker">Admin</p>
             <h2>Private RSVP view.</h2>
             <p>Preview password is <strong>cats</strong>. For the live Supabase setup, use the Edge Function so the real admin password is not stored in GitHub.</p>
-            <div class="qr-box">
-              <span class="mini">QR code</span>
-              <img id="qr-image" alt="QR code for this invitation page">
-              <input id="share-url" readonly aria-label="Invitation URL">
-              <a class="button secondary" id="qr-link" target="_blank" rel="noreferrer">Open QR</a>
-            </div>
           </div>
 
           <div class="panel admin-panel">
@@ -206,6 +206,73 @@
                 <button class="button secondary" id="export-rsvps" type="button">Export RSVPs</button>
                 <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
               </div>
+
+              <section class="admin-editor" aria-labelledby="editor-heading">
+                <h3 id="editor-heading">Editable page details</h3>
+                <form id="site-editor">
+                  <div class="editor-grid">
+                    <label>
+                      Page title
+                      <input data-setting="event.title">
+                    </label>
+                    <label>
+                      Small heading
+                      <input data-setting="event.kicker">
+                    </label>
+                    <label class="wide">
+                      Subtitle
+                      <textarea data-setting="event.subtitle" rows="3"></textarea>
+                    </label>
+                    <label>
+                      Date
+                      <input data-setting="event.dateText">
+                    </label>
+                    <label>
+                      Time
+                      <input data-setting="event.timeText">
+                    </label>
+                    <label>
+                      Location name
+                      <input data-setting="event.locationName">
+                    </label>
+                    <label>
+                      Address
+                      <input data-setting="event.address">
+                    </label>
+                    <label class="wide">
+                      Google Maps link
+                      <input data-setting="event.googleMapsUrl">
+                    </label>
+                    <label>
+                      Detail status
+                      <input data-setting="event.statusText">
+                    </label>
+                    <label>
+                      Live website URL
+                      <input data-setting="links.liveSiteUrl">
+                    </label>
+                    <label class="wide">
+                      Detail note
+                      <textarea data-setting="event.note" rows="3"></textarea>
+                    </label>
+                    <label class="wide">
+                      Invitation copy
+                      <textarea data-setting="event.inviteCopy" rows="3"></textarea>
+                    </label>
+                    <label class="wide">
+                      Hero image URL
+                      <input data-setting="assets.heroImage">
+                    </label>
+                    <label class="wide">
+                      Canva invitation image URL or path
+                      <input data-setting="assets.invitationImage" placeholder="assets/canva-invitation.png">
+                    </label>
+                  </div>
+                  <button class="button primary full" type="submit">Save page edits</button>
+                  <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
+                </form>
+              </section>
+
               <p class="admin-summary" id="admin-summary"></p>
               <div class="table-wrap">
                 <table>
@@ -231,7 +298,7 @@
     </main>
 
     <footer>
-      <span id="footer-title">Elizabeth & Angel's OIT MLS Graduation</span>
+      <span id="footer-title">Elizabeth & Angela's OIT MLS Graduation</span>
       <a href="#home">Back to top</a>
     </footer>
   </body>

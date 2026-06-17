@@ -1,4 +1,4 @@
-# Elizabeth & Angel's OIT MLS Graduation
+# Elizabeth & Angela's OIT MLS Graduation
 
 Static GitHub Pages invitation site with:
 
@@ -6,7 +6,9 @@ Static GitHub Pages invitation site with:
 - Public yes/maybe/no totals
 - Anonymous message board
 - Admin preview login
-- Address, hotel, food, weather, photos, and QR code
+- Address, hotel, food, weather, and photos
+- Confetti celebration animation
+- Admin page editor for site text/details
 - Optional Supabase storage for the real live site
 
 ## Shared Supabase Project
@@ -18,7 +20,10 @@ This project uses only prefixed objects:
 - `graduation_rsvps`
 - `graduation_messages`
 - `graduation_rsvp_totals`
+- `graduation_site_settings`
+- `graduation_admin_config`
 - policies whose names start with `graduation`
+- password-protected SQL functions whose names start with `graduation_admin`
 
 That keeps it separate from Arbolito as long as Arbolito uses different table names.
 
@@ -40,6 +45,8 @@ supabase: {
 ```
 
 The anon key is okay to put in GitHub Pages. Do not put the service role key in GitHub.
+
+The default admin password created by the SQL is `cats`.
 
 ## Private Admin
 
@@ -64,7 +71,7 @@ Most visible text is in `config.js`.
 - Add the final date and time there.
 - Put Canva invitation/photo files in `assets/`.
 - Set `invitationImage: "assets/canva-invitation.png"`.
-- Add your real GitHub Pages URL to `links.liveSiteUrl` so the QR code points to the published page.
+- Add your real GitHub Pages URL to `links.liveSiteUrl` if it ever changes.
 
 ## GitHub Pages
 

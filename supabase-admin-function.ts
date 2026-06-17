@@ -50,10 +50,33 @@ serve(async (req) => {
     return json({ rsvps: rsvps.data, messages: messages.data });
   }
 
+  if (body.action === "save_settings") {
+    const { error } = await supabase
+      .from("graduation_site_settings")
+      .upsert({
+        setting_key: "site",
+        settings: body.settings || {},
+        updated_at: new Date().toISOString()
+      });
+
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true });
+  }
+
   if (body.action === "hide_message") {
     const { error } = await supabase
       .from("graduation_messages")
       .update({ is_hidden: true })
+      .eq("id", body.messageId);
+
+    if (error) return json({ error: error.message }, 500);
+    return json({ ok: true });
+  }
+
+  if (body.action === "delete_message") {
+    const { error } = await supabase
+      .from("graduation_messages")
+      .delete()
       .eq("id", body.messageId);
 
     if (error) return json({ error: error.message }, 500);

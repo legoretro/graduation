@@ -1,8 +1,8 @@
 window.GRADUATION_CONFIG = {
   event: {
-    title: "Elizabeth & Angel's OIT MLS Graduation",
+    title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "A December graduation celebration page for RSVPs, travel details, and anonymous love notes.",
+    subtitle: "A December graduation celebration with OIT pride, Filipino joy, Mexican color, RSVPs, and anonymous love notes.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Oregon Tech - Klamath Falls Campus",
@@ -18,7 +18,7 @@ window.GRADUATION_CONFIG = {
   },
 
   links: {
-    liveSiteUrl: ""
+    liveSiteUrl: "https://legoretro.github.io/graduation/"
   },
 
   assets: {

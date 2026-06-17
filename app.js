@@ -8,6 +8,9 @@
     messages: [],
     totals: null,
     adminUnlocked: false,
+    adminPassword: "",
+    confettiFrame: null,
+    confettiPieces: [],
     supabaseClient: null,
     usingSupabase: false
   };
@@ -36,9 +39,50 @@
 
   const $ = (selector, root = document) => root.querySelector(selector);
 
+  function isObject(value) {
+    return value && typeof value === "object" && !Array.isArray(value);
+  }
+
+  function deepMerge(target, source) {
+    Object.entries(source || {}).forEach(([key, value]) => {
+      if (isObject(value)) {
+        if (!isObject(target[key])) target[key] = {};
+        deepMerge(target[key], value);
+      } else {
+        target[key] = value;
+      }
+    });
+    return target;
+  }
+
+  function getPath(path) {
+    return path.split(".").reduce((value, key) => (value ? value[key] : undefined), config);
+  }
+
+  function setPath(path, value) {
+    const parts = path.split(".");
+    const last = parts.pop();
+    const target = parts.reduce((current, key) => {
+      if (!isObject(current[key])) current[key] = {};
+      return current[key];
+    }, config);
+    target[last] = value;
+  }
+
   function setText(selector, value) {
     const node = $(selector);
     if (node) node.textContent = value === undefined || value === null ? "" : String(value);
+  }
+
+  function friendlyError(error, fallback) {
+    const message = `${error?.message || ""} ${error?.details || ""}`;
+    if (error?.code === "PGRST205" || message.includes("Could not find the table")) {
+      return "Supabase tables are missing. Copy/paste and run the SQL setup block first.";
+    }
+    if (error?.code === "PGRST202" || message.includes("function") || message.includes("schema cache")) {
+      return "Supabase admin functions are missing. Copy/paste and run the updated SQL setup block first.";
+    }
+    return fallback;
   }
 
   function table(name) {
@@ -111,7 +155,7 @@
     renderResources("#hotel-list", config.stay || []);
     renderResources("#food-list", config.food || []);
     renderPhotos(config.assets?.photos || []);
-    renderQr();
+    fillEditor();
   }
 
   function initSupabase() {
@@ -135,6 +179,20 @@
 
   function writeLocal() {
     localStorage.setItem(localKey, JSON.stringify({ rsvps: state.rsvps, messages: state.messages }));
+  }
+
+  async function loadSiteSettings() {
+    if (!state.usingSupabase) return;
+
+    const { data, error } = await state.supabaseClient
+      .from(table("site_settings"))
+      .select("settings")
+      .eq("setting_key", "site")
+      .maybeSingle();
+
+    if (!error && data?.settings) {
+      deepMerge(config, data.settings);
+    }
   }
 
   async function loadPublicData() {
@@ -216,14 +274,6 @@
     });
   }
 
-  function renderQr() {
-    const url = shareUrl();
-    const qr = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=16&data=${encodeURIComponent(url)}`;
-    $("#qr-image").src = qr;
-    $("#share-url").value = url;
-    $("#qr-link").href = qr;
-  }
-
   function renderCounts() {
     const current = totals();
     setText("#count-yes", current.yes);
@@ -234,12 +284,13 @@
   function renderMessages() {
     const board = $("#note-board");
     board.innerHTML = "";
-    if (!state.messages.length) {
+    const visibleMessages = state.messages.filter((message) => !message.isHidden);
+    if (!visibleMessages.length) {
       board.innerHTML = '<div class="empty">No notes yet. Be the first one to post a message.</div>';
       return;
     }
 
-    state.messages.slice(0, 24).forEach((message) => {
+    visibleMessages.slice(0, 24).forEach((message) => {
       const note = document.createElement("article");
       note.className = "sticky-note";
       const body = document.createElement("p");
@@ -282,12 +333,37 @@
       state.messages.forEach((message) => {
         const item = document.createElement("article");
         item.className = "admin-message";
-        item.innerHTML = "<p></p><time></time>";
+        if (message.isHidden) item.setAttribute("aria-disabled", "true");
+        item.innerHTML = '<div><p></p><time></time><span class="message-status"></span></div><button class="button quiet delete-message" type="button">Delete</button>';
         item.querySelector("p").textContent = message.body;
         item.querySelector("time").textContent = formatDate(message.createdAt);
+        item.querySelector(".message-status").textContent = message.isHidden ? "Hidden" : "";
+        item.querySelector(".delete-message").addEventListener("click", () => deleteMessage(message.id));
         list.append(item);
       });
     }
+  }
+
+  function fillEditor() {
+    const form = $("#site-editor");
+    if (!form) return;
+    form.querySelectorAll("[data-setting]").forEach((field) => {
+      field.value = getPath(field.dataset.setting) || "";
+    });
+  }
+
+  function collectEditorSettings() {
+    const settings = {};
+    $("#site-editor").querySelectorAll("[data-setting]").forEach((field) => {
+      const parts = field.dataset.setting.split(".");
+      const last = parts.pop();
+      const target = parts.reduce((current, key) => {
+        if (!isObject(current[key])) current[key] = {};
+        return current[key];
+      }, settings);
+      target[last] = field.value.trim();
+    });
+    return settings;
   }
 
   function renderAll() {
@@ -339,7 +415,16 @@
 
   async function loadAdmin(password) {
     const endpoint = config.supabase?.adminEndpoint;
-    if (!state.usingSupabase || !endpoint) return false;
+    if (!state.usingSupabase) return false;
+
+    if (!endpoint) {
+      const { data, error } = await state.supabaseClient.rpc("graduation_admin_list", {
+        admin_password: password
+      });
+      if (error) throw error;
+      applyAdminPayload(data || {});
+      return true;
+    }
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -349,6 +434,16 @@
 
     if (!response.ok) throw new Error("Admin login failed.");
     const payload = await response.json();
+    applyAdminPayload(payload);
+    return true;
+  }
+
+  function applyAdminPayload(payload) {
+    if (payload.settings) {
+      deepMerge(config, payload.settings);
+      hydrateContent();
+    }
+
     state.rsvps = (payload.rsvps || []).map((row) => ({
       id: row.id,
       guestKey: row.guest_key,
@@ -363,9 +458,70 @@
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
       body: row.body,
-      createdAt: row.created_at
+      createdAt: row.created_at,
+      isHidden: row.is_hidden
     }));
-    return true;
+  }
+
+  async function saveSiteSettings(settings) {
+    if (!state.usingSupabase) {
+      deepMerge(config, settings);
+      setText("#editor-feedback", "Edit saved successfully in this browser preview.");
+      return;
+    }
+
+    const endpoint = config.supabase?.adminEndpoint;
+    if (endpoint) {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save_settings", password: state.adminPassword, settings })
+      });
+      if (!response.ok) throw new Error("Could not save settings.");
+    } else {
+      const { error } = await state.supabaseClient.rpc("graduation_admin_save_settings", {
+        admin_password: state.adminPassword,
+        new_settings: settings
+      });
+      if (error) throw error;
+    }
+
+    deepMerge(config, settings);
+    hydrateContent();
+    setText("#editor-feedback", "Edit saved successfully.");
+    burstConfetti(120);
+  }
+
+  async function deleteMessage(messageId) {
+    if (!messageId) return;
+    try {
+      if (state.usingSupabase) {
+        const endpoint = config.supabase?.adminEndpoint;
+        if (endpoint) {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "delete_message", password: state.adminPassword, messageId })
+          });
+          if (!response.ok) throw new Error("Could not delete message.");
+        } else {
+          const { error } = await state.supabaseClient.rpc("graduation_admin_delete_message", {
+            admin_password: state.adminPassword,
+            message_id: messageId
+          });
+          if (error) throw error;
+        }
+        await loadAdmin(state.adminPassword);
+      } else {
+        state.messages = state.messages.filter((message) => message.id !== messageId);
+        writeLocal();
+      }
+      setText("#admin-feedback", "Message deleted.");
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setText("#admin-feedback", friendlyError(error, "Could not delete that message yet."));
+    }
   }
 
   function bindForms() {
@@ -385,9 +541,10 @@
         });
         setText("#rsvp-feedback", "RSVP saved. Submit again with the same name if plans change.");
         renderAll();
+        burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", "Could not save RSVP yet. Check Supabase setup and try again.");
+        setText("#rsvp-feedback", friendlyError(error, "Could not save RSVP yet. Check Supabase setup and try again."));
       }
     });
 
@@ -400,9 +557,10 @@
         event.currentTarget.reset();
         setText("#message-feedback", "Anonymous note posted.");
         renderAll();
+        burstConfetti(70);
       } catch (error) {
         console.error(error);
-        setText("#message-feedback", "Could not post the note yet. Check Supabase setup and try again.");
+        setText("#message-feedback", friendlyError(error, "Could not post the note yet. Check Supabase setup and try again."));
       }
     });
 
@@ -416,12 +574,24 @@
           return;
         }
         state.adminUnlocked = true;
+        state.adminPassword = password;
         $("#admin-dashboard").hidden = false;
         setText("#admin-feedback", "Admin unlocked.");
+        fillEditor();
         renderAll();
       } catch (error) {
         console.error(error);
-        setText("#admin-feedback", "Admin login failed.");
+        setText("#admin-feedback", friendlyError(error, "Admin login failed."));
+      }
+    });
+
+    $("#site-editor").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      try {
+        await saveSiteSettings(collectEditorSettings());
+      } catch (error) {
+        console.error(error);
+        setText("#editor-feedback", friendlyError(error, "Could not save edits yet."));
       }
     });
 
@@ -488,11 +658,80 @@
     }
   }
 
+  function initConfetti() {
+    const button = $("#celebrate-button");
+    if (button) {
+      button.addEventListener("click", () => burstConfetti(150));
+    }
+  }
+
+  function burstConfetti(amount) {
+    const canvas = $("#confetti-canvas");
+    if (!canvas) return;
+    const colors = ["#003767", "#f4b400", "#ce1126", "#ffffff", "#0038a8", "#009246", "#d62828", "#ffd166"];
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    for (let index = 0; index < amount; index += 1) {
+      state.confettiPieces.push({
+        x: width * 0.5 + (Math.random() - 0.5) * Math.min(width, 360),
+        y: height * 0.18 + Math.random() * 90,
+        vx: (Math.random() - 0.5) * 9,
+        vy: Math.random() * -8 - 3,
+        gravity: Math.random() * 0.25 + 0.16,
+        drag: 0.985,
+        size: Math.random() * 8 + 5,
+        spin: Math.random() * 0.25,
+        angle: Math.random() * Math.PI,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 180
+      });
+    }
+
+    if (!state.confettiFrame) animateConfetti();
+  }
+
+  function animateConfetti() {
+    const canvas = $("#confetti-canvas");
+    const context = canvas?.getContext("2d");
+    if (!canvas || !context) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    state.confettiPieces = state.confettiPieces.filter((piece) => {
+      piece.vx *= piece.drag;
+      piece.vy = piece.vy * piece.drag + piece.gravity;
+      piece.x += piece.vx;
+      piece.y += piece.vy;
+      piece.angle += piece.spin;
+      piece.life -= 1;
+
+      context.save();
+      context.translate(piece.x, piece.y);
+      context.rotate(piece.angle);
+      context.fillStyle = piece.color;
+      context.fillRect(-piece.size / 2, -piece.size / 3, piece.size, piece.size * 0.65);
+      context.restore();
+
+      return piece.life > 0 && piece.y < canvas.height + 40;
+    });
+
+    if (state.confettiPieces.length) {
+      state.confettiFrame = requestAnimationFrame(animateConfetti);
+    } else {
+      state.confettiFrame = null;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
   async function boot() {
-    hydrateContent();
     initSupabase();
+    await loadSiteSettings();
+    hydrateContent();
     await loadPublicData();
     bindForms();
+    initConfetti();
     renderAll();
     loadWeather();
   }
