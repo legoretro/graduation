@@ -1241,7 +1241,7 @@
     const address = event.graduationAddress || event.address || "OHSU, Portland, OR";
     const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share a memory.";
     const cellPattern = art.cellPattern ? `<image x="1020" y="-90" width="880" height="1380" href="${escapeXml(art.cellPattern)}" preserveAspectRatio="xMidYMid slice" opacity="0.2"/>` : "";
-    const microscope = art.microscope ? `<image x="740" y="285" width="430" height="610" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.88" transform="rotate(-7 955 590)"/>` : "";
+    const microscope = art.microscope ? `<image x="640" y="250" width="600" height="830" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.9" transform="rotate(-7 940 665)"/>` : "";
     const redCell = art.redCell ? `<image x="600" y="95" width="170" height="240" href="${escapeXml(art.redCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(12 685 215)"/>` : "";
     const smilingCell = art.smilingCell ? `<image x="1540" y="735" width="185" height="265" href="${escapeXml(art.smilingCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(-7 1632 867)"/>` : "";
 
@@ -1331,35 +1331,35 @@
   </g>
 
   <g font-family="Manrope, Arial, sans-serif" filter="url(#softShadow)">
-    <rect x="120" y="755" width="425" height="180" rx="26" fill="#ffffff" opacity="0.95"/>
-    <rect x="585" y="755" width="440" height="180" rx="26" fill="#ffffff" opacity="0.95"/>
-    <text x="155" y="820" font-size="28" font-weight="900" fill="#d9a21a">WHEN</text>
-    <text x="155" y="880" font-size="42" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
-    <text x="155" y="928" font-size="30" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
-    <text x="620" y="820" font-size="28" font-weight="900" fill="#d9a21a">WHERE</text>
-    ${svgTextBlock({ text: place, x: 620, y: 880, maxChars: 19, maxLines: 2, size: 34, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-    ${svgTextBlock({ text: address, x: 620, y: 970, maxChars: 28, maxLines: 2, size: 25, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    <rect x="120" y="710" width="455" height="205" rx="26" fill="#ffffff" opacity="0.96"/>
+    <rect x="610" y="710" width="485" height="205" rx="26" fill="#ffffff" opacity="0.96"/>
+    <text x="158" y="780" font-size="31" font-weight="900" fill="#d9a21a">WHEN</text>
+    <text x="158" y="846" font-size="49" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
+    <text x="158" y="900" font-size="34" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
+    <text x="648" y="780" font-size="31" font-weight="900" fill="#d9a21a">WHERE</text>
+    ${svgTextBlock({ text: place, x: 648, y: 846, maxChars: 19, maxLines: 2, size: 40, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    ${svgTextBlock({ text: address, x: 648, y: 946, maxChars: 28, maxLines: 2, size: 28, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
   </g>
 
   <g filter="url(#softShadow)">
-    <rect x="1175" y="122" width="505" height="880" rx="42" fill="#ffffff" opacity="0.94"/>
-    <rect x="1175" y="122" width="505" height="14" fill="url(#scienceGold)"/>
-    <circle cx="1242" cy="206" r="42" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="3"/>
-    <text x="1242" y="218" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700" fill="#003767">MLS</text>
-    <text x="1458" y="232" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="42" font-weight="700" fill="#003767">SCAN FOR RSVP</text>
-    <text x="1458" y="288" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="800" fill="#5c6874">directions | notes | photos</text>
-    <rect x="1303" y="380" width="250" height="250" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
-    <image x="1323" y="400" width="210" height="210" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
-    ${svgTextBlock({ text: footer, x: 1245, y: 720, maxChars: 25, maxLines: 4, size: 31, weight: 800, fill: "#003767", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    <rect x="1188" y="78" width="470" height="880" rx="42" fill="#ffffff" opacity="0.94"/>
+    <rect x="1188" y="78" width="470" height="14" fill="url(#scienceGold)"/>
+    <circle cx="1260" cy="158" r="42" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="3"/>
+    <text x="1260" y="170" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700" fill="#003767">MLS</text>
+    <text x="1423" y="194" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="44" font-weight="700" fill="#003767">SCAN RSVP</text>
+    <text x="1423" y="244" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="27" font-weight="800" fill="#5c6874">directions | notes | memories</text>
+    <rect x="1294" y="298" width="258" height="258" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
+    <image x="1315" y="319" width="216" height="216" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
+    ${svgTextBlock({ text: footer, x: 1248, y: 636, maxChars: 24, maxLines: 4, size: 31, weight: 800, fill: "#003767", anchor: "start", family: "Manrope, Arial, sans-serif" })}
     <g font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="900">
-      <rect x="1245" y="848" width="118" height="42" rx="21" fill="#fffaf0" stroke="#d7e0e8" stroke-width="2"/>
-      <rect x="1382" y="848" width="134" height="42" rx="21" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="2"/>
-      <rect x="1535" y="848" width="92" height="42" rx="21" fill="#eef7f0" stroke="#d7e0e8" stroke-width="2"/>
-      <text x="1304" y="876" text-anchor="middle" fill="#003767">LAB</text>
-      <text x="1449" y="876" text-anchor="middle" fill="#003767">FAMILY</text>
-      <text x="1581" y="876" text-anchor="middle" fill="#003767">OHSU</text>
+      <rect x="1248" y="812" width="118" height="42" rx="21" fill="#fffaf0" stroke="#d7e0e8" stroke-width="2"/>
+      <rect x="1385" y="812" width="134" height="42" rx="21" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="2"/>
+      <rect x="1538" y="812" width="92" height="42" rx="21" fill="#eef7f0" stroke="#d7e0e8" stroke-width="2"/>
+      <text x="1307" y="840" text-anchor="middle" fill="#003767">LAB</text>
+      <text x="1452" y="840" text-anchor="middle" fill="#003767">FAMILY</text>
+      <text x="1584" y="840" text-anchor="middle" fill="#003767">OHSU</text>
     </g>
-    <text x="1428" y="940" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="900" fill="#5c6874">${escapeXml(shareUrl())}</text>
+    <text x="1423" y="904" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="900" fill="#5c6874">${escapeXml(shareUrl())}</text>
   </g>
 </svg>`;
   }
@@ -1375,32 +1375,188 @@
     URL.revokeObjectURL(url);
   }
 
+  function svgToPngBlob(svg, width, height) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error("Could not create image."));
+          }
+        }, "image/png");
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Could not load image."));
+      };
+      image.src = url;
+    });
+  }
+
+  async function showSaveableImage(blob, options) {
+    const preview = $(options.previewSelector);
+    if (preview) {
+      preview.src = await blobToDataUrl(blob);
+      preview.hidden = false;
+    }
+
+    let shared = false;
+    try {
+      if (navigator.share && typeof File === "function") {
+        const file = new File([blob], options.fileName, { type: "image/png" });
+        if (!navigator.canShare || navigator.canShare({ files: [file] })) {
+          await navigator.share({ title: options.shareTitle, files: [file] });
+          shared = true;
+        }
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+
+    setText(
+      options.feedbackSelector,
+      shared
+        ? "Share/save sheet opened. The image preview is below too."
+        : "Image is ready below. On your phone, long-press it to save to Photos."
+    );
+    preview?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
   async function downloadInvitationPng() {
     setText("#invite-download-feedback", "Preparing invite image...");
-    const svg = invitationSvg(await inviteQrDataUrl(), await inviteAssetDataUrls());
-    const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
-    const image = new Image();
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1800;
-      canvas.height = 1200;
-      const context = canvas.getContext("2d");
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          setText("#invite-download-feedback", "Could not create the invite image yet. Try again.");
-          return;
-        }
-        downloadBlob(blob, "elizabeth-angela-graduation-invite.png");
-        setText("#invite-download-feedback", "Invite image downloaded.");
-      }, "image/png");
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
+    try {
+      const svg = invitationSvg(await inviteQrDataUrl(), await inviteAssetDataUrls());
+      const blob = await svgToPngBlob(svg, 1800, 1200);
+      await showSaveableImage(blob, {
+        fileName: "elizabeth-angela-graduation-invite.png",
+        previewSelector: "#invite-image-preview",
+        feedbackSelector: "#invite-download-feedback",
+        shareTitle: "Elizabeth & Angela graduation invite"
+      });
+    } catch (error) {
+      console.error(error);
       setText("#invite-download-feedback", "Could not create the invite image yet. Try again.");
+    }
+  }
+
+  function responseTone(response) {
+    if (response === "no") return { label: "No", bg: "#f8d7dc", fg: "#8c1020" };
+    if (response === "maybe") return { label: "Maybe", bg: "#fff1c7", fg: "#7a5700" };
+    return { label: "Yes", bg: "#dff4e8", fg: "#006b36" };
+  }
+
+  function rsvpImageSvg() {
+    const event = config.event || {};
+    const current = totals();
+    const rows = state.rsvps.slice(0, 80);
+    const rowHeight = 108;
+    const height = 520 + Math.max(rows.length, 1) * rowHeight;
+    const generatedAt = new Date().toLocaleString([], {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    });
+    const rowMarkup = rows.length
+      ? rows
+          .map((rsvp, index) => {
+            const y = 430 + index * rowHeight;
+            const tone = responseTone(rsvp.response || "yes");
+            const count = Math.max(1, Number(rsvp.partyCount || 1));
+            const note = rsvp.note ? `Note: ${rsvp.note}` : "No private note";
+            return `
+  <g font-family="Manrope, Arial, sans-serif">
+    <rect x="48" y="${y}" width="984" height="88" rx="22" fill="#ffffff" stroke="#d7e0e8" stroke-width="2"/>
+    <circle cx="88" cy="${y + 44}" r="18" fill="${tone.bg}" stroke="${tone.fg}" stroke-width="3"/>
+    ${svgTextBlock({ text: rsvp.name || "Unnamed", x: 126, y: y + 42, maxChars: 24, maxLines: 1, size: 33, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    <text x="126" y="${y + 72}" font-size="21" font-weight="800" fill="#5c6874">${escapeXml(formatDate(rsvp.updatedAt || rsvp.createdAt))}</text>
+    <rect x="472" y="${y + 24}" width="142" height="42" rx="21" fill="${tone.bg}"/>
+    <text x="543" y="${y + 53}" text-anchor="middle" font-size="24" font-weight="900" fill="${tone.fg}">${tone.label}</text>
+    <text x="660" y="${y + 53}" font-size="26" font-weight="900" fill="#003767">${count} ${count === 1 ? "person" : "people"}</text>
+    ${svgTextBlock({ text: note, x: 820, y: y + 44, maxChars: 17, maxLines: 2, size: 21, weight: 800, fill: "#5c6874", anchor: "middle", family: "Manrope, Arial, sans-serif" })}
+  </g>`;
+          })
+          .join("")
+      : `
+  <g font-family="Manrope, Arial, sans-serif">
+    <rect x="48" y="430" width="984" height="88" rx="22" fill="#ffffff" stroke="#d7e0e8" stroke-width="2"/>
+    <text x="540" y="486" text-anchor="middle" font-size="30" font-weight="900" fill="#5c6874">No RSVPs yet.</text>
+  </g>`;
+
+    return {
+      width: 1080,
+      height,
+      svg: `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="${height}" viewBox="0 0 1080 ${height}">
+  <defs>
+    <linearGradient id="rsvpBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="0.52" stop-color="#e7f1f8"/>
+      <stop offset="1" stop-color="#eef7f0"/>
+    </linearGradient>
+    <linearGradient id="rsvpHeader" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#001f3f"/>
+      <stop offset="1" stop-color="#003767"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="${height}" fill="url(#rsvpBg)"/>
+  <rect x="0" y="0" width="1080" height="238" fill="url(#rsvpHeader)"/>
+  <rect x="0" y="0" width="180" height="14" fill="#003767"/>
+  <rect x="180" y="0" width="180" height="14" fill="#d9a21a"/>
+  <rect x="360" y="0" width="180" height="14" fill="#0038a8"/>
+  <rect x="540" y="0" width="180" height="14" fill="#ce1126"/>
+  <rect x="720" y="0" width="180" height="14" fill="#fffaf0"/>
+  <rect x="900" y="0" width="180" height="14" fill="#009246"/>
+  <g opacity="0.16" stroke="#ffffff" fill="none">
+    <circle cx="862" cy="90" r="64" stroke-width="7"/>
+    <path d="M907 135 l95 68" stroke-width="12" stroke-linecap="round"/>
+    <path d="M650 62 h170 M686 62 v92 M774 62 v92 M662 154 h160" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <text x="48" y="86" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="30" font-weight="700" fill="#d9a21a">PRIVATE ADMIN RSVP IMAGE</text>
+  ${svgTextBlock({ text: event.title || "Elizabeth & Angela's OIT MLS Graduation", x: 48, y: 150, maxChars: 30, maxLines: 2, size: 46, weight: 900, fill: "#ffffff", anchor: "start", lineHeight: 1.03 })}
+  <text x="48" y="218" font-family="Manrope, Arial, sans-serif" font-size="23" font-weight="800" fill="#d7e8f5">Created ${escapeXml(generatedAt)}</text>
+
+  <g font-family="Manrope, Arial, sans-serif" filter="none">
+    <rect x="48" y="272" width="300" height="108" rx="24" fill="#003767"/>
+    <rect x="390" y="272" width="300" height="108" rx="24" fill="#fff1c7" stroke="#d9a21a" stroke-width="2"/>
+    <rect x="732" y="272" width="300" height="108" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="2"/>
+    <text x="84" y="314" font-size="23" font-weight="900" fill="#d9a21a">YES</text>
+    <text x="84" y="360" font-size="48" font-weight="900" fill="#ffffff">${current.yes}</text>
+    <text x="426" y="314" font-size="23" font-weight="900" fill="#7a5700">MAYBE</text>
+    <text x="426" y="360" font-size="48" font-weight="900" fill="#17212b">${current.maybe}</text>
+    <text x="768" y="314" font-size="23" font-weight="900" fill="#8c1020">NO</text>
+    <text x="768" y="360" font-size="48" font-weight="900" fill="#17212b">${current.no}</text>
+  </g>
+  ${rowMarkup}
+</svg>`
     };
-    image.src = url;
+  }
+
+  async function saveRsvpImage() {
+    if (!state.adminUnlocked) return;
+    setText("#admin-feedback", "Preparing RSVP image...");
+    try {
+      const image = rsvpImageSvg();
+      const blob = await svgToPngBlob(image.svg, image.width, image.height);
+      await showSaveableImage(blob, {
+        fileName: "graduation-rsvps.png",
+        previewSelector: "#rsvp-image-preview",
+        feedbackSelector: "#admin-feedback",
+        shareTitle: "Graduation RSVP list"
+      });
+    } catch (error) {
+      console.error(error);
+      setText("#admin-feedback", "Could not create the RSVP image yet.");
+    }
   }
 
   function bindForms() {
@@ -1552,24 +1708,7 @@
       renderAll();
     });
 
-    $("#export-rsvps").addEventListener("click", () => {
-      const headers = ["name", "response", "party_count", "note", "updated_at"];
-      const lines = [
-        headers.join(","),
-        ...state.rsvps.map((rsvp) =>
-          [rsvp.name, rsvp.response, rsvp.partyCount, rsvp.note, rsvp.updatedAt || rsvp.createdAt]
-            .map((value) => `"${String(value || "").replace(/"/g, '""')}"`)
-            .join(",")
-        )
-      ];
-      const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "graduation-rsvps.csv";
-      link.click();
-      URL.revokeObjectURL(url);
-    });
+    $("#export-rsvps").addEventListener("click", saveRsvpImage);
 
     $("#download-selected-memories").addEventListener("click", () => {
       downloadMemoryBatch(selectedMemories());

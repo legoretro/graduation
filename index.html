@@ -54,7 +54,7 @@
                   <p class="kicker">RSVP List</p>
                   <h3>Who has RSVP'd</h3>
                 </div>
-                <button class="button secondary" id="export-rsvps" type="button">Export CSV</button>
+                <button class="button secondary" id="export-rsvps" type="button">Save RSVP Image</button>
               </div>
               <p class="admin-summary" id="admin-summary"></p>
               <div class="table-wrap">
@@ -71,6 +71,7 @@
                   <tbody id="admin-rsvp-rows"></tbody>
                 </table>
               </div>
+              <img class="download-preview admin-download-preview" id="rsvp-image-preview" alt="RSVP list image" hidden>
             </section>
 
             <section class="admin-card">
@@ -187,9 +188,10 @@
               </div>
             </figure>
             <div class="invite-download-row">
-              <button class="button primary" id="download-invite-png" type="button">Download Invite Image</button>
+              <button class="button primary" id="download-invite-png" type="button">Save Invite Image</button>
             </div>
             <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
+            <img class="download-preview invite-image-preview" id="invite-image-preview" alt="Generated invitation image" hidden>
             <div class="inline-admin-card invite-admin-card" data-admin-edit-panel hidden>
               <label>
                 Card headline

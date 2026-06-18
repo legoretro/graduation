@@ -779,13 +779,13 @@ p {
 }
 
 .microscope-art {
-  bottom: -12%;
+  bottom: -20%;
   filter: drop-shadow(0 18px 18px rgba(0, 31, 63, 0.24));
-  left: 40%;
+  left: 35%;
   max-width: none;
-  opacity: 0.84;
+  opacity: 0.9;
   transform: rotate(-8deg);
-  width: 29%;
+  width: 39%;
 }
 
 .cell-art {
@@ -911,14 +911,14 @@ p {
   border-radius: var(--radius);
   box-shadow: 0 10px 24px rgba(0, 31, 63, 0.1);
   min-width: 0;
-  padding: clamp(0.45rem, 1.3vw, 0.82rem);
+  padding: clamp(0.55rem, 1.55vw, 1rem);
 }
 
 .invite-card-details span {
   color: var(--oit-gold);
   display: block;
   font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(0.52rem, 1.15vw, 0.68rem);
+  font-size: clamp(0.56rem, 1.25vw, 0.75rem);
   font-weight: 950;
   text-transform: uppercase;
 }
@@ -932,14 +932,14 @@ p {
 
 .invite-card-details strong {
   color: var(--ink);
-  font-size: clamp(0.6rem, 1.5vw, 0.98rem);
+  font-size: clamp(0.72rem, 1.85vw, 1.22rem);
   line-height: 1.1;
   margin-top: 0.2rem;
 }
 
 .invite-card-details em {
   color: var(--muted);
-  font-size: clamp(0.52rem, 1.2vw, 0.78rem);
+  font-size: clamp(0.56rem, 1.28vw, 0.86rem);
   font-weight: 800;
   line-height: 1.2;
   margin-top: 0.22rem;
@@ -955,10 +955,10 @@ p {
   gap: clamp(0.32rem, 1vw, 0.72rem);
   grid-area: footer;
   grid-template-rows: auto auto auto;
-  align-content: center;
+  align-content: start;
   justify-items: center;
   min-width: 0;
-  padding: clamp(0.5rem, 1.4vw, 0.9rem);
+  padding: clamp(0.72rem, 2vw, 1.2rem) clamp(0.5rem, 1.4vw, 0.9rem);
 }
 
 .invite-card-footer::before {
@@ -977,7 +977,7 @@ p {
   border-radius: 6px;
   box-shadow: 0 10px 22px rgba(0, 31, 63, 0.1);
   padding: 0.22rem;
-  width: clamp(4.2rem, 11.5vw, 7.6rem);
+  width: clamp(4.8rem, 12.5vw, 8.5rem);
 }
 
 .invite-card-footer p {
@@ -1039,11 +1039,57 @@ p {
   min-height: 1rem;
 }
 
+.download-preview {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: block;
+  height: auto;
+  margin-top: 0.35rem;
+  max-width: 100%;
+}
+
+.invite-image-preview {
+  width: min(100%, 520px);
+}
+
+.admin-download-preview {
+  width: min(100%, 520px);
+}
+
 .rsvp-section,
 .gallery-section {
   background:
     linear-gradient(90deg, rgba(0, 56, 168, 0.05), rgba(255, 255, 255, 0.95), rgba(206, 17, 38, 0.05)),
     var(--white);
+}
+
+.rsvp-section {
+  background:
+    radial-gradient(circle at 11% 15%, rgba(217, 162, 26, 0.28), transparent 24rem),
+    radial-gradient(circle at 84% 12%, rgba(0, 55, 103, 0.15), transparent 22rem),
+    linear-gradient(90deg, rgba(255, 250, 240, 0.98), rgba(231, 241, 248, 0.92), rgba(238, 247, 240, 0.96));
+  border-block: 1px solid rgba(217, 162, 26, 0.32);
+  position: relative;
+}
+
+.rsvp-section .section-inner {
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(0, 55, 103, 0.12);
+  border-radius: var(--radius);
+  box-shadow: 0 22px 60px rgba(0, 31, 63, 0.12);
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+.rsvp-section h2 {
+  color: var(--oit-blue);
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.rsvp-section .panel {
+  border: 2px solid rgba(217, 162, 26, 0.72);
+  box-shadow: 0 18px 0 rgba(0, 31, 63, 0.12), 0 22px 55px rgba(0, 31, 63, 0.14);
 }
 
 .counts {
@@ -1054,22 +1100,23 @@ p {
 }
 
 .counts div {
-  background: linear-gradient(150deg, var(--sky), rgba(255, 209, 102, 0.28));
-  border: 1px solid var(--line);
+  background: linear-gradient(150deg, var(--oit-blue), #075a86);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(0, 31, 63, 0.16);
   min-height: 5.2rem;
   padding: 0.8rem;
 }
 
 .counts span {
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.76);
   display: block;
   font-size: 0.85rem;
   font-weight: 850;
 }
 
 .counts strong {
-  color: var(--oit-blue);
+  color: var(--white);
   display: block;
   font-size: 1.8rem;
   margin-top: 0.25rem;
@@ -2033,7 +2080,7 @@ footer a {
   }
 
   .invite-card-details div {
-    padding: 0.36rem;
+    padding: 0.4rem;
   }
 
   .invite-card-details span {
@@ -2041,17 +2088,17 @@ footer a {
   }
 
   .invite-card-details strong {
-    font-size: 0.55rem;
+    font-size: 0.64rem;
   }
 
   .invite-card-details em {
-    font-size: 0.46rem;
+    font-size: 0.5rem;
   }
 
   .invite-card-footer {
-    align-content: end;
+    align-content: start;
     gap: 0.28rem;
-    padding: 0.38rem;
+    padding: 0.46rem 0.34rem;
   }
 
   .invite-card-footer::before {
@@ -2059,7 +2106,7 @@ footer a {
   }
 
   .invite-card-footer img {
-    width: 3.8rem;
+    width: 4.25rem;
   }
 
   .invite-card-footer p {
@@ -2067,9 +2114,9 @@ footer a {
   }
 
   .microscope-art {
-    bottom: -13%;
-    left: 42%;
-    width: 27%;
+    bottom: -24%;
+    left: 35%;
+    width: 38%;
   }
 
   .cell-art-a {
