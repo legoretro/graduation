@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-inline-admin-rsvp-photos",
+  contentVersion: "2026-06-17-downloadable-invite-card",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -17,8 +17,11 @@ window.GRADUATION_CONFIG = {
     graduationAddress: "OHSU, Portland, OR - exact room TBA",
     graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
     statusText: "More details soon",
-    note: "Final date, exact OHSU room, and the Canva invite can be updated anytime.",
-    inviteCopy: "Your 4x6 Canva invitation will live here once it is ready, with a download button for family who want to save it."
+    note: "Final date, exact OHSU room, and the invite card can be updated anytime.",
+    inviteCopy: "Download this 4x6 invite as a print-ready image or send it as an e-invite.",
+    inviteHeadline: "Join us to celebrate",
+    inviteTagline: "OIT/OHSU Medical Laboratory Science Graduation",
+    inviteFooter: "Scan to RSVP, get directions, leave a note, and share photos."
   },
 
   admin: {
@@ -31,7 +34,6 @@ window.GRADUATION_CONFIG = {
 
   assets: {
     heroImage: "assets/hero-celebration.png",
-    invitationImage: "",
     photos: []
   },
 

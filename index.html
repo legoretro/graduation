@@ -153,12 +153,20 @@
         <div class="section-inner two-col">
           <div>
             <p class="kicker">4x6 magic</p>
-            <h2>Tiny 4x6 invite goes here.</h2>
-            <p id="invite-copy" data-inline-setting="event.inviteCopy">When the final invitation image is ready, put it in assets/ and update config.js.</p>
+            <h2>Downloadable invite card.</h2>
+            <p id="invite-copy" data-inline-setting="event.inviteCopy">Download this 4x6 invite as a print-ready image or send it as an e-invite.</p>
             <div class="inline-admin-card" data-admin-edit-panel hidden>
               <label>
-                Invitation image URL or asset path
-                <input data-inline-input="assets.invitationImage" placeholder="assets/canva-invitation.png">
+                Card headline
+                <input data-inline-input="event.inviteHeadline" placeholder="Join us to celebrate">
+              </label>
+              <label>
+                Card tagline
+                <input data-inline-input="event.inviteTagline" placeholder="OIT/OHSU Medical Laboratory Science Graduation">
+              </label>
+              <label>
+                Card footer note
+                <input data-inline-input="event.inviteFooter" placeholder="Scan to RSVP and see details">
               </label>
               <label>
                 Hero image URL or asset path
@@ -179,14 +187,39 @@
             </div>
           </div>
           <div class="invite-tools">
-            <figure class="invite-card">
-              <div id="invite-placeholder">
-                <span>Canva invitation image</span>
-                <strong>Drop in later</strong>
+            <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Downloadable graduation invitation card">
+              <div class="invite-card-bg" aria-hidden="true"></div>
+              <div class="invite-card-content">
+                <p class="invite-mini">OIT / OHSU MLS</p>
+                <h3 id="invite-card-headline" data-inline-setting="event.inviteHeadline">Join us to celebrate</h3>
+                <p class="invite-card-title" id="invite-card-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</p>
+                <p class="invite-card-tagline" id="invite-card-tagline" data-inline-setting="event.inviteTagline">Medical Laboratory Science Graduation</p>
+
+                <div class="invite-card-details">
+                  <div>
+                    <span>When</span>
+                    <strong id="invite-card-date">December 2026</strong>
+                    <em id="invite-card-time">Time TBA</em>
+                  </div>
+                  <div>
+                    <span>Where</span>
+                    <strong id="invite-card-location">Graduation at OHSU</strong>
+                    <em id="invite-card-address">OHSU, Portland, OR</em>
+                  </div>
+                </div>
+
+                <div class="invite-card-footer">
+                  <img id="invite-card-qr" alt="QR code to RSVP">
+                  <p id="invite-card-footer-copy" data-inline-setting="event.inviteFooter">Scan to RSVP, get directions, leave a note, and share photos.</p>
+                </div>
               </div>
-              <img id="invite-image" alt="Graduation invitation" hidden>
             </figure>
-            <a class="button secondary invite-download" id="invite-download" href="#" download hidden>Download invitation</a>
+            <div class="invite-download-row">
+              <button class="button secondary" id="download-invite-png" type="button">Download PNG</button>
+              <button class="button secondary" id="download-invite-svg" type="button">Download SVG</button>
+              <button class="button quiet" id="print-invite-card" type="button">Print card</button>
+            </div>
+            <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
             <div class="qr-share-card">
               <img id="qr-image" alt="QR code for the graduation website">
               <div>

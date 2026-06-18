@@ -116,7 +116,10 @@
         graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
         statusText: defaultConfig.event?.statusText,
         note: defaultConfig.event?.note,
-        inviteCopy: defaultConfig.event?.inviteCopy
+        inviteCopy: defaultConfig.event?.inviteCopy,
+        inviteHeadline: defaultConfig.event?.inviteHeadline,
+        inviteTagline: defaultConfig.event?.inviteTagline,
+        inviteFooter: defaultConfig.event?.inviteFooter
       },
       assets: {
         heroImage: defaultConfig.assets?.heroImage,
@@ -256,6 +259,14 @@
     setText("#quick-grad-location", event.graduationLocationName || event.locationName);
     setText("#quick-grad-address", event.graduationAddress || event.address);
     setText("#invite-copy", event.inviteCopy);
+    setText("#invite-card-headline", event.inviteHeadline || "Join us to celebrate");
+    setText("#invite-card-title", event.title);
+    setText("#invite-card-tagline", event.inviteTagline || "OIT/OHSU Medical Laboratory Science Graduation");
+    setText("#invite-card-date", event.dateText);
+    setText("#invite-card-time", event.timeText);
+    setText("#invite-card-location", event.graduationLocationName || event.locationName);
+    setText("#invite-card-address", event.graduationAddress || event.address);
+    setText("#invite-card-footer-copy", event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share photos.");
     setText("#footer-title", event.title);
 
     setHref("#hero-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
@@ -267,24 +278,6 @@
       $("#hero-image").style.backgroundImage = `url("${config.assets.heroImage}")`;
     } else {
       $(".hero").classList.remove("custom-hero");
-    }
-
-    if (config.assets?.invitationImage) {
-      const image = $("#invite-image");
-      image.src = config.assets.invitationImage;
-      image.hidden = false;
-      $("#invite-placeholder").hidden = true;
-      const download = $("#invite-download");
-      if (download) {
-        download.href = config.assets.invitationImage;
-        download.hidden = false;
-      }
-    } else {
-      const image = $("#invite-image");
-      const download = $("#invite-download");
-      if (image) image.hidden = true;
-      if ($("#invite-placeholder")) $("#invite-placeholder").hidden = false;
-      if (download) download.hidden = true;
     }
 
     renderResources("#hotel-list", config.stay || []);
@@ -299,6 +292,8 @@
   function hydrateShareTools() {
     const qr = $("#qr-image");
     if (qr) qr.src = qrImageUrl();
+    const inviteQr = $("#invite-card-qr");
+    if (inviteQr) inviteQr.src = qrImageUrl();
   }
 
   function initSupabase() {
@@ -1152,6 +1147,219 @@
     }
   }
 
+  function escapeXml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function svgTextLines(value, maxChars, maxLines) {
+    const words = String(value || "").trim().split(/\s+/).filter(Boolean);
+    const lines = [];
+    let current = "";
+    words.forEach((word) => {
+      const next = current ? `${current} ${word}` : word;
+      if (next.length > maxChars && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = next;
+      }
+    });
+    if (current) lines.push(current);
+    if (lines.length > maxLines) {
+      const kept = lines.slice(0, maxLines);
+      kept[maxLines - 1] = `${kept[maxLines - 1].replace(/\.+$/, "")}...`;
+      return kept;
+    }
+    return lines;
+  }
+
+  function svgTextBlock({ text, x, y, maxChars, maxLines, size, weight = 700, fill = "#17212b", anchor = "middle", lineHeight = 1.12, family = "Space Grotesk, Manrope, Arial, sans-serif" }) {
+    const lines = svgTextLines(text, maxChars, maxLines);
+    const tspans = lines
+      .map((line, index) => `<tspan x="${x}" dy="${index ? size * lineHeight : 0}">${escapeXml(line)}</tspan>`)
+      .join("");
+    return `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="${family}" font-size="${size}" font-weight="${weight}" fill="${fill}">${tspans}</text>`;
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Could not prepare the QR code."));
+      reader.onload = () => resolve(String(reader.result));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function inviteQrDataUrl() {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 2500);
+    try {
+      const response = await fetch(qrImageUrl(), { mode: "cors", signal: controller.signal });
+      if (!response.ok) throw new Error("QR request failed.");
+      return await blobToDataUrl(await response.blob());
+    } catch (error) {
+      console.warn(error);
+      return qrImageUrl();
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  }
+
+  function invitationSvg(qrHref) {
+    const event = config.event || {};
+    const title = event.title || "Elizabeth & Angela's OIT MLS Graduation";
+    const headline = event.inviteHeadline || "Join us to celebrate";
+    const tagline = event.inviteTagline || "OIT/OHSU Medical Laboratory Science Graduation";
+    const date = event.dateText || "December 2026";
+    const time = event.timeText || "Time TBA";
+    const place = event.graduationLocationName || event.locationName || "Graduation at OHSU";
+    const address = event.graduationAddress || event.address || "OHSU, Portland, OR";
+    const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share photos.";
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1800" viewBox="0 0 1200 1800">
+  <defs>
+    <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="0.47" stop-color="#e8f2f7"/>
+      <stop offset="1" stop-color="#eef7f0"/>
+    </linearGradient>
+    <linearGradient id="bluePanel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#001f3f"/>
+      <stop offset="1" stop-color="#003767"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#0a1f33" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="1800" fill="url(#cardBg)"/>
+  <rect x="0" y="0" width="1200" height="350" fill="url(#bluePanel)"/>
+  <rect x="0" y="350" width="200" height="16" fill="#003767"/>
+  <rect x="200" y="350" width="200" height="16" fill="#d9a21a"/>
+  <rect x="400" y="350" width="200" height="16" fill="#0038a8"/>
+  <rect x="600" y="350" width="200" height="16" fill="#ce1126"/>
+  <rect x="800" y="350" width="200" height="16" fill="#fffaf0"/>
+  <rect x="1000" y="350" width="200" height="16" fill="#009246"/>
+
+  <g opacity="0.18" stroke="#ffffff" fill="none">
+    <circle cx="170" cy="145" r="92" stroke-width="8"/>
+    <path d="M242 197 L442 330" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="910" cy="116" r="58" stroke-width="7"/>
+    <path d="M875 190 h150 M914 190 v88 M958 190 v88 M892 278 h88" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <g opacity="0.16" stroke="#003767">
+    <path d="M95 455 H1105 M95 525 H1105 M95 595 H1105 M95 665 H1105" stroke-width="2"/>
+    <path d="M180 410 V720 M270 410 V720 M360 410 V720 M450 410 V720 M540 410 V720 M630 410 V720 M720 410 V720 M810 410 V720 M900 410 V720 M990 410 V720" stroke-width="2"/>
+  </g>
+  <g opacity="0.22">
+    <circle cx="100" cy="790" r="10" fill="#d9a21a"/>
+    <circle cx="1080" cy="460" r="12" fill="#ce1126"/>
+    <circle cx="1020" cy="720" r="9" fill="#009246"/>
+    <circle cx="170" cy="1010" r="8" fill="#0038a8"/>
+  </g>
+
+  <text x="600" y="135" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="40" font-weight="900" fill="#d9a21a" letter-spacing="2">OIT / OHSU MEDICAL LABORATORY SCIENCE</text>
+  ${svgTextBlock({ text: headline.toUpperCase(), x: 600, y: 248, maxChars: 24, maxLines: 2, size: 82, weight: 800, fill: "#ffffff" })}
+
+  <g filter="url(#softShadow)">
+    <rect x="90" y="430" width="1020" height="1010" rx="28" fill="#ffffff" opacity="0.94"/>
+  </g>
+  ${svgTextBlock({ text: title, x: 600, y: 565, maxChars: 26, maxLines: 3, size: 82, weight: 800, fill: "#003767" })}
+  ${svgTextBlock({ text: tagline, x: 600, y: 805, maxChars: 38, maxLines: 2, size: 34, weight: 800, fill: "#5c6874", family: "Manrope, Arial, sans-serif" })}
+
+  <g font-family="Manrope, Arial, sans-serif">
+    <rect x="170" y="910" width="395" height="210" rx="22" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="3"/>
+    <rect x="635" y="910" width="395" height="210" rx="22" fill="#fffaf0" stroke="#d7e0e8" stroke-width="3"/>
+    <text x="200" y="970" font-size="28" font-weight="900" fill="#d9a21a">WHEN</text>
+    <text x="200" y="1032" font-size="43" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
+    <text x="200" y="1088" font-size="34" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
+    <text x="665" y="970" font-size="28" font-weight="900" fill="#d9a21a">WHERE</text>
+    ${svgTextBlock({ text: place, x: 665, y: 1032, maxChars: 18, maxLines: 2, size: 36, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    ${svgTextBlock({ text: address, x: 665, y: 1130, maxChars: 24, maxLines: 2, size: 28, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+  </g>
+
+  <g>
+    <rect x="192" y="1240" width="250" height="250" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
+    <image x="212" y="1260" width="210" height="210" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
+    <text x="485" y="1320" font-family="Space Grotesk, Arial, sans-serif" font-size="42" font-weight="800" fill="#003767">RSVP + details</text>
+    ${svgTextBlock({ text: footer, x: 485, y: 1382, maxChars: 30, maxLines: 3, size: 30, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+  </g>
+
+  <text x="600" y="1665" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="900" fill="#003767">${escapeXml(shareUrl())}</text>
+</svg>`;
+  }
+
+  function downloadBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function downloadInvitationSvg() {
+    setText("#invite-download-feedback", "Preparing invite...");
+    const svg = invitationSvg(await inviteQrDataUrl());
+    downloadBlob(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), "elizabeth-angela-graduation-invite.svg");
+    setText("#invite-download-feedback", "SVG invite downloaded.");
+  }
+
+  async function downloadInvitationPng() {
+    setText("#invite-download-feedback", "Preparing print-ready image...");
+    const svg = invitationSvg(await inviteQrDataUrl());
+    const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1200;
+      canvas.height = 1800;
+      const context = canvas.getContext("2d");
+      context.drawImage(image, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          setText("#invite-download-feedback", "Could not create the PNG yet. Try SVG.");
+          return;
+        }
+        downloadBlob(blob, "elizabeth-angela-graduation-invite.png");
+        setText("#invite-download-feedback", "PNG invite downloaded.");
+      }, "image/png");
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      setText("#invite-download-feedback", "Could not create the PNG yet. Try SVG.");
+    };
+    image.src = url;
+  }
+
+  async function printInvitationCard() {
+    setText("#invite-download-feedback", "Opening print card...");
+    const svg = invitationSvg(await inviteQrDataUrl());
+    const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+    const printWindow = window.open(url, "_blank");
+    if (!printWindow) {
+      setText("#invite-download-feedback", "Popup blocked. Download PNG or SVG instead.");
+      URL.revokeObjectURL(url);
+      return;
+    }
+    window.setTimeout(() => {
+      try {
+        printWindow.print();
+      } catch (error) {
+        console.warn(error);
+      }
+      URL.revokeObjectURL(url);
+    }, 900);
+    setText("#invite-download-feedback", "Print card opened.");
+  }
+
   function bindForms() {
     $("#rsvp-form").addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1329,6 +1537,9 @@
     });
 
     $("#share-qr-button").addEventListener("click", shareQrCode);
+    $("#download-invite-png").addEventListener("click", downloadInvitationPng);
+    $("#download-invite-svg").addEventListener("click", downloadInvitationSvg);
+    $("#print-invite-card").addEventListener("click", printInvitationCard);
   }
 
   async function loadWeather() {

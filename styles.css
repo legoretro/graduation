@@ -696,42 +696,181 @@ p {
 .invite-card {
   aspect-ratio: 2 / 3;
   justify-self: end;
-  max-height: 520px;
-  max-width: 340px;
+  max-height: 570px;
+  max-width: 380px;
   min-height: 0;
   margin: 0;
   overflow: hidden;
-  width: min(100%, 340px);
+  width: min(100%, 380px);
 }
 
-.invite-download {
-  justify-self: end;
-  width: min(100%, 340px);
-}
-
-.invite-card img {
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-#invite-placeholder {
-  align-items: center;
-  background:
-    linear-gradient(135deg, rgba(0, 56, 168, 0.12), rgba(244, 180, 0, 0.2), rgba(0, 146, 70, 0.12)),
-    repeating-linear-gradient(45deg, rgba(206, 17, 38, 0.08) 0, rgba(206, 17, 38, 0.08) 10px, transparent 10px, transparent 22px);
+.invite-download-row {
   display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-self: end;
+  width: min(100%, 380px);
+}
+
+.invite-download-row .button {
+  min-height: 2.55rem;
+  padding: 0.62rem 0.65rem;
+}
+
+.generated-invite-card {
+  background:
+    linear-gradient(180deg, var(--oit-blue-dark) 0 22%, transparent 22%),
+    linear-gradient(135deg, #fffaf0, #e7f1f8 48%, #eef7f0);
+  color: var(--ink);
+  isolation: isolate;
+  padding: 0;
+}
+
+.invite-card-bg {
+  inset: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.invite-card-bg::before {
+  background:
+    linear-gradient(rgba(0, 55, 103, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 55, 103, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+  content: "";
+  inset: 24% 0 0;
+  opacity: 0.52;
+  position: absolute;
+}
+
+.invite-card-bg::after {
+  background:
+    radial-gradient(circle at 18% 8%, rgba(217, 162, 26, 0.85) 0 5%, transparent 14%),
+    radial-gradient(circle at 88% 28%, rgba(0, 146, 70, 0.24) 0 12%, transparent 24%),
+    radial-gradient(circle at 82% 72%, rgba(206, 17, 38, 0.14) 0 11%, transparent 26%),
+    linear-gradient(90deg, var(--oit-blue) 0 16.6%, var(--oit-gold) 16.6% 33.2%, var(--philippine-blue) 33.2% 49.8%, var(--fiesta-red) 49.8% 66.4%, var(--paper) 66.4% 83%, var(--fiesta-green) 83%);
+  bottom: 0;
+  content: "";
+  height: 0.55rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.invite-card-content {
+  display: grid;
+  gap: 0.62rem;
+  grid-template-rows: auto auto auto auto 1fr auto;
   height: 100%;
-  min-height: 0;
-  padding: 2rem;
-  place-items: center;
+  padding: 1.05rem;
+  position: relative;
+  z-index: 1;
+}
+
+.invite-mini {
+  color: var(--oit-gold);
+  font-size: 0.68rem;
+  font-weight: 950;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.invite-card h3 {
+  color: var(--white);
+  font-size: 1.42rem;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.invite-card-title {
+  color: var(--oit-blue);
+  font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.72rem;
+  font-weight: 800;
+  line-height: 0.98;
+  margin: 2.15rem 0 0;
   text-align: center;
 }
 
-#invite-placeholder strong {
-  color: var(--oit-blue);
+.invite-card-tagline {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 850;
+  line-height: 1.25;
+  margin: 0;
+  text-align: center;
+}
+
+.invite-card-details {
   display: block;
-  font-size: 2rem;
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: 1fr;
+}
+
+.invite-card-details div {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.72rem;
+}
+
+.invite-card-details span {
+  color: var(--oit-gold);
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.invite-card-details strong,
+.invite-card-details em {
+  display: block;
+  font-style: normal;
+}
+
+.invite-card-details strong {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.1;
+  margin-top: 0.2rem;
+}
+
+.invite-card-details em {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 0.22rem;
+}
+
+.invite-card-footer {
+  align-items: center;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 5.4rem minmax(0, 1fr);
+  margin-top: 0.2rem;
+}
+
+.invite-card-footer img {
+  aspect-ratio: 1;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.25rem;
+  width: 5.4rem;
+}
+
+.invite-card-footer p {
+  color: var(--oit-blue);
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.22;
+  margin: 0;
 }
 
 .inline-admin-card,
@@ -1556,7 +1695,7 @@ footer a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .invite-download {
+  .invite-download-row {
     justify-self: center;
   }
 
@@ -1734,6 +1873,10 @@ footer a {
 
   .invite-card {
     justify-self: center;
+  }
+
+  .invite-download-row {
+    grid-template-columns: 1fr;
   }
 
   .inline {
