@@ -1262,6 +1262,16 @@
     <path d="M512 170 H588 M550 132 V208" stroke-width="8" stroke-linecap="round"/>
     <path d="M770 170 h170 M812 170 v118 M898 170 v118 M790 288 h150" stroke-width="10" stroke-linecap="round"/>
   </g>
+  <g opacity="0.2" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="170" y="985" width="300" height="34" rx="17" stroke-width="9"/>
+    <path d="M246 984 v-106 l120 -58" stroke-width="11"/>
+    <circle cx="392" cy="808" r="46" stroke-width="10"/>
+    <path d="M430 834 l115 82" stroke-width="11"/>
+    <rect x="615" y="982" width="170" height="44" rx="16" stroke-width="8"/>
+    <rect x="650" y="850" width="28" height="132" rx="14" stroke-width="7"/>
+    <rect x="704" y="820" width="28" height="162" rx="14" stroke-width="7"/>
+    <rect x="758" y="875" width="28" height="107" rx="14" stroke-width="7"/>
+  </g>
   <g opacity="0.18" stroke="#003767">
     <path d="M1160 100 H1710 M1160 165 H1710 M1160 230 H1710 M1160 295 H1710 M1160 360 H1710 M1160 425 H1710 M1160 490 H1710 M1160 555 H1710 M1160 620 H1710 M1160 685 H1710 M1160 750 H1710 M1160 815 H1710 M1160 880 H1710" stroke-width="2"/>
     <path d="M1195 70 V930 M1260 70 V930 M1325 70 V930 M1390 70 V930 M1455 70 V930 M1520 70 V930 M1585 70 V930 M1650 70 V930" stroke-width="2"/>
@@ -1282,6 +1292,14 @@
   ${svgTextBlock({ text: headline.toUpperCase(), x: 120, y: 245, maxChars: 27, maxLines: 1, size: 62, weight: 800, fill: "#ffffff", anchor: "start", family: "Chakra Petch, Space Grotesk, Arial, sans-serif" })}
   ${svgTextBlock({ text: title, x: 120, y: 390, maxChars: 25, maxLines: 2, size: 98, weight: 800, fill: "#ffffff", anchor: "start", lineHeight: 1.02 })}
   ${svgTextBlock({ text: tagline, x: 124, y: 635, maxChars: 48, maxLines: 2, size: 36, weight: 800, fill: "#d7e8f5", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+  <g font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="24" font-weight="700" opacity="0.92">
+    <rect x="120" y="670" width="160" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
+    <rect x="300" y="670" width="190" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
+    <rect x="512" y="670" width="205" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
+    <text x="200" y="703" text-anchor="middle" fill="#ffffff">HEMATOLOGY</text>
+    <text x="395" y="703" text-anchor="middle" fill="#ffffff">MICROBIOLOGY</text>
+    <text x="614" y="703" text-anchor="middle" fill="#ffffff">CHEMISTRY</text>
+  </g>
 
   <g font-family="Manrope, Arial, sans-serif" filter="url(#softShadow)">
     <rect x="120" y="755" width="425" height="180" rx="26" fill="#ffffff" opacity="0.95"/>
@@ -1297,12 +1315,22 @@
   <g filter="url(#softShadow)">
     <rect x="1175" y="122" width="505" height="880" rx="42" fill="#ffffff" opacity="0.94"/>
     <rect x="1175" y="122" width="505" height="14" fill="url(#scienceGold)"/>
-    <text x="1428" y="232" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="42" font-weight="700" fill="#003767">SCAN FOR RSVP</text>
-    <text x="1428" y="288" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="800" fill="#5c6874">directions | notes | photos</text>
+    <circle cx="1242" cy="206" r="42" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="3"/>
+    <text x="1242" y="218" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="28" font-weight="700" fill="#003767">MLS</text>
+    <text x="1458" y="232" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="42" font-weight="700" fill="#003767">SCAN FOR RSVP</text>
+    <text x="1458" y="288" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="800" fill="#5c6874">directions | notes | photos</text>
     <rect x="1303" y="380" width="250" height="250" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
     <image x="1323" y="400" width="210" height="210" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
     ${svgTextBlock({ text: footer, x: 1245, y: 720, maxChars: 25, maxLines: 4, size: 31, weight: 800, fill: "#003767", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-    <text x="1428" y="927" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="900" fill="#5c6874">${escapeXml(shareUrl())}</text>
+    <g font-family="Manrope, Arial, sans-serif" font-size="22" font-weight="900">
+      <rect x="1245" y="848" width="118" height="42" rx="21" fill="#fffaf0" stroke="#d7e0e8" stroke-width="2"/>
+      <rect x="1382" y="848" width="134" height="42" rx="21" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="2"/>
+      <rect x="1535" y="848" width="92" height="42" rx="21" fill="#eef7f0" stroke="#d7e0e8" stroke-width="2"/>
+      <text x="1304" y="876" text-anchor="middle" fill="#003767">LAB</text>
+      <text x="1449" y="876" text-anchor="middle" fill="#003767">FAMILY</text>
+      <text x="1581" y="876" text-anchor="middle" fill="#003767">OHSU</text>
+    </g>
+    <text x="1428" y="940" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="900" fill="#5c6874">${escapeXml(shareUrl())}</text>
   </g>
 </svg>`;
   }

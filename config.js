@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-landscape-science-invite",
+  contentVersion: "2026-06-17-static-mls-invite",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",

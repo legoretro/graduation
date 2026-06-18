@@ -743,11 +743,11 @@ p {
   background:
     linear-gradient(rgba(0, 55, 103, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 55, 103, 0.08) 1px, transparent 1px);
-  animation: grid-drift 14s linear infinite;
   background-size: 28px 28px;
   content: "";
   inset: 0;
-  opacity: 0.42;
+  mask-image: linear-gradient(90deg, transparent 0 18%, black 34% 100%);
+  opacity: 0.38;
   position: absolute;
 }
 
@@ -765,75 +765,190 @@ p {
   right: 0;
 }
 
-.science-sparkles {
+.mls-card-art {
   inset: 0;
   pointer-events: none;
   position: absolute;
   z-index: 1;
 }
 
-.science-sparkles::before,
-.science-sparkles::after {
-  border: 2px solid rgba(217, 162, 26, 0.32);
-  border-radius: 999px;
+.mls-card-art span {
+  display: block;
+  position: absolute;
+}
+
+.mls-card-art .scope {
+  border-bottom: 0.58rem solid rgba(255, 255, 255, 0.22);
+  border-left: 0.42rem solid rgba(255, 255, 255, 0.16);
+  border-radius: 0 0 1rem 1rem;
+  bottom: 24%;
+  height: 4.4rem;
+  left: 9%;
+  opacity: 0.72;
+  transform: rotate(-5deg);
+  width: 8.8rem;
+}
+
+.mls-card-art .scope::before,
+.mls-card-art .scope::after,
+.mls-card-art .pipette::before,
+.mls-card-art .slide::before,
+.mls-card-art .slide::after,
+.mls-card-art .tube::before,
+.mls-card-art .tube::after {
   content: "";
   position: absolute;
 }
 
-.science-sparkles::before {
-  animation: molecule-spin 16s linear infinite;
-  height: 7.4rem;
-  left: 8%;
-  top: 16%;
-  transform: rotate(-18deg);
-  width: 11rem;
-}
-
-.science-sparkles::after {
-  animation: molecule-spin 20s linear infinite reverse;
-  border-color: rgba(0, 146, 70, 0.24);
-  bottom: 13%;
-  height: 5.8rem;
-  right: 15%;
-  transform: rotate(24deg);
-  width: 8.5rem;
-}
-
-.science-sparkles span {
-  animation: lab-float 5s ease-in-out infinite;
-  background: var(--oit-gold);
-  border: 2px solid rgba(255, 255, 255, 0.72);
+.mls-card-art .scope::before {
+  border: 0.38rem solid rgba(217, 162, 26, 0.34);
   border-radius: 50%;
-  box-shadow: 0 0 24px rgba(217, 162, 26, 0.32);
-  height: 0.85rem;
-  position: absolute;
-  width: 0.85rem;
+  height: 3.6rem;
+  left: 0.25rem;
+  top: -2rem;
+  width: 3.6rem;
 }
 
-.science-sparkles span:nth-child(1) {
-  left: 12%;
-  top: 30%;
+.mls-card-art .scope::after {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  height: 0.74rem;
+  left: 3.55rem;
+  top: 0.8rem;
+  transform: rotate(28deg);
+  transform-origin: left center;
+  width: 7.5rem;
 }
 
-.science-sparkles span:nth-child(2) {
-  animation-delay: -1.2s;
-  background: #7cb7d8;
-  left: 44%;
-  top: 20%;
+.mls-card-art .pipette {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  height: 0.62rem;
+  left: 29%;
+  top: 25%;
+  transform: rotate(-31deg);
+  width: 11.5rem;
 }
 
-.science-sparkles span:nth-child(3) {
-  animation-delay: -2.6s;
-  background: #f0b4ca;
-  right: 26%;
-  top: 34%;
+.mls-card-art .pipette::before {
+  background: rgba(217, 162, 26, 0.42);
+  border-radius: 999px;
+  height: 1.25rem;
+  left: -0.7rem;
+  top: -0.32rem;
+  width: 2.15rem;
 }
 
-.science-sparkles span:nth-child(4) {
-  animation-delay: -3.4s;
-  background: #9bd7a6;
+.mls-card-art .tube {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) 28%, rgba(255, 255, 255, 0.06) 28%),
+    linear-gradient(180deg, transparent 54%, rgba(124, 183, 216, 0.45) 54%);
+  border: 0.18rem solid rgba(255, 255, 255, 0.36);
+  border-top: 0;
+  border-radius: 0 0 999px 999px;
+  height: 6.2rem;
+  top: 22%;
+  width: 1.28rem;
+}
+
+.mls-card-art .tube::before {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  height: 0.28rem;
+  left: -0.32rem;
+  top: -0.12rem;
+  width: 1.9rem;
+}
+
+.mls-card-art .tube::after {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  bottom: 0.8rem;
+  height: 0.2rem;
+  left: 0.18rem;
+  width: 0.52rem;
+}
+
+.mls-card-art .tube-a {
+  right: 33%;
+  transform: rotate(-9deg);
+}
+
+.mls-card-art .tube-b {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.18) 30%, rgba(255, 255, 255, 0.05) 30%),
+    linear-gradient(180deg, transparent 58%, rgba(240, 180, 202, 0.5) 58%);
+  right: 29%;
+  top: 19%;
+  transform: rotate(5deg);
+}
+
+.mls-card-art .tube-c {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.18) 26%, rgba(255, 255, 255, 0.05) 26%),
+    linear-gradient(180deg, transparent 48%, rgba(155, 215, 166, 0.48) 48%);
+  right: 25%;
+  top: 24%;
+  transform: rotate(12deg);
+}
+
+.mls-card-art .slide {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(215, 224, 232, 0.92);
+  border-radius: 0.42rem;
   bottom: 18%;
-  right: 12%;
+  height: 3.4rem;
+  right: 13%;
+  transform: rotate(-8deg);
+  width: 9.2rem;
+}
+
+.mls-card-art .slide::before {
+  background: rgba(0, 55, 103, 0.12);
+  border-radius: 999px;
+  height: 1.55rem;
+  left: 3.35rem;
+  top: 0.86rem;
+  width: 2.25rem;
+}
+
+.mls-card-art .slide::after {
+  background:
+    radial-gradient(circle at 25% 45%, rgba(206, 17, 38, 0.5) 0 0.18rem, transparent 0.2rem),
+    radial-gradient(circle at 62% 55%, rgba(0, 56, 168, 0.42) 0 0.14rem, transparent 0.16rem),
+    radial-gradient(circle at 76% 38%, rgba(0, 146, 70, 0.38) 0 0.12rem, transparent 0.14rem);
+  inset: 0.45rem;
+}
+
+.mls-card-art .cells {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(206, 17, 38, 0.48) 0 0.22rem, transparent 0.24rem),
+    radial-gradient(circle at 34% 68%, rgba(217, 162, 26, 0.58) 0 0.2rem, transparent 0.22rem),
+    radial-gradient(circle at 52% 36%, rgba(0, 56, 168, 0.42) 0 0.18rem, transparent 0.2rem),
+    radial-gradient(circle at 70% 70%, rgba(0, 146, 70, 0.42) 0 0.24rem, transparent 0.26rem),
+    radial-gradient(circle at 84% 26%, rgba(206, 17, 38, 0.5) 0 0.16rem, transparent 0.18rem);
+  height: 7.2rem;
+  right: 3%;
+  top: 34%;
+  width: 12rem;
+}
+
+.mls-card-art .badge {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(215, 224, 232, 0.95);
+  border-radius: 50%;
+  color: var(--oit-blue);
+  display: grid;
+  font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 950;
+  height: 4.1rem;
+  justify-items: center;
+  right: 11%;
+  top: 6%;
+  transform: rotate(9deg);
+  width: 4.1rem;
 }
 
 .invite-card-content {
@@ -955,10 +1070,20 @@ p {
   display: grid;
   gap: clamp(0.32rem, 1vw, 0.72rem);
   grid-area: footer;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto auto auto;
+  align-content: center;
   justify-items: center;
   min-width: 0;
   padding: clamp(0.5rem, 1.4vw, 0.9rem);
+}
+
+.invite-card-footer::before {
+  color: var(--oit-blue);
+  content: "Scan RSVP";
+  font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(0.62rem, 1.5vw, 0.95rem);
+  font-weight: 950;
+  text-transform: uppercase;
 }
 
 .invite-card-footer img {
@@ -966,7 +1091,6 @@ p {
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: 6px;
-  margin-top: auto;
   padding: 0.22rem;
   width: clamp(4.2rem, 11.5vw, 7.6rem);
 }
@@ -978,46 +1102,6 @@ p {
   line-height: 1.15;
   margin: 0;
   text-align: center;
-}
-
-@keyframes grid-drift {
-  from {
-    background-position: 0 0;
-  }
-
-  to {
-    background-position: 56px 28px;
-  }
-}
-
-@keyframes lab-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate3d(0.35rem, -0.55rem, 0) scale(1.12);
-  }
-}
-
-@keyframes molecule-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .invite-card-bg::before,
-  .science-sparkles::before,
-  .science-sparkles::after,
-  .science-sparkles span {
-    animation: none;
-  }
 }
 
 .inline-admin-card,
@@ -2084,8 +2168,11 @@ footer a {
   .invite-card-footer {
     align-content: end;
     gap: 0.28rem;
-    grid-template-rows: 1fr;
     padding: 0.38rem;
+  }
+
+  .invite-card-footer::before {
+    font-size: 0.44rem;
   }
 
   .invite-card-footer img {
@@ -2096,14 +2183,72 @@ footer a {
     display: none;
   }
 
-  .science-sparkles::before {
-    height: 3.8rem;
-    width: 5.8rem;
+  .mls-card-art .scope {
+    bottom: 20%;
+    height: 2.9rem;
+    left: 8%;
+    width: 5.5rem;
   }
 
-  .science-sparkles::after {
-    height: 3rem;
-    width: 4.6rem;
+  .mls-card-art .scope::before {
+    height: 2.15rem;
+    top: -1.15rem;
+    width: 2.15rem;
+  }
+
+  .mls-card-art .scope::after {
+    left: 2.15rem;
+    top: 0.62rem;
+    width: 4.25rem;
+  }
+
+  .mls-card-art .pipette {
+    display: none;
+  }
+
+  .mls-card-art .tube {
+    height: 3.7rem;
+    width: 0.82rem;
+  }
+
+  .mls-card-art .tube-a {
+    right: 32%;
+  }
+
+  .mls-card-art .tube-b {
+    right: 28%;
+  }
+
+  .mls-card-art .tube-c {
+    right: 24%;
+  }
+
+  .mls-card-art .slide {
+    bottom: 14%;
+    height: 2rem;
+    right: 13%;
+    width: 5.4rem;
+  }
+
+  .mls-card-art .slide::before {
+    height: 0.85rem;
+    left: 1.92rem;
+    top: 0.54rem;
+    width: 1.36rem;
+  }
+
+  .mls-card-art .cells {
+    height: 4.4rem;
+    right: 2%;
+    top: 34%;
+    width: 6.8rem;
+  }
+
+  .mls-card-art .badge {
+    font-size: 0.58rem;
+    height: 2.45rem;
+    right: 8%;
+    width: 2.45rem;
   }
 
   .inline {
