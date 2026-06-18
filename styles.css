@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Manrope:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Manrope:wght@500;600;700;800;900&family=Parisienne&family=Space+Grotesk:wght@600;700&display=swap");
 
 :root {
   --oit-blue: #003767;
@@ -568,8 +568,9 @@ p {
 
 .secondary {
   background: var(--white);
-  border-color: var(--line);
+  border-color: rgba(0, 55, 103, 0.32);
   color: var(--oit-blue);
+  box-shadow: 0 8px 0 rgba(0, 31, 63, 0.12);
 }
 
 .quiet {
@@ -579,10 +580,10 @@ p {
 }
 
 .fiesta {
-  background: linear-gradient(135deg, var(--oit-blue), #2c668d);
-  border-color: rgba(217, 162, 26, 0.7);
+  background: linear-gradient(135deg, #0c665f, #0b3c5d);
+  border-color: rgba(217, 162, 26, 0.72);
   color: var(--white);
-  box-shadow: 0 10px 0 rgba(0, 31, 63, 0.16);
+  box-shadow: 0 10px 0 rgba(0, 31, 63, 0.18);
 }
 
 .culture-ribbon {
@@ -712,9 +713,9 @@ p {
 .invite-download-row {
   display: grid;
   gap: 0.55rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   justify-self: center;
-  width: min(100%, 820px);
+  width: min(100%, 360px);
 }
 
 .invite-download-row .button {
@@ -724,9 +725,9 @@ p {
 
 .generated-invite-card {
   background:
-    linear-gradient(112deg, var(--oit-blue-dark) 0 42%, rgba(0, 55, 103, 0.9) 42% 58%, transparent 58%),
-    radial-gradient(circle at 78% 18%, rgba(217, 162, 26, 0.2), transparent 24%),
-    linear-gradient(135deg, #f9fbfd, #e7f1f8 48%, #eef7f0);
+    linear-gradient(106deg, rgba(0, 31, 63, 0.98) 0 47%, rgba(0, 55, 103, 0.9) 47% 58%, rgba(248, 251, 253, 0.92) 58%),
+    url("assets/mls-red-cell-pattern.jpg") right center / 48% auto no-repeat,
+    linear-gradient(135deg, #fffaf0, #e7f1f8 48%, #eef7f0);
   color: var(--ink);
   isolation: isolate;
   padding: 0;
@@ -741,21 +742,20 @@ p {
 
 .invite-card-bg::before {
   background:
-    linear-gradient(rgba(0, 55, 103, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 55, 103, 0.08) 1px, transparent 1px);
-  background-size: 28px 28px;
+    radial-gradient(circle at 18% 74%, rgba(217, 162, 26, 0.35) 0 3.8rem, transparent 4rem),
+    radial-gradient(circle at 53% 22%, rgba(124, 183, 216, 0.22) 0 5.5rem, transparent 5.75rem),
+    linear-gradient(rgba(0, 55, 103, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 55, 103, 0.075) 1px, transparent 1px);
+  background-size: auto, auto, 30px 30px, 30px 30px;
   content: "";
   inset: 0;
-  mask-image: linear-gradient(90deg, transparent 0 18%, black 34% 100%);
-  opacity: 0.38;
+  mask-image: linear-gradient(90deg, transparent 0 22%, black 42% 100%);
+  opacity: 0.54;
   position: absolute;
 }
 
 .invite-card-bg::after {
   background:
-    radial-gradient(circle at 15% 12%, rgba(217, 162, 26, 0.8) 0 4%, transparent 12%),
-    radial-gradient(circle at 83% 20%, rgba(0, 146, 70, 0.2) 0 10%, transparent 24%),
-    radial-gradient(circle at 70% 72%, rgba(206, 17, 38, 0.13) 0 10%, transparent 25%),
     linear-gradient(90deg, var(--oit-blue) 0 16.6%, var(--oit-gold) 16.6% 33.2%, var(--philippine-blue) 33.2% 49.8%, var(--fiesta-red) 49.8% 66.4%, var(--paper) 66.4% 83%, var(--fiesta-green) 83%);
   bottom: 0;
   content: "";
@@ -772,195 +772,77 @@ p {
   z-index: 1;
 }
 
+.mls-card-art img,
 .mls-card-art span {
   display: block;
   position: absolute;
 }
 
-.mls-card-art .scope {
-  border-bottom: 0.58rem solid rgba(255, 255, 255, 0.22);
-  border-left: 0.42rem solid rgba(255, 255, 255, 0.16);
-  border-radius: 0 0 1rem 1rem;
-  bottom: 24%;
-  height: 4.4rem;
-  left: 9%;
-  opacity: 0.72;
-  transform: rotate(-5deg);
-  width: 8.8rem;
-}
-
-.mls-card-art .scope::before,
-.mls-card-art .scope::after,
-.mls-card-art .pipette::before,
-.mls-card-art .slide::before,
-.mls-card-art .slide::after,
-.mls-card-art .tube::before,
-.mls-card-art .tube::after {
-  content: "";
-  position: absolute;
-}
-
-.mls-card-art .scope::before {
-  border: 0.38rem solid rgba(217, 162, 26, 0.34);
-  border-radius: 50%;
-  height: 3.6rem;
-  left: 0.25rem;
-  top: -2rem;
-  width: 3.6rem;
-}
-
-.mls-card-art .scope::after {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  height: 0.74rem;
-  left: 3.55rem;
-  top: 0.8rem;
-  transform: rotate(28deg);
-  transform-origin: left center;
-  width: 7.5rem;
-}
-
-.mls-card-art .pipette {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-  height: 0.62rem;
-  left: 29%;
-  top: 25%;
-  transform: rotate(-31deg);
-  width: 11.5rem;
-}
-
-.mls-card-art .pipette::before {
-  background: rgba(217, 162, 26, 0.42);
-  border-radius: 999px;
-  height: 1.25rem;
-  left: -0.7rem;
-  top: -0.32rem;
-  width: 2.15rem;
-}
-
-.mls-card-art .tube {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.2) 28%, rgba(255, 255, 255, 0.06) 28%),
-    linear-gradient(180deg, transparent 54%, rgba(124, 183, 216, 0.45) 54%);
-  border: 0.18rem solid rgba(255, 255, 255, 0.36);
-  border-top: 0;
-  border-radius: 0 0 999px 999px;
-  height: 6.2rem;
-  top: 22%;
-  width: 1.28rem;
-}
-
-.mls-card-art .tube::before {
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  height: 0.28rem;
-  left: -0.32rem;
-  top: -0.12rem;
-  width: 1.9rem;
-}
-
-.mls-card-art .tube::after {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  bottom: 0.8rem;
-  height: 0.2rem;
-  left: 0.18rem;
-  width: 0.52rem;
-}
-
-.mls-card-art .tube-a {
-  right: 33%;
-  transform: rotate(-9deg);
-}
-
-.mls-card-art .tube-b {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.18) 30%, rgba(255, 255, 255, 0.05) 30%),
-    linear-gradient(180deg, transparent 58%, rgba(240, 180, 202, 0.5) 58%);
-  right: 29%;
-  top: 19%;
-  transform: rotate(5deg);
-}
-
-.mls-card-art .tube-c {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.18) 26%, rgba(255, 255, 255, 0.05) 26%),
-    linear-gradient(180deg, transparent 48%, rgba(155, 215, 166, 0.48) 48%);
-  right: 25%;
-  top: 24%;
-  transform: rotate(12deg);
-}
-
-.mls-card-art .slide {
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(215, 224, 232, 0.92);
-  border-radius: 0.42rem;
-  bottom: 18%;
-  height: 3.4rem;
-  right: 13%;
+.microscope-art {
+  bottom: -12%;
+  filter: drop-shadow(0 18px 18px rgba(0, 31, 63, 0.24));
+  left: 40%;
+  max-width: none;
+  opacity: 0.84;
   transform: rotate(-8deg);
-  width: 9.2rem;
+  width: 29%;
 }
 
-.mls-card-art .slide::before {
-  background: rgba(0, 55, 103, 0.12);
-  border-radius: 999px;
-  height: 1.55rem;
-  left: 3.35rem;
-  top: 0.86rem;
-  width: 2.25rem;
+.cell-art {
+  filter: drop-shadow(0 12px 18px rgba(0, 31, 63, 0.16));
+  max-width: none;
 }
 
-.mls-card-art .slide::after {
-  background:
-    radial-gradient(circle at 25% 45%, rgba(206, 17, 38, 0.5) 0 0.18rem, transparent 0.2rem),
-    radial-gradient(circle at 62% 55%, rgba(0, 56, 168, 0.42) 0 0.14rem, transparent 0.16rem),
-    radial-gradient(circle at 76% 38%, rgba(0, 146, 70, 0.38) 0 0.12rem, transparent 0.14rem);
-  inset: 0.45rem;
+.cell-art-a {
+  right: 28%;
+  top: 8%;
+  transform: rotate(13deg);
+  width: 9%;
 }
 
-.mls-card-art .cells {
-  background:
-    radial-gradient(circle at 18% 24%, rgba(206, 17, 38, 0.48) 0 0.22rem, transparent 0.24rem),
-    radial-gradient(circle at 34% 68%, rgba(217, 162, 26, 0.58) 0 0.2rem, transparent 0.22rem),
-    radial-gradient(circle at 52% 36%, rgba(0, 56, 168, 0.42) 0 0.18rem, transparent 0.2rem),
-    radial-gradient(circle at 70% 70%, rgba(0, 146, 70, 0.42) 0 0.24rem, transparent 0.26rem),
-    radial-gradient(circle at 84% 26%, rgba(206, 17, 38, 0.5) 0 0.16rem, transparent 0.18rem);
-  height: 7.2rem;
-  right: 3%;
-  top: 34%;
-  width: 12rem;
+.cell-art-b {
+  bottom: 8%;
+  right: 4%;
+  transform: rotate(-8deg);
+  width: 13%;
 }
 
-.mls-card-art .badge {
+.lab-pill {
   align-items: center;
   background: rgba(255, 255, 255, 0.82);
   border: 1px solid rgba(215, 224, 232, 0.95);
-  border-radius: 50%;
+  border-radius: 999px;
   color: var(--oit-blue);
   display: grid;
   font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 950;
-  height: 4.1rem;
+  height: 2.1rem;
   justify-items: center;
-  right: 11%;
+  padding: 0 0.72rem;
+  right: 15%;
+  text-transform: uppercase;
   top: 6%;
-  transform: rotate(9deg);
-  width: 4.1rem;
+  transform: rotate(7deg);
+}
+
+.lab-pill-b {
+  background: rgba(255, 250, 240, 0.9);
+  right: 4%;
+  top: 16%;
+  transform: rotate(-5deg);
 }
 
 .invite-card-content {
   display: grid;
-  gap: clamp(0.28rem, 1vw, 0.8rem);
+  gap: clamp(0.22rem, 0.85vw, 0.65rem);
   grid-template-areas:
     "mini footer"
     "headline footer"
     "title footer"
     "tagline footer"
     "details footer";
-  grid-template-columns: minmax(0, 1fr) minmax(160px, 0.48fr);
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 0.46fr);
   grid-template-rows: auto auto auto auto 1fr;
   height: 100%;
   padding: clamp(0.78rem, 2.4vw, 1.55rem);
@@ -973,7 +855,7 @@ p {
 }
 
 .invite-mini {
-  color: var(--oit-gold);
+  color: #f1c75f;
   font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(0.62rem, 1.5vw, 0.92rem);
   font-weight: 950;
@@ -984,19 +866,20 @@ p {
 }
 
 .invite-card h3 {
-  color: var(--white);
-  font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(0.82rem, 2.4vw, 1.6rem);
+  color: #f3c79f;
+  font-family: "Parisienne", "Times New Roman", serif;
+  font-size: clamp(1.45rem, 4.4vw, 3.15rem);
+  font-weight: 400;
   grid-area: headline;
-  line-height: 0.98;
+  line-height: 0.82;
   margin: 0;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .invite-card-title {
   color: var(--white);
   font-family: "Space Grotesk", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
-  font-size: clamp(1.05rem, 4.1vw, 2.75rem);
+  font-size: clamp(1.05rem, 4vw, 2.65rem);
   font-weight: 800;
   grid-area: title;
   line-height: 0.96;
@@ -1005,7 +888,7 @@ p {
 }
 
 .invite-card-tagline {
-  color: rgba(255, 255, 255, 0.84);
+  color: rgba(255, 255, 255, 0.88);
   font-size: clamp(0.62rem, 1.6vw, 0.98rem);
   font-weight: 850;
   grid-area: tagline;
@@ -1023,9 +906,10 @@ p {
 }
 
 .invite-card-details div {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(215, 224, 232, 0.92);
+  background: rgba(255, 255, 255, 0.93);
+  border: 1px solid rgba(215, 224, 232, 0.72);
   border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(0, 31, 63, 0.1);
   min-width: 0;
   padding: clamp(0.45rem, 1.3vw, 0.82rem);
 }
@@ -1064,8 +948,8 @@ p {
 .invite-card-footer {
   align-items: center;
   align-self: stretch;
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(215, 224, 232, 0.95);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(215, 224, 232, 0.75);
   border-radius: var(--radius);
   display: grid;
   gap: clamp(0.32rem, 1vw, 0.72rem);
@@ -1091,6 +975,7 @@ p {
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: 6px;
+  box-shadow: 0 10px 22px rgba(0, 31, 63, 0.1);
   padding: 0.22rem;
   width: clamp(4.2rem, 11.5vw, 7.6rem);
 }
@@ -1644,10 +1529,11 @@ textarea:focus,
 }
 
 .admin-dock {
+  bottom: 0.7rem;
   max-width: calc(100% - 1.5rem);
   position: fixed;
   right: 0.75rem;
-  top: 4.35rem;
+  top: auto;
   width: min(620px, calc(100vw - 1.5rem));
   z-index: 30;
 }
@@ -1658,16 +1544,17 @@ textarea:focus,
 }
 
 .admin-dock summary {
-  background: linear-gradient(135deg, var(--oit-gold), var(--sun));
+  background: rgba(255, 250, 240, 0.92);
   border: 1px solid rgba(0, 31, 63, 0.12);
-  border-radius: var(--radius);
-  box-shadow: 0 12px 24px rgba(10, 31, 51, 0.16);
-  color: #1d1b12;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(10, 31, 51, 0.12);
+  color: var(--oit-blue);
   cursor: pointer;
-  font-weight: 950;
+  font-size: 0.78rem;
+  font-weight: 900;
   list-style: none;
   margin-left: auto;
-  padding: 0.7rem 0.9rem;
+  padding: 0.52rem 0.72rem;
   text-align: center;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1682,14 +1569,18 @@ textarea:focus,
   background: rgba(255, 250, 240, 0.98);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  bottom: calc(100% + 0.6rem);
   box-shadow: 0 24px 60px rgba(10, 31, 51, 0.22);
   display: block;
   gap: 1rem;
-  margin-top: 0.7rem;
+  margin-top: 0;
   max-height: min(76vh, 720px);
   overflow: auto;
   padding: 0.9rem;
   pointer-events: auto;
+  position: absolute;
+  right: 0;
+  width: min(620px, calc(100vw - 1.5rem));
 }
 
 .inline {
@@ -1948,8 +1839,8 @@ footer a {
 
   nav {
     display: grid;
-    gap: 0.35rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.25rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     min-width: 0;
     overflow: hidden;
     width: 100%;
@@ -1958,11 +1849,11 @@ footer a {
   nav a {
     align-items: center;
     display: flex;
-    font-size: 0.76rem;
+    font-size: 0.64rem;
     justify-content: center;
     line-height: 1.15;
     min-width: 0;
-    padding: 0.5rem 0.45rem;
+    padding: 0.48rem 0.28rem;
     text-align: center;
     white-space: normal;
     word-break: normal;
@@ -2083,23 +1974,15 @@ footer a {
   }
 
   .admin-dock {
+    bottom: 0.55rem;
     max-width: calc(100vw - 1.5rem);
     right: 0.6rem;
-    top: 7rem;
+    top: auto;
     width: min(420px, calc(100vw - 1.2rem));
   }
 
   .admin-dock summary {
-    font-size: 0;
-  }
-
-  .admin-dock summary::after {
-    content: "Admin";
-    font-size: 0.82rem;
-  }
-
-  nav a[href="#admin"] {
-    display: none;
+    font-size: 0.7rem;
   }
 
   .invite-card {
@@ -2183,72 +2066,33 @@ footer a {
     display: none;
   }
 
-  .mls-card-art .scope {
-    bottom: 20%;
-    height: 2.9rem;
-    left: 8%;
-    width: 5.5rem;
+  .microscope-art {
+    bottom: -13%;
+    left: 42%;
+    width: 27%;
   }
 
-  .mls-card-art .scope::before {
-    height: 2.15rem;
-    top: -1.15rem;
-    width: 2.15rem;
-  }
-
-  .mls-card-art .scope::after {
-    left: 2.15rem;
-    top: 0.62rem;
-    width: 4.25rem;
-  }
-
-  .mls-card-art .pipette {
-    display: none;
-  }
-
-  .mls-card-art .tube {
-    height: 3.7rem;
-    width: 0.82rem;
-  }
-
-  .mls-card-art .tube-a {
-    right: 32%;
-  }
-
-  .mls-card-art .tube-b {
+  .cell-art-a {
     right: 28%;
+    top: 10%;
+    width: 8%;
   }
 
-  .mls-card-art .tube-c {
-    right: 24%;
+  .cell-art-b {
+    bottom: 9%;
+    right: 3%;
+    width: 12%;
   }
 
-  .mls-card-art .slide {
-    bottom: 14%;
-    height: 2rem;
-    right: 13%;
-    width: 5.4rem;
+  .lab-pill {
+    font-size: 0.48rem;
+    height: 1.35rem;
+    padding: 0 0.4rem;
+    right: 12%;
   }
 
-  .mls-card-art .slide::before {
-    height: 0.85rem;
-    left: 1.92rem;
-    top: 0.54rem;
-    width: 1.36rem;
-  }
-
-  .mls-card-art .cells {
-    height: 4.4rem;
+  .lab-pill-b {
     right: 2%;
-    top: 34%;
-    width: 6.8rem;
-  }
-
-  .mls-card-art .badge {
-    font-size: 0.58rem;
-    height: 2.45rem;
-    right: 8%;
-    width: 2.45rem;
   }
 
   .inline {

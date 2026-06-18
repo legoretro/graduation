@@ -1209,16 +1209,41 @@
     }
   }
 
-  function invitationSvg(qrHref) {
+  async function assetDataUrl(path) {
+    try {
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`Could not load ${path}`);
+      return await blobToDataUrl(await response.blob());
+    } catch (error) {
+      console.warn(error);
+      return "";
+    }
+  }
+
+  async function inviteAssetDataUrls() {
+    const [cellPattern, microscope, redCell, smilingCell] = await Promise.all([
+      assetDataUrl("assets/mls-red-cell-pattern.jpg"),
+      assetDataUrl("assets/mls-microscope.png"),
+      assetDataUrl("assets/mls-red-cell-sticker.png"),
+      assetDataUrl("assets/mls-smiling-cell.png")
+    ]);
+    return { cellPattern, microscope, redCell, smilingCell };
+  }
+
+  function invitationSvg(qrHref, art = {}) {
     const event = config.event || {};
     const title = event.title || "Elizabeth & Angela's OIT MLS Graduation";
-    const headline = event.inviteHeadline || "Join us to celebrate";
+    const headline = event.inviteHeadline || "You're invited to";
     const tagline = event.inviteTagline || "OIT/OHSU Medical Laboratory Science Graduation";
     const date = event.dateText || "December 2026";
     const time = event.timeText || "Time TBA";
     const place = event.graduationLocationName || event.locationName || "Graduation at OHSU";
     const address = event.graduationAddress || event.address || "OHSU, Portland, OR";
-    const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share photos.";
+    const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share a memory.";
+    const cellPattern = art.cellPattern ? `<image x="1020" y="-90" width="880" height="1380" href="${escapeXml(art.cellPattern)}" preserveAspectRatio="xMidYMid slice" opacity="0.2"/>` : "";
+    const microscope = art.microscope ? `<image x="740" y="285" width="430" height="610" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.88" transform="rotate(-7 955 590)"/>` : "";
+    const redCell = art.redCell ? `<image x="600" y="95" width="170" height="240" href="${escapeXml(art.redCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(12 685 215)"/>` : "";
+    const smilingCell = art.smilingCell ? `<image x="1540" y="735" width="185" height="265" href="${escapeXml(art.smilingCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(-7 1632 867)"/>` : "";
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
@@ -1241,6 +1266,7 @@
     </filter>
   </defs>
   <rect width="1800" height="1200" fill="url(#cardBg)"/>
+  ${cellPattern}
   <path d="M0 0 H1120 L1010 1200 H0 Z" fill="url(#bluePanel)"/>
   <rect x="0" y="0" width="300" height="18" fill="#003767"/>
   <rect x="300" y="0" width="300" height="18" fill="#d9a21a"/>
@@ -1287,9 +1313,12 @@
     <ellipse cx="1395" cy="170" rx="156" ry="44" transform="rotate(22 1395 170)"/>
     <circle cx="1395" cy="170" r="16" fill="#d9a21a" stroke="none"/>
   </g>
+  ${microscope}
+  ${redCell}
+  ${smilingCell}
 
   <text x="120" y="130" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="36" font-weight="700" fill="#d9a21a">OIT / OHSU MLS</text>
-  ${svgTextBlock({ text: headline.toUpperCase(), x: 120, y: 245, maxChars: 27, maxLines: 1, size: 62, weight: 800, fill: "#ffffff", anchor: "start", family: "Chakra Petch, Space Grotesk, Arial, sans-serif" })}
+  ${svgTextBlock({ text: headline, x: 120, y: 255, maxChars: 30, maxLines: 1, size: 86, weight: 400, fill: "#f3c79f", anchor: "start", family: "Brush Script MT, Snell Roundhand, cursive" })}
   ${svgTextBlock({ text: title, x: 120, y: 390, maxChars: 25, maxLines: 2, size: 98, weight: 800, fill: "#ffffff", anchor: "start", lineHeight: 1.02 })}
   ${svgTextBlock({ text: tagline, x: 124, y: 635, maxChars: 48, maxLines: 2, size: 36, weight: 800, fill: "#d7e8f5", anchor: "start", family: "Manrope, Arial, sans-serif" })}
   <g font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="24" font-weight="700" opacity="0.92">
@@ -1346,16 +1375,9 @@
     URL.revokeObjectURL(url);
   }
 
-  async function downloadInvitationSvg() {
-    setText("#invite-download-feedback", "Preparing invite...");
-    const svg = invitationSvg(await inviteQrDataUrl());
-    downloadBlob(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), "elizabeth-angela-graduation-invite.svg");
-    setText("#invite-download-feedback", "SVG invite downloaded.");
-  }
-
   async function downloadInvitationPng() {
-    setText("#invite-download-feedback", "Preparing print-ready image...");
-    const svg = invitationSvg(await inviteQrDataUrl());
+    setText("#invite-download-feedback", "Preparing invite image...");
+    const svg = invitationSvg(await inviteQrDataUrl(), await inviteAssetDataUrls());
     const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
     const image = new Image();
     image.onload = () => {
@@ -1367,39 +1389,18 @@
       URL.revokeObjectURL(url);
       canvas.toBlob((blob) => {
         if (!blob) {
-          setText("#invite-download-feedback", "Could not create the PNG yet. Try SVG.");
+          setText("#invite-download-feedback", "Could not create the invite image yet. Try again.");
           return;
         }
         downloadBlob(blob, "elizabeth-angela-graduation-invite.png");
-        setText("#invite-download-feedback", "PNG invite downloaded.");
+        setText("#invite-download-feedback", "Invite image downloaded.");
       }, "image/png");
     };
     image.onerror = () => {
       URL.revokeObjectURL(url);
-      setText("#invite-download-feedback", "Could not create the PNG yet. Try SVG.");
+      setText("#invite-download-feedback", "Could not create the invite image yet. Try again.");
     };
     image.src = url;
-  }
-
-  async function printInvitationCard() {
-    setText("#invite-download-feedback", "Opening print card...");
-    const svg = invitationSvg(await inviteQrDataUrl());
-    const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
-    const printWindow = window.open(url, "_blank");
-    if (!printWindow) {
-      setText("#invite-download-feedback", "Popup blocked. Download PNG or SVG instead.");
-      URL.revokeObjectURL(url);
-      return;
-    }
-    window.setTimeout(() => {
-      try {
-        printWindow.print();
-      } catch (error) {
-        console.warn(error);
-      }
-      URL.revokeObjectURL(url);
-    }, 900);
-    setText("#invite-download-feedback", "Print card opened.");
   }
 
   function bindForms() {
@@ -1580,8 +1581,6 @@
 
     $("#share-qr-button").addEventListener("click", shareQrCode);
     $("#download-invite-png").addEventListener("click", downloadInvitationPng);
-    $("#download-invite-svg").addEventListener("click", downloadInvitationSvg);
-    $("#print-invite-card").addEventListener("click", printInvitationCard);
   }
 
   async function loadWeather() {

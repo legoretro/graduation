@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-static-mls-invite",
+  contentVersion: "2026-06-17-artful-mls-invite",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -19,9 +19,9 @@ window.GRADUATION_CONFIG = {
     statusText: "More details soon",
     note: "Final date, exact OHSU room, and the invite card can be updated anytime.",
     inviteCopy: "Download this 6x4 invite as a print-ready image or send it as an e-invite.",
-    inviteHeadline: "Join us to celebrate",
+    inviteHeadline: "You're invited to",
     inviteTagline: "OIT/OHSU Medical Laboratory Science Graduation",
-    inviteFooter: "Scan to RSVP, get directions, leave a note, and share photos."
+    inviteFooter: "Scan to RSVP, get directions, leave a note, and share a memory."
   },
 
   admin: {

@@ -20,8 +20,8 @@
       <nav aria-label="Main navigation">
         <a href="#rsvp">RSVP</a>
         <a href="#board">Leave a Note!</a>
+        <a href="#memories">Share a Memory</a>
         <a href="#visit">Places Nearby</a>
-        <a href="#admin">Admin</a>
       </nav>
     </header>
 
@@ -113,7 +113,7 @@
           <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions, leave a kind note, find Wilsonville-area hotels, and upload graduation-day photos during the celebration.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
-            <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Open Maps</a>
+            <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Map to Graduation</a>
             <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
           </div>
         </div>
@@ -149,24 +149,21 @@
         </article>
       </section>
 
-      <section class="section invite-section">
+      <section class="section invite-section" id="invite">
         <div class="section-inner invite-card-section">
           <div class="invite-tools">
             <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Downloadable graduation invitation card">
               <div class="invite-card-bg" aria-hidden="true"></div>
               <div class="mls-card-art" aria-hidden="true">
-                <span class="scope"></span>
-                <span class="pipette"></span>
-                <span class="tube tube-a"></span>
-                <span class="tube tube-b"></span>
-                <span class="tube tube-c"></span>
-                <span class="slide"></span>
-                <span class="cells"></span>
-                <span class="badge">MLS</span>
+                <img class="microscope-art" src="assets/mls-microscope.png" alt="">
+                <img class="cell-art cell-art-a" src="assets/mls-red-cell-sticker.png" alt="">
+                <img class="cell-art cell-art-b" src="assets/mls-smiling-cell.png" alt="">
+                <span class="lab-pill">MLS</span>
+                <span class="lab-pill lab-pill-b">OHSU/OIT</span>
               </div>
               <div class="invite-card-content">
                 <p class="invite-mini">OIT / OHSU MLS</p>
-                <h3 id="invite-card-headline" data-inline-setting="event.inviteHeadline">Join us to celebrate</h3>
+                <h3 id="invite-card-headline" data-inline-setting="event.inviteHeadline">You're invited to</h3>
                 <p class="invite-card-title" id="invite-card-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</p>
                 <p class="invite-card-tagline" id="invite-card-tagline" data-inline-setting="event.inviteTagline">Medical Laboratory Science Graduation</p>
 
@@ -185,20 +182,18 @@
 
                 <div class="invite-card-footer">
                   <img id="invite-card-qr" alt="QR code to RSVP">
-                  <p id="invite-card-footer-copy" data-inline-setting="event.inviteFooter">Scan to RSVP, get directions, leave a note, and share photos.</p>
+                  <p id="invite-card-footer-copy" data-inline-setting="event.inviteFooter">Scan to RSVP, get directions, leave a note, and share a memory.</p>
                 </div>
               </div>
             </figure>
             <div class="invite-download-row">
-              <button class="button secondary" id="download-invite-png" type="button">Download PNG</button>
-              <button class="button secondary" id="download-invite-svg" type="button">Download SVG</button>
-              <button class="button quiet" id="print-invite-card" type="button">Print card</button>
+              <button class="button primary" id="download-invite-png" type="button">Download Invite Image</button>
             </div>
             <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
             <div class="inline-admin-card invite-admin-card" data-admin-edit-panel hidden>
               <label>
                 Card headline
-                <input data-inline-input="event.inviteHeadline" placeholder="Join us to celebrate">
+                <input data-inline-input="event.inviteHeadline" placeholder="You're invited to">
               </label>
               <label>
                 Card tagline
@@ -324,7 +319,7 @@
         </div>
       </section>
 
-      <section class="section gallery-section">
+      <section class="section gallery-section" id="memories">
         <div class="section-inner">
           <p class="kicker">Memory strip</p>
           <h2>Proof we made it! Share the graduation moments.</h2>
