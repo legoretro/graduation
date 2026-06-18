@@ -1221,75 +1221,89 @@
     const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share photos.";
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1800" viewBox="0 0 1200 1800">
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200" viewBox="0 0 1800 1200">
   <defs>
     <linearGradient id="cardBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fffaf0"/>
-      <stop offset="0.47" stop-color="#e8f2f7"/>
+      <stop offset="0" stop-color="#f8fbfd"/>
+      <stop offset="0.53" stop-color="#e8f2f7"/>
       <stop offset="1" stop-color="#eef7f0"/>
     </linearGradient>
     <linearGradient id="bluePanel" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#001f3f"/>
       <stop offset="1" stop-color="#003767"/>
     </linearGradient>
+    <linearGradient id="scienceGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1c75f"/>
+      <stop offset="1" stop-color="#d9a21a"/>
+    </linearGradient>
     <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#0a1f33" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#0a1f33" flood-opacity="0.16"/>
     </filter>
   </defs>
-  <rect width="1200" height="1800" fill="url(#cardBg)"/>
-  <rect x="0" y="0" width="1200" height="350" fill="url(#bluePanel)"/>
-  <rect x="0" y="350" width="200" height="16" fill="#003767"/>
-  <rect x="200" y="350" width="200" height="16" fill="#d9a21a"/>
-  <rect x="400" y="350" width="200" height="16" fill="#0038a8"/>
-  <rect x="600" y="350" width="200" height="16" fill="#ce1126"/>
-  <rect x="800" y="350" width="200" height="16" fill="#fffaf0"/>
-  <rect x="1000" y="350" width="200" height="16" fill="#009246"/>
+  <rect width="1800" height="1200" fill="url(#cardBg)"/>
+  <path d="M0 0 H1120 L1010 1200 H0 Z" fill="url(#bluePanel)"/>
+  <rect x="0" y="0" width="300" height="18" fill="#003767"/>
+  <rect x="300" y="0" width="300" height="18" fill="#d9a21a"/>
+  <rect x="600" y="0" width="300" height="18" fill="#0038a8"/>
+  <rect x="900" y="0" width="300" height="18" fill="#ce1126"/>
+  <rect x="1200" y="0" width="300" height="18" fill="#fffaf0"/>
+  <rect x="1500" y="0" width="300" height="18" fill="#009246"/>
+  <rect x="0" y="1182" width="300" height="18" fill="#003767"/>
+  <rect x="300" y="1182" width="300" height="18" fill="#d9a21a"/>
+  <rect x="600" y="1182" width="300" height="18" fill="#0038a8"/>
+  <rect x="900" y="1182" width="300" height="18" fill="#ce1126"/>
+  <rect x="1200" y="1182" width="300" height="18" fill="#fffaf0"/>
+  <rect x="1500" y="1182" width="300" height="18" fill="#009246"/>
 
-  <g opacity="0.18" stroke="#ffffff" fill="none">
-    <circle cx="170" cy="145" r="92" stroke-width="8"/>
-    <path d="M242 197 L442 330" stroke-width="14" stroke-linecap="round"/>
-    <circle cx="910" cy="116" r="58" stroke-width="7"/>
-    <path d="M875 190 h150 M914 190 v88 M958 190 v88 M892 278 h88" stroke-width="10" stroke-linecap="round"/>
+  <g opacity="0.15" stroke="#ffffff" fill="none">
+    <circle cx="210" cy="235" r="118" stroke-width="8"/>
+    <path d="M300 310 L520 456" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="550" cy="170" r="38" stroke-width="8"/>
+    <path d="M512 170 H588 M550 132 V208" stroke-width="8" stroke-linecap="round"/>
+    <path d="M770 170 h170 M812 170 v118 M898 170 v118 M790 288 h150" stroke-width="10" stroke-linecap="round"/>
   </g>
-  <g opacity="0.16" stroke="#003767">
-    <path d="M95 455 H1105 M95 525 H1105 M95 595 H1105 M95 665 H1105" stroke-width="2"/>
-    <path d="M180 410 V720 M270 410 V720 M360 410 V720 M450 410 V720 M540 410 V720 M630 410 V720 M720 410 V720 M810 410 V720 M900 410 V720 M990 410 V720" stroke-width="2"/>
+  <g opacity="0.18" stroke="#003767">
+    <path d="M1160 100 H1710 M1160 165 H1710 M1160 230 H1710 M1160 295 H1710 M1160 360 H1710 M1160 425 H1710 M1160 490 H1710 M1160 555 H1710 M1160 620 H1710 M1160 685 H1710 M1160 750 H1710 M1160 815 H1710 M1160 880 H1710" stroke-width="2"/>
+    <path d="M1195 70 V930 M1260 70 V930 M1325 70 V930 M1390 70 V930 M1455 70 V930 M1520 70 V930 M1585 70 V930 M1650 70 V930" stroke-width="2"/>
   </g>
-  <g opacity="0.22">
-    <circle cx="100" cy="790" r="10" fill="#d9a21a"/>
-    <circle cx="1080" cy="460" r="12" fill="#ce1126"/>
-    <circle cx="1020" cy="720" r="9" fill="#009246"/>
-    <circle cx="170" cy="1010" r="8" fill="#0038a8"/>
+  <g opacity="0.32">
+    <circle cx="1380" cy="165" r="68" fill="#d9a21a"/>
+    <circle cx="1576" cy="272" r="34" fill="#ce1126"/>
+    <circle cx="1238" cy="840" r="46" fill="#0038a8"/>
+    <circle cx="1660" cy="868" r="28" fill="#009246"/>
+  </g>
+  <g opacity="0.36" stroke="#d9a21a" fill="none" stroke-width="4">
+    <ellipse cx="1395" cy="170" rx="156" ry="44" transform="rotate(-22 1395 170)"/>
+    <ellipse cx="1395" cy="170" rx="156" ry="44" transform="rotate(22 1395 170)"/>
+    <circle cx="1395" cy="170" r="16" fill="#d9a21a" stroke="none"/>
   </g>
 
-  <text x="600" y="135" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="40" font-weight="900" fill="#d9a21a" letter-spacing="2">OIT / OHSU MEDICAL LABORATORY SCIENCE</text>
-  ${svgTextBlock({ text: headline.toUpperCase(), x: 600, y: 248, maxChars: 24, maxLines: 2, size: 82, weight: 800, fill: "#ffffff" })}
+  <text x="120" y="130" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="36" font-weight="700" fill="#d9a21a">OIT / OHSU MLS</text>
+  ${svgTextBlock({ text: headline.toUpperCase(), x: 120, y: 245, maxChars: 27, maxLines: 1, size: 62, weight: 800, fill: "#ffffff", anchor: "start", family: "Chakra Petch, Space Grotesk, Arial, sans-serif" })}
+  ${svgTextBlock({ text: title, x: 120, y: 390, maxChars: 25, maxLines: 2, size: 98, weight: 800, fill: "#ffffff", anchor: "start", lineHeight: 1.02 })}
+  ${svgTextBlock({ text: tagline, x: 124, y: 635, maxChars: 48, maxLines: 2, size: 36, weight: 800, fill: "#d7e8f5", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+
+  <g font-family="Manrope, Arial, sans-serif" filter="url(#softShadow)">
+    <rect x="120" y="755" width="425" height="180" rx="26" fill="#ffffff" opacity="0.95"/>
+    <rect x="585" y="755" width="440" height="180" rx="26" fill="#ffffff" opacity="0.95"/>
+    <text x="155" y="820" font-size="28" font-weight="900" fill="#d9a21a">WHEN</text>
+    <text x="155" y="880" font-size="42" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
+    <text x="155" y="928" font-size="30" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
+    <text x="620" y="820" font-size="28" font-weight="900" fill="#d9a21a">WHERE</text>
+    ${svgTextBlock({ text: place, x: 620, y: 880, maxChars: 19, maxLines: 2, size: 34, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    ${svgTextBlock({ text: address, x: 620, y: 970, maxChars: 28, maxLines: 2, size: 25, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+  </g>
 
   <g filter="url(#softShadow)">
-    <rect x="90" y="430" width="1020" height="1010" rx="28" fill="#ffffff" opacity="0.94"/>
+    <rect x="1175" y="122" width="505" height="880" rx="42" fill="#ffffff" opacity="0.94"/>
+    <rect x="1175" y="122" width="505" height="14" fill="url(#scienceGold)"/>
+    <text x="1428" y="232" text-anchor="middle" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="42" font-weight="700" fill="#003767">SCAN FOR RSVP</text>
+    <text x="1428" y="288" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="800" fill="#5c6874">directions | notes | photos</text>
+    <rect x="1303" y="380" width="250" height="250" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
+    <image x="1323" y="400" width="210" height="210" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
+    ${svgTextBlock({ text: footer, x: 1245, y: 720, maxChars: 25, maxLines: 4, size: 31, weight: 800, fill: "#003767", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    <text x="1428" y="927" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="24" font-weight="900" fill="#5c6874">${escapeXml(shareUrl())}</text>
   </g>
-  ${svgTextBlock({ text: title, x: 600, y: 565, maxChars: 26, maxLines: 3, size: 82, weight: 800, fill: "#003767" })}
-  ${svgTextBlock({ text: tagline, x: 600, y: 805, maxChars: 38, maxLines: 2, size: 34, weight: 800, fill: "#5c6874", family: "Manrope, Arial, sans-serif" })}
-
-  <g font-family="Manrope, Arial, sans-serif">
-    <rect x="170" y="910" width="395" height="210" rx="22" fill="#e7f1f8" stroke="#d7e0e8" stroke-width="3"/>
-    <rect x="635" y="910" width="395" height="210" rx="22" fill="#fffaf0" stroke="#d7e0e8" stroke-width="3"/>
-    <text x="200" y="970" font-size="28" font-weight="900" fill="#d9a21a">WHEN</text>
-    <text x="200" y="1032" font-size="43" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
-    <text x="200" y="1088" font-size="34" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
-    <text x="665" y="970" font-size="28" font-weight="900" fill="#d9a21a">WHERE</text>
-    ${svgTextBlock({ text: place, x: 665, y: 1032, maxChars: 18, maxLines: 2, size: 36, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-    ${svgTextBlock({ text: address, x: 665, y: 1130, maxChars: 24, maxLines: 2, size: 28, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-  </g>
-
-  <g>
-    <rect x="192" y="1240" width="250" height="250" rx="24" fill="#ffffff" stroke="#d7e0e8" stroke-width="4"/>
-    <image x="212" y="1260" width="210" height="210" href="${escapeXml(qrHref)}" preserveAspectRatio="xMidYMid meet"/>
-    <text x="485" y="1320" font-family="Space Grotesk, Arial, sans-serif" font-size="42" font-weight="800" fill="#003767">RSVP + details</text>
-    ${svgTextBlock({ text: footer, x: 485, y: 1382, maxChars: 30, maxLines: 3, size: 30, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-  </g>
-
-  <text x="600" y="1665" text-anchor="middle" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="900" fill="#003767">${escapeXml(shareUrl())}</text>
 </svg>`;
   }
 
@@ -1318,10 +1332,10 @@
     const image = new Image();
     image.onload = () => {
       const canvas = document.createElement("canvas");
-      canvas.width = 1200;
-      canvas.height = 1800;
+      canvas.width = 1800;
+      canvas.height = 1200;
       const context = canvas.getContext("2d");
-      context.drawImage(image, 0, 0);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
       canvas.toBlob((blob) => {
         if (!blob) {

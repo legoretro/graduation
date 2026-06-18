@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-downloadable-invite-card",
+  contentVersion: "2026-06-17-landscape-science-invite",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -18,7 +18,7 @@ window.GRADUATION_CONFIG = {
     graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
     statusText: "More details soon",
     note: "Final date, exact OHSU room, and the invite card can be updated anytime.",
-    inviteCopy: "Download this 4x6 invite as a print-ready image or send it as an e-invite.",
+    inviteCopy: "Download this 6x4 invite as a print-ready image or send it as an e-invite.",
     inviteHeadline: "Join us to celebrate",
     inviteTagline: "OIT/OHSU Medical Laboratory Science Graduation",
     inviteFooter: "Scan to RSVP, get directions, leave a note, and share photos."

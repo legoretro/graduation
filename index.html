@@ -150,45 +150,13 @@
       </section>
 
       <section class="section invite-section">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">4x6 magic</p>
-            <h2>Downloadable invite card.</h2>
-            <p id="invite-copy" data-inline-setting="event.inviteCopy">Download this 4x6 invite as a print-ready image or send it as an e-invite.</p>
-            <div class="inline-admin-card" data-admin-edit-panel hidden>
-              <label>
-                Card headline
-                <input data-inline-input="event.inviteHeadline" placeholder="Join us to celebrate">
-              </label>
-              <label>
-                Card tagline
-                <input data-inline-input="event.inviteTagline" placeholder="OIT/OHSU Medical Laboratory Science Graduation">
-              </label>
-              <label>
-                Card footer note
-                <input data-inline-input="event.inviteFooter" placeholder="Scan to RSVP and see details">
-              </label>
-              <label>
-                Hero image URL or asset path
-                <input data-inline-input="assets.heroImage" placeholder="assets/hero-celebration.png">
-              </label>
-              <label>
-                E&A home map link
-                <input data-inline-input="event.homeGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
-              </label>
-              <label>
-                Graduation map link
-                <input data-inline-input="event.graduationGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
-              </label>
-              <label>
-                Live QR / website URL
-                <input data-inline-input="links.liveSiteUrl" placeholder="https://legoretro.github.io/graduation/">
-              </label>
-            </div>
-          </div>
+        <div class="section-inner invite-card-section">
           <div class="invite-tools">
             <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Downloadable graduation invitation card">
               <div class="invite-card-bg" aria-hidden="true"></div>
+              <div class="science-sparkles" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+              </div>
               <div class="invite-card-content">
                 <p class="invite-mini">OIT / OHSU MLS</p>
                 <h3 id="invite-card-headline" data-inline-setting="event.inviteHeadline">Join us to celebrate</h3>
@@ -220,6 +188,36 @@
               <button class="button quiet" id="print-invite-card" type="button">Print card</button>
             </div>
             <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
+            <div class="inline-admin-card invite-admin-card" data-admin-edit-panel hidden>
+              <label>
+                Card headline
+                <input data-inline-input="event.inviteHeadline" placeholder="Join us to celebrate">
+              </label>
+              <label>
+                Card tagline
+                <input data-inline-input="event.inviteTagline" placeholder="OIT/OHSU Medical Laboratory Science Graduation">
+              </label>
+              <label>
+                Card footer note
+                <input data-inline-input="event.inviteFooter" placeholder="Scan to RSVP and see details">
+              </label>
+              <label>
+                Hero image URL or asset path
+                <input data-inline-input="assets.heroImage" placeholder="assets/hero-celebration.png">
+              </label>
+              <label>
+                E&A home map link
+                <input data-inline-input="event.homeGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
+              </label>
+              <label>
+                Graduation map link
+                <input data-inline-input="event.graduationGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
+              </label>
+              <label>
+                Live QR / website URL
+                <input data-inline-input="links.liveSiteUrl" placeholder="https://legoretro.github.io/graduation/">
+              </label>
+            </div>
             <div class="qr-share-card">
               <img id="qr-image" alt="QR code for the graduation website">
               <div>
