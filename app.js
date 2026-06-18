@@ -1397,6 +1397,98 @@
     });
   }
 
+  function canvasToPngBlob(canvas) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Could not create image."));
+        }
+      }, "image/png");
+    });
+  }
+
+  function waitForCardImages(root) {
+    const images = Array.from(root.querySelectorAll("img"));
+    return Promise.all(
+      images.map(
+        (image) =>
+          new Promise((resolve) => {
+            if (image.complete && image.naturalWidth) {
+              resolve();
+              return;
+            }
+            const done = () => {
+              image.removeEventListener("load", done);
+              image.removeEventListener("error", done);
+              resolve();
+            };
+            image.addEventListener("load", done, { once: true });
+            image.addEventListener("error", done, { once: true });
+            window.setTimeout(done, 2000);
+          })
+      )
+    );
+  }
+
+  function nextPaint() {
+    return new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+    });
+  }
+
+  async function captureInviteCardBlob() {
+    const card = $("#printable-invite-card");
+    const qr = $("#invite-card-qr");
+    if (!card || typeof window.html2canvas !== "function") {
+      throw new Error("Invite card capture is not ready.");
+    }
+
+    const originalQrSrc = qr?.getAttribute("src") || "";
+    try {
+      if (qr) {
+        const qrDataUrl = await inviteQrDataUrl();
+        qr.src = qrDataUrl || originalQrSrc || qrImageUrl();
+      }
+      await document.fonts?.ready?.catch(() => {});
+      await waitForCardImages(card);
+      await nextPaint();
+
+      const rect = card.getBoundingClientRect();
+      const scale = Math.min(3, Math.max(2, 1800 / Math.max(rect.width, 1)));
+      const canvas = await window.html2canvas(card, {
+        allowTaint: false,
+        backgroundColor: null,
+        logging: false,
+        scale,
+        useCORS: true,
+        windowHeight: 900,
+        windowWidth: 1200,
+        onclone: (documentClone) => {
+          const clone = documentClone.querySelector("#printable-invite-card");
+          if (!clone) return;
+          clone.style.aspectRatio = "3 / 2";
+          clone.style.boxShadow = "none";
+          clone.style.height = "546.6667px";
+          clone.style.margin = "0";
+          clone.style.maxWidth = "820px";
+          clone.style.minHeight = "0";
+          clone.style.transform = "none";
+          clone.style.width = "820px";
+          const wrapper = clone.closest(".invite-tools");
+          if (wrapper) {
+            wrapper.style.maxWidth = "820px";
+            wrapper.style.width = "820px";
+          }
+        }
+      });
+      return await canvasToPngBlob(canvas);
+    } finally {
+      if (qr) qr.src = originalQrSrc || qrImageUrl();
+    }
+  }
+
   async function showSaveableImage(blob, options) {
     const preview = options.previewSelector ? $(options.previewSelector) : null;
     if (preview) {
@@ -1433,10 +1525,9 @@
   }
 
   async function downloadInvitationPng() {
-    setText("#invite-download-feedback", "Preparing invite image...");
+    setText("#invite-download-feedback", "Preparing the card you see...");
     try {
-      const svg = invitationSvg(await inviteQrDataUrl(), await inviteAssetDataUrls());
-      const blob = await svgToPngBlob(svg, 1800, 1200);
+      const blob = await captureInviteCardBlob();
       await showSaveableImage(blob, {
         fileName: "elizabeth-angela-graduation-invite.png",
         feedbackSelector: "#invite-download-feedback",

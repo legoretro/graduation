@@ -7,6 +7,7 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="assets/html2canvas.min.js"></script>
     <script defer src="config.js"></script>
     <script defer src="app.js"></script>
   </head>
@@ -234,7 +235,9 @@
         <div class="section-inner invite-card-section">
           <div class="invite-tools">
             <figure class="invite-card generated-invite-card" id="printable-invite-card" role="button" tabindex="0" aria-label="Save graduation invitation image">
+              <div class="invite-card-bar invite-card-top-bar" aria-hidden="true"></div>
               <div class="invite-card-bg" aria-hidden="true"></div>
+              <div class="invite-card-bar invite-card-bottom-bar" aria-hidden="true"></div>
               <div class="mls-card-art" aria-hidden="true">
                 <img class="microscope-art" src="assets/mls-microscope.png" alt="">
                 <img class="cell-art cell-art-a" src="assets/mls-red-cell-sticker.png" alt="">

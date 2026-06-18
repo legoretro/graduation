@@ -739,6 +739,30 @@ p {
   padding: 0;
 }
 
+.generated-invite-card::before {
+  content: none;
+}
+
+.invite-card-bar {
+  background: linear-gradient(90deg, var(--oit-blue) 0 16.6%, var(--oit-gold) 16.6% 33.2%, var(--philippine-blue) 33.2% 49.8%, var(--fiesta-red) 49.8% 66.4%, var(--paper) 66.4% 83%, var(--fiesta-green) 83%);
+  content: "";
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  z-index: 4;
+}
+
+.invite-card-top-bar {
+  height: 0.32rem;
+  top: 0;
+}
+
+.invite-card-bottom-bar {
+  bottom: 0;
+  height: 0.55rem;
+}
+
 .invite-card-bg {
   inset: 0;
   overflow: hidden;
@@ -758,17 +782,6 @@ p {
   mask-image: linear-gradient(90deg, transparent 0 22%, black 42% 100%);
   opacity: 0.54;
   position: absolute;
-}
-
-.invite-card-bg::after {
-  background:
-    linear-gradient(90deg, var(--oit-blue) 0 16.6%, var(--oit-gold) 16.6% 33.2%, var(--philippine-blue) 33.2% 49.8%, var(--fiesta-red) 49.8% 66.4%, var(--paper) 66.4% 83%, var(--fiesta-green) 83%);
-  bottom: 0;
-  content: "";
-  height: 0.55rem;
-  left: 0;
-  position: absolute;
-  right: 0;
 }
 
 .mls-card-art {
