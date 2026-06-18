@@ -1462,26 +1462,7 @@
         backgroundColor: null,
         logging: false,
         scale,
-        useCORS: true,
-        windowHeight: 900,
-        windowWidth: 1200,
-        onclone: (documentClone) => {
-          const clone = documentClone.querySelector("#printable-invite-card");
-          if (!clone) return;
-          clone.style.aspectRatio = "3 / 2";
-          clone.style.boxShadow = "none";
-          clone.style.height = "546.6667px";
-          clone.style.margin = "0";
-          clone.style.maxWidth = "820px";
-          clone.style.minHeight = "0";
-          clone.style.transform = "none";
-          clone.style.width = "820px";
-          const wrapper = clone.closest(".invite-tools");
-          if (wrapper) {
-            wrapper.style.maxWidth = "820px";
-            wrapper.style.width = "820px";
-          }
-        }
+        useCORS: true
       });
       return await canvasToPngBlob(canvas);
     } finally {
