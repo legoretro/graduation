@@ -1,18 +1,15 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-17-artful-mls-invite",
+  contentVersion: "2026-06-18-layout-download-fix",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "Welcome! RSVP below, grab directions to E&A's home and OHSU, leave a note, find nearby hotels and food, and upload graduation-day photos during the celebration.",
+    subtitle: "Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find nearby hotels and food, and upload graduation-day photos during the celebration.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Graduation at OHSU",
     address: "OHSU, Portland, OR - exact room TBA",
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",
-    homeLocationName: "E&A's Home",
-    homeAddress: "Home address coming soon",
-    homeGoogleMapsUrl: "#",
     graduationLocationName: "Graduation at OHSU",
     graduationAddress: "OHSU, Portland, OR - exact room TBA",
     graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=OHSU%20Portland%20OR",

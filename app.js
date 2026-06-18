@@ -108,9 +108,6 @@
         locationName: defaultConfig.event?.locationName,
         address: defaultConfig.event?.address,
         googleMapsUrl: defaultConfig.event?.googleMapsUrl,
-        homeLocationName: defaultConfig.event?.homeLocationName,
-        homeAddress: defaultConfig.event?.homeAddress,
-        homeGoogleMapsUrl: defaultConfig.event?.homeGoogleMapsUrl,
         graduationLocationName: defaultConfig.event?.graduationLocationName,
         graduationAddress: defaultConfig.event?.graduationAddress,
         graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
@@ -254,8 +251,6 @@
     setText("#event-address", event.address);
     setText("#event-status", event.statusText);
     setText("#event-note", event.note);
-    setText("#quick-home-location", event.homeLocationName || "E&A's Home");
-    setText("#quick-home-address", event.homeAddress || "Home address coming soon");
     setText("#quick-grad-location", event.graduationLocationName || event.locationName);
     setText("#quick-grad-address", event.graduationAddress || event.address);
     setText("#invite-copy", event.inviteCopy);
@@ -270,7 +265,6 @@
     setText("#footer-title", event.title);
 
     setHref("#hero-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
-    setHref("#quick-home-map-link", event.homeGoogleMapsUrl);
     setHref("#quick-grad-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
 
     if (config.assets?.heroImage) {
@@ -1241,7 +1235,7 @@
     const address = event.graduationAddress || event.address || "OHSU, Portland, OR";
     const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share a memory.";
     const cellPattern = art.cellPattern ? `<image x="1020" y="-90" width="880" height="1380" href="${escapeXml(art.cellPattern)}" preserveAspectRatio="xMidYMid slice" opacity="0.2"/>` : "";
-    const microscope = art.microscope ? `<image x="640" y="250" width="600" height="830" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.9" transform="rotate(-7 940 665)"/>` : "";
+    const microscope = art.microscope ? `<image x="690" y="405" width="500" height="675" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.78" transform="rotate(-7 940 742)"/>` : "";
     const redCell = art.redCell ? `<image x="600" y="95" width="170" height="240" href="${escapeXml(art.redCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(12 685 215)"/>` : "";
     const smilingCell = art.smilingCell ? `<image x="1540" y="735" width="185" height="265" href="${escapeXml(art.smilingCell)}" preserveAspectRatio="xMidYMid meet" transform="rotate(-7 1632 867)"/>` : "";
 
@@ -1319,26 +1313,27 @@
 
   <text x="120" y="130" font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="36" font-weight="700" fill="#d9a21a">OIT / OHSU MLS</text>
   ${svgTextBlock({ text: headline, x: 120, y: 255, maxChars: 30, maxLines: 1, size: 86, weight: 400, fill: "#f3c79f", anchor: "start", family: "Brush Script MT, Snell Roundhand, cursive" })}
-  ${svgTextBlock({ text: title, x: 120, y: 390, maxChars: 25, maxLines: 2, size: 98, weight: 800, fill: "#ffffff", anchor: "start", lineHeight: 1.02 })}
-  ${svgTextBlock({ text: tagline, x: 124, y: 635, maxChars: 48, maxLines: 2, size: 36, weight: 800, fill: "#d7e8f5", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+  <rect x="88" y="304" width="895" height="330" rx="34" fill="#001f3f" opacity="0.32"/>
+  ${svgTextBlock({ text: title, x: 120, y: 405, maxChars: 22, maxLines: 2, size: 76, weight: 800, fill: "#ffffff", anchor: "start", lineHeight: 1.04 })}
+  ${svgTextBlock({ text: tagline, x: 124, y: 585, maxChars: 44, maxLines: 2, size: 33, weight: 800, fill: "#e5f2fb", anchor: "start", family: "Manrope, Arial, sans-serif" })}
   <g font-family="Chakra Petch, Space Grotesk, Arial, sans-serif" font-size="24" font-weight="700" opacity="0.92">
-    <rect x="120" y="670" width="160" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
-    <rect x="300" y="670" width="190" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
-    <rect x="512" y="670" width="205" height="48" rx="24" fill="#ffffff" fill-opacity="0.13" stroke="#d9a21a" stroke-width="2"/>
-    <text x="200" y="703" text-anchor="middle" fill="#ffffff">HEMATOLOGY</text>
-    <text x="395" y="703" text-anchor="middle" fill="#ffffff">MICROBIOLOGY</text>
-    <text x="614" y="703" text-anchor="middle" fill="#ffffff">CHEMISTRY</text>
+    <rect x="120" y="640" width="160" height="48" rx="24" fill="#001f3f" fill-opacity="0.28" stroke="#d9a21a" stroke-width="2"/>
+    <rect x="300" y="640" width="190" height="48" rx="24" fill="#001f3f" fill-opacity="0.28" stroke="#d9a21a" stroke-width="2"/>
+    <rect x="512" y="640" width="205" height="48" rx="24" fill="#001f3f" fill-opacity="0.28" stroke="#d9a21a" stroke-width="2"/>
+    <text x="200" y="673" text-anchor="middle" fill="#ffffff">HEMATOLOGY</text>
+    <text x="395" y="673" text-anchor="middle" fill="#ffffff">MICROBIOLOGY</text>
+    <text x="614" y="673" text-anchor="middle" fill="#ffffff">CHEMISTRY</text>
   </g>
 
   <g font-family="Manrope, Arial, sans-serif" filter="url(#softShadow)">
-    <rect x="120" y="710" width="455" height="205" rx="26" fill="#ffffff" opacity="0.96"/>
-    <rect x="610" y="710" width="485" height="205" rx="26" fill="#ffffff" opacity="0.96"/>
+    <rect x="120" y="710" width="455" height="250" rx="26" fill="#ffffff" opacity="0.96"/>
+    <rect x="610" y="710" width="485" height="250" rx="26" fill="#ffffff" opacity="0.96"/>
     <text x="158" y="780" font-size="31" font-weight="900" fill="#d9a21a">WHEN</text>
     <text x="158" y="846" font-size="49" font-weight="900" fill="#17212b">${escapeXml(date)}</text>
     <text x="158" y="900" font-size="34" font-weight="800" fill="#5c6874">${escapeXml(time)}</text>
     <text x="648" y="780" font-size="31" font-weight="900" fill="#d9a21a">WHERE</text>
-    ${svgTextBlock({ text: place, x: 648, y: 846, maxChars: 19, maxLines: 2, size: 40, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
-    ${svgTextBlock({ text: address, x: 648, y: 946, maxChars: 28, maxLines: 2, size: 28, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    ${svgTextBlock({ text: place, x: 648, y: 842, maxChars: 20, maxLines: 2, size: 39, weight: 900, fill: "#17212b", anchor: "start", family: "Manrope, Arial, sans-serif" })}
+    ${svgTextBlock({ text: address, x: 648, y: 925, maxChars: 30, maxLines: 2, size: 27, weight: 800, fill: "#5c6874", anchor: "start", family: "Manrope, Arial, sans-serif" })}
   </g>
 
   <g filter="url(#softShadow)">
@@ -1403,7 +1398,7 @@
   }
 
   async function showSaveableImage(blob, options) {
-    const preview = $(options.previewSelector);
+    const preview = options.previewSelector ? $(options.previewSelector) : null;
     if (preview) {
       preview.src = await blobToDataUrl(blob);
       preview.hidden = false;
@@ -1422,11 +1417,17 @@
       console.warn(error);
     }
 
+    if (!preview && !shared) {
+      downloadBlob(blob, options.fileName);
+    }
+
     setText(
       options.feedbackSelector,
       shared
-        ? "Share/save sheet opened. The image preview is below too."
-        : "Image is ready below. On your phone, long-press it to save to Photos."
+        ? "Share/save sheet opened."
+        : preview
+        ? "Image is ready below. On your phone, long-press it to save to Photos."
+        : "Invite image download started."
     );
     preview?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
@@ -1438,7 +1439,6 @@
       const blob = await svgToPngBlob(svg, 1800, 1200);
       await showSaveableImage(blob, {
         fileName: "elizabeth-angela-graduation-invite.png",
-        previewSelector: "#invite-image-preview",
         feedbackSelector: "#invite-download-feedback",
         shareTitle: "Elizabeth & Angela graduation invite"
       });
@@ -1719,7 +1719,16 @@
     });
 
     $("#share-qr-button").addEventListener("click", shareQrCode);
-    $("#download-invite-png").addEventListener("click", downloadInvitationPng);
+    const inviteCard = $("#printable-invite-card");
+    if (inviteCard) {
+      inviteCard.addEventListener("click", downloadInvitationPng);
+      inviteCard.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          downloadInvitationPng();
+        }
+      });
+    }
   }
 
   async function loadWeather() {
