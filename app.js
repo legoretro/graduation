@@ -600,7 +600,7 @@
     const rows = $("#admin-rsvp-rows");
     rows.innerHTML = "";
     if (!state.rsvps.length) {
-      rows.innerHTML = `<tr><td colspan="5">${state.usingSupabase ? "No RSVP rows loaded yet. If guests have RSVP'd, run the Supabase admin SQL setup so this private list can load." : "No RSVPs yet."}</td></tr>`;
+      rows.innerHTML = `<tr><td colspan="6">${state.usingSupabase ? "No RSVP rows loaded yet. If guests have RSVP'd, run the Supabase admin SQL setup so this private list can load." : "No RSVPs yet."}</td></tr>`;
     } else {
       state.rsvps.forEach((rsvp) => {
         const row = document.createElement("tr");
@@ -623,7 +623,15 @@
         const updated = document.createElement("td");
         updated.textContent = formatDate(rsvp.updatedAt || rsvp.createdAt);
 
-        row.append(name, response, party, note, updated);
+        const action = document.createElement("td");
+        const del = document.createElement("button");
+        del.className = "button quiet delete-rsvp";
+        del.type = "button";
+        del.textContent = "Delete";
+        del.addEventListener("click", () => deleteRsvp(rsvp.id));
+        action.append(del);
+
+        row.append(name, response, party, note, updated, action);
         rows.append(row);
       });
     }
@@ -1052,6 +1060,7 @@
       createdAt: row.created_at,
       updatedAt: row.updated_at
     }));
+    state.totals = null;
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
       body: row.body,
@@ -1145,6 +1154,39 @@
     } catch (error) {
       console.error(error);
       setText("#admin-feedback", friendlyError(error, "Could not remove that place yet."));
+    }
+  }
+
+  async function deleteRsvp(rsvpId) {
+    if (!rsvpId) return;
+    try {
+      if (state.usingSupabase) {
+        const endpoint = config.supabase?.adminEndpoint;
+        if (endpoint) {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "delete_rsvp", password: state.adminPassword, rsvpId })
+          });
+          if (!response.ok) throw new Error("Could not delete RSVP.");
+        } else {
+          const { error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
+            admin_password: state.adminPassword,
+            rsvp_id: rsvpId
+          });
+          if (error) throw error;
+        }
+        await loadAdmin(state.adminPassword);
+      } else {
+        state.rsvps = state.rsvps.filter((rsvp) => rsvp.id !== rsvpId);
+        state.totals = null;
+        writeLocal();
+      }
+      setText("#admin-feedback", "RSVP deleted.");
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setText("#admin-feedback", friendlyError(error, "Could not delete that RSVP yet."));
     }
   }
 

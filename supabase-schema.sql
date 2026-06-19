@@ -369,6 +369,22 @@ begin
 end;
 $$;
 
+create or replace function public.graduation_admin_delete_rsvp(admin_password text, rsvp_id uuid)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  perform public.graduation_assert_admin(admin_password);
+
+  delete from public.graduation_rsvps
+  where id = rsvp_id;
+
+  return jsonb_build_object('ok', true);
+end;
+$$;
+
 create or replace function public.graduation_admin_delete_memory(admin_password text, memory_id uuid)
 returns jsonb
 language plpgsql
@@ -392,6 +408,7 @@ grant execute on function public.graduation_delete_memory(text, uuid) to anon;
 grant execute on function public.graduation_admin_list(text) to anon;
 grant execute on function public.graduation_admin_save_settings(text, jsonb) to anon;
 grant execute on function public.graduation_admin_delete_message(text, uuid) to anon;
+grant execute on function public.graduation_admin_delete_rsvp(text, uuid) to anon;
 grant execute on function public.graduation_admin_delete_memory(text, uuid) to anon;
 
 notify pgrst, 'reload schema';
