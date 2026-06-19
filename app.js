@@ -1515,6 +1515,9 @@
 
   async function deleteRsvp(rsvpId, button) {
     if (!rsvpId) return;
+    const rsvp = state.rsvps.find((item) => item.id === rsvpId);
+    const name = rsvp?.name || "this RSVP";
+    if (!window.confirm(`Delete ${name}? This cannot be undone.`)) return;
     const oldText = button?.textContent || "";
     try {
       if (button) {
@@ -1546,6 +1549,9 @@
           }
         }
         await loadAdmin(state.adminPassword);
+        if (state.rsvps.some((item) => item.id === rsvpId)) {
+          throw new Error("Supabase blocked delete.");
+        }
         await loadOwnedRsvps().catch(() => {});
       } else {
         state.rsvps = state.rsvps.filter((rsvp) => rsvp.id !== rsvpId);
@@ -1557,8 +1563,8 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      const detail = missingSupabaseFunction(error)
-        ? "Delete needs the small admin update. Paste it once, then try again."
+      const detail = missingSupabaseFunction(error) || /blocked delete/i.test(error?.message || "")
+        ? "Supabase still needs the admin delete update before this can delete."
         : "Could not delete that RSVP yet.";
       setText("#admin-feedback", detail);
     } finally {
