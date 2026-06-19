@@ -14,6 +14,7 @@
     { key: "more", label: "More" }
   ];
   const maxMemoryImageLength = 1800000;
+  const maxPlaceImageLength = 650000;
   const state = {
     rsvps: [],
     publicRsvps: [],
@@ -124,7 +125,6 @@
         graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
         homeLocationName: defaultConfig.event?.homeLocationName,
         homeAddress: defaultConfig.event?.homeAddress,
-        homeGoogleMapsUrl: defaultConfig.event?.homeGoogleMapsUrl,
         statusText: defaultConfig.event?.statusText,
         note: defaultConfig.event?.note,
         inviteCopy: defaultConfig.event?.inviteCopy,
@@ -301,7 +301,7 @@
     const gradMapUrl = graduationMapUrl(event);
     setHref("#hero-map-link", gradMapUrl);
     setHref("#quick-grad-map-link", gradMapUrl);
-    setHref("#home-place-map-link", event.homeGoogleMapsUrl || mapsUrl(event.homeAddress || event.homeLocationName));
+    setHref("#home-place-map-link", mapsUrl(event.homeAddress || event.homeLocationName));
 
     if (config.assets?.heroImage) {
       $(".hero").classList.add("custom-hero");
@@ -817,7 +817,7 @@
 
     list.innerHTML = "";
     if (!state.ownedRsvps.length) {
-      list.innerHTML = '<div class="empty small-empty">No RSVP found on this phone yet. No worries, just message Elizabeth or Angela and we can update it.</div>';
+      list.innerHTML = '<div class="empty small-empty">Message Elizabeth or Angela to update!</div>';
       return;
     }
 
@@ -1016,9 +1016,14 @@
 
       const actions = document.createElement("div");
       actions.className = "admin-place-actions";
+      const edit = document.createElement("button");
+      edit.className = "button secondary";
+      edit.type = "button";
+      edit.textContent = "Edit";
+      edit.addEventListener("click", () => startEditPlace(resource));
       const map = document.createElement("a");
       map.className = "button secondary";
-      map.href = resource.url || mapsUrl(resource.address || resource.name);
+      map.href = mapsUrl(resource.address || resource.name);
       map.target = "_blank";
       map.rel = "noreferrer";
       map.textContent = "Open map";
@@ -1027,11 +1032,50 @@
       del.type = "button";
       del.textContent = "Delete";
       del.addEventListener("click", () => deletePlace(resource.group, resource.index));
-      actions.append(map, del);
+      actions.append(edit, map, del);
 
       item.append(copy, actions);
       list.append(item);
     });
+  }
+
+  function resetPlaceForm() {
+    const form = $("#place-form");
+    if (!form) return;
+    form.reset();
+    form.elements.editCategory.value = "";
+    form.elements.editIndex.value = "";
+    form.elements.image.placeholder = "Paste image URL or leave blank";
+    const submit = $(".place-submit-button", form);
+    if (submit) submit.textContent = "Add place";
+    const cancel = $("#cancel-place-edit");
+    if (cancel) cancel.hidden = true;
+  }
+
+  function startEditPlace(resource) {
+    const form = $("#place-form");
+    if (!form) return;
+    form.elements.category.value = normalizeResourceGroup(resource.group);
+    form.elements.name.value = resource.name || "";
+    form.elements.address.value = resource.address || "";
+    form.elements.image.value = resource.image && !resource.image.startsWith("data:") ? resource.image : "";
+    form.elements.image.placeholder = resource.image ? "Image already saved. Upload another to replace." : "Paste image URL or leave blank";
+    if (form.elements.imageFile) form.elements.imageFile.value = "";
+    form.elements.editCategory.value = normalizeResourceGroup(resource.group);
+    form.elements.editIndex.value = String(resource.index);
+    const submit = $(".place-submit-button", form);
+    if (submit) submit.textContent = "Save place";
+    const cancel = $("#cancel-place-edit");
+    if (cancel) cancel.hidden = false;
+    form.scrollIntoView({ behavior: "smooth", block: "center" });
+    setText("#admin-feedback", "Editing place. Make changes, then save.");
+  }
+
+  async function placeImageFromForm(formData, existingImage) {
+    const upload = formData.get("imageFile");
+    if (upload?.size) return compressPlaceImage(upload);
+    const pasted = String(formData.get("image") || "").trim();
+    return pasted || existingImage || "";
   }
 
   function fillEditor() {
@@ -1271,6 +1315,19 @@
     throw new Error("That photo is still too big. Try a smaller image.");
   }
 
+  async function compressPlaceImage(file) {
+    const attempts = [
+      { maxEdge: 760, quality: 0.72 },
+      { maxEdge: 620, quality: 0.66 },
+      { maxEdge: 520, quality: 0.6 }
+    ];
+    for (const attempt of attempts) {
+      const dataUrl = await canvasDataUrl(file, attempt.maxEdge, attempt.quality);
+      if (dataUrl.length <= maxPlaceImageLength) return dataUrl;
+    }
+    throw new Error("That place image is too big. Try a smaller one.");
+  }
+
   async function saveMemory(file, caption) {
     const imageData = await compressMemoryImage(file);
     if (state.usingSupabase) {
@@ -1404,10 +1461,16 @@
 
   async function addPlace(formData) {
     const group = normalizeResourceGroup(formData.get("category"));
+    const editGroup = normalizeResourceGroup(formData.get("editCategory"));
+    const editIndexValue = String(formData.get("editIndex") || "");
+    const editIndex = editIndexValue === "" ? -1 : Number(editIndexValue);
+    const isEditing = Number.isInteger(editIndex) && editIndex >= 0;
+    const existingItems = isEditing ? publicResourceItems(editGroup) : [];
+    const existingPlace = isEditing ? existingItems[editIndex] : null;
     const place = cleanResource({
       name: formData.get("name"),
       address: formData.get("address"),
-      image: formData.get("image")
+      image: await placeImageFromForm(formData, existingPlace?.image || "")
     });
 
     if (!place.name && !place.address) {
@@ -1415,9 +1478,21 @@
       return false;
     }
 
-    const nextItems = [...publicResourceItems(group), place];
-    await saveSiteSettings({ [group]: nextItems });
-    setText("#admin-feedback", `${resourceGroupLabel(group).replace(/s$/, "")} added.`);
+    if (isEditing && existingPlace) {
+      const updates = {};
+      if (editGroup === group) {
+        updates[group] = existingItems.map((item, index) => (index === editIndex ? place : item));
+      } else {
+        updates[editGroup] = existingItems.filter((_, index) => index !== editIndex);
+        updates[group] = [...publicResourceItems(group), place];
+      }
+      await saveSiteSettings(updates);
+      setText("#admin-feedback", "Place updated.");
+    } else {
+      const nextItems = [...publicResourceItems(group), place];
+      await saveSiteSettings({ [group]: nextItems });
+      setText("#admin-feedback", `${resourceGroupLabel(group).replace(/s$/, "")} added.`);
+    }
     renderAll();
     return true;
   }
@@ -1466,7 +1541,10 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      setText("#admin-feedback", friendlyError(error, "Could not delete that RSVP yet."));
+      const detail = missingSupabaseFunction(error)
+        ? "Delete needs the small admin update. Paste it once, then try again."
+        : "Could not delete that RSVP yet.";
+      setText("#admin-feedback", detail);
     }
   }
 
@@ -1492,7 +1570,7 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      setText("#rsvp-feedback", guestError(setupError(error, "RSVP changes need the Supabase SQL update first. Run the setup block, then refresh.", "Could not delete that RSVP from this phone.")));
+      setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
     }
   }
 
@@ -2155,7 +2233,7 @@
         burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", guestError(setupError(error, "RSVP editing needs the Supabase SQL update first. Run the setup block, then refresh.", "Could not save that RSVP yet. Try again in a minute.")));
+        setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
       }
     });
 
@@ -2168,7 +2246,7 @@
           setText("#rsvp-feedback", "");
         } catch (error) {
           console.error(error);
-          setText("#rsvp-feedback", guestError(setupError(error, "RSVP changes need the Supabase SQL update first. Run the setup block, then refresh.", "Could not load RSVPs from this phone.")));
+          setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
         }
       }
       renderOwnedRsvps();
@@ -2202,10 +2280,7 @@
       } catch (error) {
         console.error(error);
         removePendingMessage(pendingId);
-        setText(
-          "#message-feedback",
-          guestError(setupError(error, "Notes need the Supabase SQL update first. Run the setup block, then refresh.", "That note did not stick yet. Try again in a minute."))
-        );
+        setText("#message-feedback", "That note did not stick yet. Try again in a minute.");
       }
     });
 
@@ -2226,11 +2301,8 @@
       } catch (error) {
         console.error(error);
         const message = String(error?.message || "");
-        const setupMissing = /function|schema cache|graduation_add_memory|PGRST202/i.test(message);
         const knownImageIssue = /Choose an image file|Could not read that image|JPG|PNG|WebP|too big|smaller image/i.test(message);
-        const safeMessage = setupMissing
-          ? "Memory uploads need the Supabase SQL update first. Run the memory setup block, then refresh."
-          : knownImageIssue
+        const safeMessage = knownImageIssue
           ? message
           : "Could not upload that memory yet. Try again in a minute.";
         setText("#memory-feedback", guestError(safeMessage));
@@ -2305,13 +2377,18 @@
         event.preventDefault();
         try {
           const saved = await addPlace(new FormData(event.currentTarget));
-          if (saved) event.currentTarget.reset();
+          if (saved) resetPlaceForm();
         } catch (error) {
           console.error(error);
           setText("#admin-feedback", friendlyError(error, "Could not save that place yet."));
         }
       });
     }
+
+    $("#cancel-place-edit")?.addEventListener("click", () => {
+      resetPlaceForm();
+      setText("#admin-feedback", "Place edit canceled.");
+    });
 
     $("#clear-demo-data").addEventListener("click", () => {
       if (state.usingSupabase) {

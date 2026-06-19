@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-18-home-rsvp-cache",
+  contentVersion: "2026-06-18-place-edit-upload",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -15,7 +15,6 @@ window.GRADUATION_CONFIG = {
     graduationGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=3286%20SW%20Research%20Dr%2C%20Portland%2C%20OR%2097239",
     homeLocationName: "Elizabeth & Angela's Place",
     homeAddress: "8550 SW Ash Meadows, Apartment 433, Wilsonville, OR",
-    homeGoogleMapsUrl: "https://www.google.com/maps/search/?api=1&query=8550%20SW%20Ash%20Meadows%20Apartment%20433%2C%20Wilsonville%2C%20OR",
     statusText: "More details soon",
     note: "Final date, exact OHSU room, and the invite card can be updated anytime.",
     inviteCopy: "Download this 6x4 invite as a print-ready image or send it as an e-invite.",

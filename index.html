@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260618-home-rsvp-cache"></script>
-    <script defer src="config.js?v=20260618-home-rsvp-cache"></script>
-    <script defer src="app.js?v=20260618-home-rsvp-cache"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260618-place-edit-upload"></script>
+    <script defer src="config.js?v=20260618-place-edit-upload"></script>
+    <script defer src="app.js?v=20260618-place-edit-upload"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -109,6 +109,8 @@
                 </div>
               </div>
               <form class="admin-place-form" id="place-form">
+                <input name="editCategory" type="hidden">
+                <input name="editIndex" type="hidden">
                 <label class="place-type-field">
                   Type
                   <select name="category">
@@ -126,10 +128,15 @@
                   <input name="address" placeholder="Street address, city, state">
                 </label>
                 <label class="place-image-field">
-                  Image
-                  <input name="image" placeholder="Image URL or assets/photo.jpg">
+                  Image URL
+                  <input name="image" placeholder="Paste image URL or leave blank">
                 </label>
-                <button class="button secondary" type="submit">Add place</button>
+                <label class="place-upload-field">
+                  Upload image
+                  <input name="imageFile" type="file" accept="image/*">
+                </label>
+                <button class="button secondary place-submit-button" type="submit">Add place</button>
+                <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
               </form>
               <div id="admin-place-list"></div>
             </section>

@@ -1894,7 +1894,7 @@ textarea:focus,
 .admin-place-form {
   display: grid;
   gap: 0.65rem;
-  grid-template-columns: minmax(140px, 0.55fr) minmax(260px, 1.4fr) minmax(180px, 1fr);
+  grid-template-columns: minmax(150px, 0.55fr) minmax(260px, 1fr) minmax(260px, 1fr) minmax(190px, 0.7fr);
 }
 
 .admin-place-form label {
@@ -1906,20 +1906,30 @@ textarea:focus,
 }
 
 .admin-place-form .place-name-field {
-  grid-column: 2 / 4;
+  grid-column: 2 / 5;
 }
 
 .admin-place-form .place-address-field {
-  grid-column: 1 / 4;
+  grid-column: 1 / 5;
 }
 
 .admin-place-form .place-image-field {
   grid-column: 1 / 3;
 }
 
-.admin-place-form .button {
-  align-self: end;
+.admin-place-form .place-upload-field {
   grid-column: 3 / 4;
+}
+
+.admin-place-form .place-submit-button {
+  align-self: end;
+  grid-column: 4 / 5;
+  min-height: 2.65rem;
+}
+
+.admin-place-form .place-cancel-button {
+  align-self: end;
+  grid-column: 4 / 5;
   min-height: 2.65rem;
 }
 
@@ -2491,7 +2501,9 @@ footer a {
   .admin-place-form .place-name-field,
   .admin-place-form .place-address-field,
   .admin-place-form .place-image-field,
-  .admin-place-form .button {
+  .admin-place-form .place-upload-field,
+  .admin-place-form .place-submit-button,
+  .admin-place-form .place-cancel-button {
     grid-column: auto;
   }
 
