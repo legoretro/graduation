@@ -1565,18 +1565,18 @@
   }
 
   async function callAdminDeleteRsvp(rsvpId) {
-    const fallback = await state.supabaseClient.rpc("graduation_admin_delete_message", {
-      admin_password: state.adminPassword,
-      message_id: rsvpId
-    });
-    if (!fallback.error) return;
-    if (!missingSupabaseFunction(fallback.error)) throw fallback.error;
-
     const { error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
       admin_password: state.adminPassword,
       rsvp_id: rsvpId
     });
-    if (error) throw error;
+    if (!error) return;
+    if (!missingSupabaseFunction(error)) throw error;
+
+    const fallback = await state.supabaseClient.rpc("graduation_admin_delete_message", {
+      admin_password: state.adminPassword,
+      message_id: rsvpId
+    });
+    if (fallback.error) throw fallback.error;
   }
 
   async function deleteOwnedRsvp(rsvpId) {

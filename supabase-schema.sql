@@ -434,16 +434,25 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  deleted_messages integer := 0;
+  deleted_rsvps integer := 0;
 begin
   perform public.graduation_assert_admin(admin_password);
 
   delete from public.graduation_messages
   where id = message_id;
+  get diagnostics deleted_messages = row_count;
 
   delete from public.graduation_rsvps
   where id = message_id;
+  get diagnostics deleted_rsvps = row_count;
 
-  return jsonb_build_object('ok', true);
+  return jsonb_build_object(
+    'ok', true,
+    'deleted_messages', deleted_messages,
+    'deleted_rsvps', deleted_rsvps
+  );
 end;
 $$;
 
@@ -453,13 +462,19 @@ language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  deleted_rsvps integer := 0;
 begin
   perform public.graduation_assert_admin(admin_password);
 
   delete from public.graduation_rsvps
   where id = rsvp_id;
+  get diagnostics deleted_rsvps = row_count;
 
-  return jsonb_build_object('ok', true);
+  return jsonb_build_object(
+    'ok', true,
+    'deleted_rsvps', deleted_rsvps
+  );
 end;
 $$;
 
