@@ -1608,6 +1608,44 @@ textarea:focus,
   font-weight: 850;
 }
 
+.home-place-card {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(0, 55, 103, 0.94), rgba(0, 78, 117, 0.9)),
+    var(--oit-blue);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 42px rgba(0, 31, 63, 0.18);
+  color: var(--white);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.home-place-card span {
+  color: var(--oit-gold);
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.home-place-card h3 {
+  color: var(--white);
+  margin-bottom: 0.2rem;
+}
+
+.home-place-card p {
+  color: rgba(255, 255, 255, 0.84);
+  margin: 0;
+}
+
+.home-place-card .button {
+  white-space: nowrap;
+}
+
 .resource-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 1rem;
@@ -2147,6 +2185,11 @@ footer a {
 
   .invite-tools {
     justify-items: center;
+  }
+
+  .home-place-card {
+    align-items: stretch;
+    grid-template-columns: 1fr;
   }
 }
 

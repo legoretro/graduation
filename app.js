@@ -6,6 +6,7 @@
   const localKey = "graduation-invite-preview";
   const ownerTokenKey = "graduation-memory-owner-token";
   const ownedMemoryKey = "graduation-owned-memory-ids";
+  const ownedRsvpKey = "graduation-owned-rsvp-cache";
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
   const resourceGroups = [
     { key: "stay", label: "Hotels" },
@@ -121,6 +122,9 @@
         graduationLocationName: defaultConfig.event?.graduationLocationName,
         graduationAddress: defaultConfig.event?.graduationAddress,
         graduationGoogleMapsUrl: defaultConfig.event?.graduationGoogleMapsUrl,
+        homeLocationName: defaultConfig.event?.homeLocationName,
+        homeAddress: defaultConfig.event?.homeAddress,
+        homeGoogleMapsUrl: defaultConfig.event?.homeGoogleMapsUrl,
         statusText: defaultConfig.event?.statusText,
         note: defaultConfig.event?.note,
         inviteCopy: defaultConfig.event?.inviteCopy,
@@ -281,6 +285,8 @@
     setText("#event-note", event.note);
     setText("#quick-grad-location", event.graduationLocationName || event.locationName);
     setText("#quick-grad-address", normalizeMapQuery(event.graduationAddress || event.address));
+    setText("#home-place-name", event.homeLocationName || "Elizabeth & Angela's Place");
+    setText("#home-place-address", normalizeMapQuery(event.homeAddress));
     setText("#invite-copy", event.inviteCopy);
     setText("#invite-card-headline", event.inviteHeadline || "Join us to celebrate");
     setText("#invite-card-title", event.title);
@@ -295,6 +301,7 @@
     const gradMapUrl = graduationMapUrl(event);
     setHref("#hero-map-link", gradMapUrl);
     setHref("#quick-grad-map-link", gradMapUrl);
+    setHref("#home-place-map-link", event.homeGoogleMapsUrl || mapsUrl(event.homeAddress || event.homeLocationName));
 
     if (config.assets?.heroImage) {
       $(".hero").classList.add("custom-hero");
@@ -367,6 +374,39 @@
         return item.name.trim().toLowerCase() !== publicRsvp.name.trim().toLowerCase();
       })
     ];
+  }
+
+  function readOwnedRsvpCache() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(ownedRsvpKey) || "[]");
+      return Array.isArray(cached)
+        ? cached
+            .filter((rsvp) => rsvp.ownerToken === state.ownerToken)
+            .map((rsvp) => ({ ...normalizeRsvp(rsvp), note: rsvp.note || "", ownerToken: rsvp.ownerToken || state.ownerToken }))
+        : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function writeOwnedRsvpCache(items) {
+    localStorage.setItem(ownedRsvpKey, JSON.stringify(items.slice(0, 20)));
+  }
+
+  function cacheOwnedRsvp(rsvp) {
+    if (!rsvp?.name) return;
+    const cached = readOwnedRsvpCache().filter((item) => {
+      if (rsvp.id && item.id === rsvp.id) return false;
+      if (rsvp.guestKey && item.guestKey === rsvp.guestKey) return false;
+      return item.name.trim().toLowerCase() !== rsvp.name.trim().toLowerCase();
+    });
+    const saved = {
+      ...normalizeRsvp(rsvp),
+      note: rsvp.note || "",
+      ownerToken: rsvp.ownerToken || state.ownerToken
+    };
+    state.ownedRsvps = [saved, ...cached];
+    writeOwnedRsvpCache(state.ownedRsvps);
   }
 
   function localOwnedRsvps() {
@@ -478,7 +518,7 @@
     });
     if (error) {
       if (missingSupabaseFunction(error)) {
-        state.ownedRsvps = [];
+        state.ownedRsvps = readOwnedRsvpCache();
         return state.ownedRsvps;
       }
       throw error;
@@ -495,6 +535,7 @@
       updatedAt: row.updated_at,
       ownerToken: state.ownerToken
     }));
+    writeOwnedRsvpCache(state.ownedRsvps);
     return state.ownedRsvps;
   }
 
@@ -776,7 +817,7 @@
 
     list.innerHTML = "";
     if (!state.ownedRsvps.length) {
-      list.innerHTML = '<div class="empty small-empty">No RSVP from this phone yet. If you used another phone, Elizabeth can fix it in admin.</div>';
+      list.innerHTML = '<div class="empty small-empty">No RSVP found on this phone yet. No worries, just message Elizabeth or Angela and we can update it.</div>';
       return;
     }
 
@@ -1133,7 +1174,9 @@
       }
       await loadPublicData();
       if (!legacyMode) await loadOwnedRsvps().catch(() => {});
-      upsertPublicRsvp({ ...entry, id: data?.id || entry.id, guestKey: data?.guest_key || entry.guestKey });
+      const saved = { ...entry, id: data?.id || entry.id, guestKey: data?.guest_key || entry.guestKey, ownerToken: entry.ownerToken || state.ownerToken };
+      upsertPublicRsvp(saved);
+      cacheOwnedRsvp(saved);
       return {
         id: data?.id || entry.id,
         guestKey: data?.guest_key || entry.guestKey,

@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260618-public-rsvp-places"></script>
-    <script defer src="config.js?v=20260618-public-rsvp-places"></script>
-    <script defer src="app.js?v=20260618-public-rsvp-places"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260618-home-rsvp-cache"></script>
+    <script defer src="config.js?v=20260618-home-rsvp-cache"></script>
+    <script defer src="app.js?v=20260618-home-rsvp-cache"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -260,6 +260,14 @@
         <div class="section-inner">
           <p class="kicker">Places Nearby</p>
           <h2>Hotels, food, and useful stops.</h2>
+          <article class="home-place-card">
+            <div>
+              <span>Home base</span>
+              <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
+              <p id="home-place-address" data-inline-setting="event.homeAddress">8550 SW Ash Meadows, Apartment 433, Wilsonville, OR</p>
+            </div>
+            <a class="button primary" id="home-place-map-link" href="#" target="_blank" rel="noreferrer">Go to maps</a>
+          </article>
           <div class="resource-grid">
             <div>
               <h3>Hotels</h3>
