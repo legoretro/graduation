@@ -7,6 +7,11 @@
   const ownerTokenKey = "graduation-memory-owner-token";
   const ownedMemoryKey = "graduation-owned-memory-ids";
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
+  const resourceGroups = [
+    { key: "stay", label: "Hotels" },
+    { key: "food", label: "Food" },
+    { key: "more", label: "More" }
+  ];
   const maxMemoryImageLength = 1800000;
   const state = {
     rsvps: [],
@@ -139,8 +144,21 @@
     if (node) node.href = value || "#";
   }
 
+  function normalizeMapQuery(address) {
+    return String(address || "")
+      .trim()
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/\b(Dr|Drive|Rd|Road|St|Street|Ave|Avenue|Blvd|Boulevard|Ln|Lane|Way)\s+(Portland|Wilsonville|Beaverton|Hillsboro|Tigard|Klamath|Salem|Eugene)\b/gi, "$1, $2")
+      .replace(/\s+/g, " ");
+  }
+
   function mapsUrl(address) {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(normalizeMapQuery(address))}`;
+  }
+
+  function graduationMapUrl(event) {
+    const address = event.graduationAddress || event.address || event.graduationLocationName || event.locationName || "OHSU Portland OR";
+    return mapsUrl(address);
   }
 
   function setHeroTitle(value) {
@@ -252,7 +270,7 @@
     setText("#event-status", event.statusText);
     setText("#event-note", event.note);
     setText("#quick-grad-location", event.graduationLocationName || event.locationName);
-    setText("#quick-grad-address", event.graduationAddress || event.address);
+    setText("#quick-grad-address", normalizeMapQuery(event.graduationAddress || event.address));
     setText("#invite-copy", event.inviteCopy);
     setText("#invite-card-headline", event.inviteHeadline || "Join us to celebrate");
     setText("#invite-card-title", event.title);
@@ -260,12 +278,13 @@
     setText("#invite-card-date", event.dateText);
     setText("#invite-card-time", event.timeText);
     setText("#invite-card-location", event.graduationLocationName || event.locationName);
-    setText("#invite-card-address", event.graduationAddress || event.address);
+    setText("#invite-card-address", normalizeMapQuery(event.graduationAddress || event.address));
     setText("#invite-card-footer-copy", event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share photos.");
     setText("#footer-title", event.title);
 
-    setHref("#hero-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
-    setHref("#quick-grad-map-link", event.graduationGoogleMapsUrl || event.googleMapsUrl);
+    const gradMapUrl = graduationMapUrl(event);
+    setHref("#hero-map-link", gradMapUrl);
+    setHref("#quick-grad-map-link", gradMapUrl);
 
     if (config.assets?.heroImage) {
       $(".hero").classList.add("custom-hero");
@@ -418,6 +437,30 @@
     return [];
   }
 
+  function resourceGroupLabel(key) {
+    return resourceGroups.find((group) => group.key === key)?.label || "Places";
+  }
+
+  function normalizeResourceGroup(value) {
+    const key = String(value || "").trim().toLowerCase();
+    return resourceGroups.some((group) => group.key === key) ? key : "more";
+  }
+
+  function cleanResource(resource) {
+    return {
+      name: String(resource?.name || "").trim(),
+      address: normalizeMapQuery(resource?.address || ""),
+      image: String(resource?.image || "").trim(),
+      url: String(resource?.url || "").trim()
+    };
+  }
+
+  function publicResourceItems(key) {
+    return resourceItems(config[key] || []).map(cleanResource).filter((resource) =>
+      resource.name || resource.address || resource.image || resource.url
+    );
+  }
+
   function renderResources(selector, resources) {
     const list = $(selector);
     if (!list) return;
@@ -427,7 +470,7 @@
     );
 
     if (!items.length) {
-      list.innerHTML = '<div class="empty small-empty">Add places in admin when you are ready.</div>';
+      list.innerHTML = '<div class="empty small-empty">Coming soon.</div>';
       return;
     }
 
@@ -603,6 +646,8 @@
       });
     }
 
+    renderAdminPlaces();
+
     const memories = $("#admin-memory-list");
     if (!memories) return;
     memories.innerHTML = "";
@@ -652,6 +697,67 @@
         memories.append(item);
       });
     }
+  }
+
+  function renderAdminPlaces() {
+    const list = $("#admin-place-list");
+    if (!list) return;
+    list.innerHTML = "";
+
+    const items = resourceGroups.flatMap((group) =>
+      publicResourceItems(group.key).map((resource, index) => ({ ...resource, group: group.key, index }))
+    );
+
+    if (!items.length) {
+      list.innerHTML = '<div class="empty small-empty">No places yet. Add a name, address, and optional image above.</div>';
+      return;
+    }
+
+    items.forEach((resource) => {
+      const item = document.createElement("article");
+      item.className = "admin-place";
+
+      if (resource.image) {
+        const image = document.createElement("img");
+        image.src = resource.image;
+        image.alt = "";
+        image.loading = "lazy";
+        item.append(image);
+      } else {
+        const placeholder = document.createElement("span");
+        placeholder.className = "admin-place-placeholder";
+        placeholder.textContent = "IMG";
+        item.append(placeholder);
+      }
+
+      const copy = document.createElement("div");
+      const category = document.createElement("span");
+      category.className = "admin-place-category";
+      category.textContent = resourceGroupLabel(resource.group);
+      const name = document.createElement("p");
+      name.textContent = resource.name || "Unnamed place";
+      const address = document.createElement("small");
+      address.textContent = resource.address || "No address yet";
+      copy.append(category, name, address);
+
+      const actions = document.createElement("div");
+      actions.className = "admin-place-actions";
+      const map = document.createElement("a");
+      map.className = "button secondary";
+      map.href = resource.url || mapsUrl(resource.address || resource.name);
+      map.target = "_blank";
+      map.rel = "noreferrer";
+      map.textContent = "Open map";
+      const del = document.createElement("button");
+      del.className = "button quiet";
+      del.type = "button";
+      del.textContent = "Delete";
+      del.addEventListener("click", () => deletePlace(resource.group, resource.index));
+      actions.append(map, del);
+
+      item.append(copy, actions);
+      list.append(item);
+    });
   }
 
   function fillEditor() {
@@ -1009,6 +1115,39 @@
     burstConfetti(120);
   }
 
+  async function addPlace(formData) {
+    const group = normalizeResourceGroup(formData.get("category"));
+    const place = cleanResource({
+      name: formData.get("name"),
+      address: formData.get("address"),
+      image: formData.get("image")
+    });
+
+    if (!place.name && !place.address) {
+      setText("#admin-feedback", "Add at least a place name or address.");
+      return false;
+    }
+
+    const nextItems = [...publicResourceItems(group), place];
+    await saveSiteSettings({ [group]: nextItems });
+    setText("#admin-feedback", `${resourceGroupLabel(group).replace(/s$/, "")} added.`);
+    renderAll();
+    return true;
+  }
+
+  async function deletePlace(group, index) {
+    const key = normalizeResourceGroup(group);
+    const nextItems = publicResourceItems(key).filter((_, itemIndex) => itemIndex !== Number(index));
+    try {
+      await saveSiteSettings({ [key]: nextItems });
+      setText("#admin-feedback", "Place removed.");
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setText("#admin-feedback", friendlyError(error, "Could not remove that place yet."));
+    }
+  }
+
   async function deleteMessage(messageId) {
     if (!messageId) return;
     try {
@@ -1232,7 +1371,7 @@
     const date = event.dateText || "December 2026";
     const time = event.timeText || "Time TBA";
     const place = event.graduationLocationName || event.locationName || "Graduation at OHSU";
-    const address = event.graduationAddress || event.address || "OHSU, Portland, OR";
+    const address = normalizeMapQuery(event.graduationAddress || event.address || "OHSU, Portland, OR");
     const footer = event.inviteFooter || "Scan to RSVP, get directions, leave a note, and share a memory.";
     const cellPattern = art.cellPattern ? `<image x="1020" y="-90" width="880" height="1380" href="${escapeXml(art.cellPattern)}" preserveAspectRatio="xMidYMid slice" opacity="0.2"/>` : "";
     const microscope = art.microscope ? `<image x="690" y="405" width="500" height="675" href="${escapeXml(art.microscope)}" preserveAspectRatio="xMidYMid meet" opacity="0.78" transform="rotate(-7 940 742)"/>` : "";
@@ -1769,6 +1908,20 @@
       setText("#admin-feedback", "Page edits canceled.");
     });
 
+    const placeForm = $("#place-form");
+    if (placeForm) {
+      placeForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        try {
+          const saved = await addPlace(new FormData(event.currentTarget));
+          if (saved) event.currentTarget.reset();
+        } catch (error) {
+          console.error(error);
+          setText("#admin-feedback", friendlyError(error, "Could not save that place yet."));
+        }
+      });
+    }
+
     $("#clear-demo-data").addEventListener("click", () => {
       if (state.usingSupabase) {
         setText("#admin-feedback", "Clear is only for local preview storage.");
@@ -1791,16 +1944,7 @@
     });
 
     $("#share-qr-button").addEventListener("click", shareQrCode);
-    const inviteCard = $("#printable-invite-card");
-    if (inviteCard) {
-      inviteCard.addEventListener("click", downloadInvitationPng);
-      inviteCard.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          downloadInvitationPng();
-        }
-      });
-    }
+    $("#download-invite-png")?.addEventListener("click", downloadInvitationPng);
   }
 
   async function loadWeather() {

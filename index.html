@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260618-exact-card"></script>
-    <script defer src="config.js?v=20260618-exact-card"></script>
-    <script defer src="app.js?v=20260618-exact-card"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260618-button-map-places"></script>
+    <script defer src="config.js?v=20260618-button-map-places"></script>
+    <script defer src="app.js?v=20260618-button-map-places"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -89,14 +89,50 @@
               <div id="admin-memory-list"></div>
             </section>
 
-            <details class="admin-card">
-              <summary>Notes and local preview tools</summary>
-              <div class="admin-actions compact">
+            <section class="admin-card">
+              <div class="admin-card-head">
+                <div>
+                  <p class="kicker">Caring Notes</p>
+                  <h3>Posted notes</h3>
+                </div>
                 <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
               </div>
-              <h3>Caring notes</h3>
               <div id="admin-message-list"></div>
-            </details>
+            </section>
+
+            <section class="admin-card">
+              <div class="admin-card-head">
+                <div>
+                  <p class="kicker">Places Nearby</p>
+                  <h3>Add a place</h3>
+                </div>
+              </div>
+              <form class="admin-place-form" id="place-form">
+                <label>
+                  Type
+                  <select name="category">
+                    <option value="stay">Hotel</option>
+                    <option value="food">Food</option>
+                    <option value="more">More</option>
+                  </select>
+                </label>
+                <label>
+                  Place name
+                  <input name="name" placeholder="Hotel, restaurant, or useful stop">
+                </label>
+                <label>
+                  Address
+                  <input name="address" placeholder="Street address, city, state">
+                </label>
+                <label>
+                  Image
+                  <input name="image" placeholder="Image URL or assets/photo.jpg">
+                </label>
+                <button class="button secondary" type="submit">Add place</button>
+              </form>
+              <div id="admin-place-list"></div>
+            </section>
+
           </div>
         </div>
       </details>
@@ -234,7 +270,7 @@
       <section class="section invite-section" id="invite">
         <div class="section-inner invite-card-section">
           <div class="invite-tools">
-            <figure class="invite-card generated-invite-card" id="printable-invite-card" role="button" tabindex="0" aria-label="Save graduation invitation image">
+            <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Graduation invitation image">
               <div class="invite-card-bar invite-card-top-bar" aria-hidden="true"></div>
               <div class="invite-card-bg" aria-hidden="true"></div>
               <div class="invite-card-bar invite-card-bottom-bar" aria-hidden="true"></div>
@@ -270,6 +306,9 @@
                 </div>
               </div>
             </figure>
+            <div class="invite-download-row">
+              <button class="button secondary" id="download-invite-png" type="button">Download image here</button>
+            </div>
             <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
             <div class="inline-admin-card invite-admin-card" data-admin-edit-panel hidden>
               <label>
@@ -287,10 +326,6 @@
               <label>
                 Hero image URL or asset path
                 <input data-inline-input="assets.heroImage" placeholder="assets/hero-celebration.png">
-              </label>
-              <label>
-                Graduation map link
-                <input data-inline-input="event.graduationGoogleMapsUrl" placeholder="https://www.google.com/maps/search/...">
               </label>
               <label>
                 Live QR / website URL

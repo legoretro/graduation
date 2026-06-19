@@ -46,6 +46,7 @@ body {
 body,
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
@@ -702,7 +703,7 @@ p {
 
 .invite-card {
   aspect-ratio: 3 / 2;
-  cursor: pointer;
+  cursor: default;
   justify-self: center;
   max-width: 820px;
   min-height: 0;
@@ -1161,6 +1162,7 @@ label + label,
 }
 
 input,
+select,
 textarea {
   background: #f7f9fb;
   border: 1px solid var(--line);
@@ -1177,6 +1179,7 @@ textarea {
 }
 
 input:focus,
+select:focus,
 textarea:focus,
 .choice input:focus + span {
   outline: 3px solid rgba(244, 180, 0, 0.36);
@@ -1689,6 +1692,21 @@ textarea:focus,
   gap: 0.45rem;
 }
 
+.admin-place-form {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: minmax(120px, 0.7fr) repeat(3, minmax(0, 1fr)) auto;
+}
+
+.admin-place-form label {
+  margin: 0;
+}
+
+.admin-place-form .button {
+  align-self: end;
+  min-height: 2.65rem;
+}
+
 .admin-summary {
   background: #f7f9fb;
   border: 1px solid var(--line);
@@ -1769,6 +1787,63 @@ th {
 
 .admin-message[aria-disabled="true"] {
   opacity: 0.58;
+}
+
+.admin-place {
+  align-items: center;
+  background: #f7f9fb;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+}
+
+.admin-place img,
+.admin-place-placeholder {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  height: 72px;
+  object-fit: cover;
+  width: 72px;
+}
+
+.admin-place-placeholder {
+  align-items: center;
+  background: #e7f1f8;
+  color: var(--oit-blue);
+  display: flex;
+  font-size: 0.75rem;
+  font-weight: 950;
+  justify-content: center;
+}
+
+.admin-place-category {
+  color: var(--oit-gold-dark);
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.admin-place p {
+  color: var(--ink);
+  margin: 0.2rem 0 0.15rem;
+}
+
+.admin-place small {
+  color: var(--muted);
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.admin-place-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: end;
 }
 
 .admin-memory {
@@ -2001,6 +2076,7 @@ footer a {
   }
 
   input,
+  select,
   textarea {
     min-height: 2.6rem;
     padding: 0.65rem 0.75rem;
@@ -2162,8 +2238,13 @@ footer a {
   }
 
   .admin-card-head,
+  .admin-place,
   .admin-memory {
     align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-place-form {
     grid-template-columns: 1fr;
   }
 
@@ -2171,15 +2252,19 @@ footer a {
     flex-direction: column;
   }
 
+  .admin-place img,
+  .admin-place-placeholder,
   .admin-memory img {
     height: auto;
     width: 100%;
   }
 
+  .admin-place-actions,
   .admin-memory-actions {
     justify-content: stretch;
   }
 
+  .admin-place-actions .button,
   .admin-memory-actions .button {
     flex: 1;
   }
