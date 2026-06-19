@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260618-owned-rsvp"></script>
-    <script defer src="config.js?v=20260618-owned-rsvp"></script>
-    <script defer src="app.js?v=20260618-owned-rsvp"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260618-public-rsvp-places"></script>
+    <script defer src="config.js?v=20260618-public-rsvp-places"></script>
+    <script defer src="app.js?v=20260618-public-rsvp-places"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -109,7 +109,7 @@
                 </div>
               </div>
               <form class="admin-place-form" id="place-form">
-                <label>
+                <label class="place-type-field">
                   Type
                   <select name="category">
                     <option value="stay">Hotel</option>
@@ -117,15 +117,15 @@
                     <option value="more">More</option>
                   </select>
                 </label>
-                <label>
+                <label class="place-name-field">
                   Place name
                   <input name="name" placeholder="Hotel, restaurant, or useful stop">
                 </label>
-                <label>
+                <label class="place-address-field">
                   Address
                   <input name="address" placeholder="Street address, city, state">
                 </label>
-                <label>
+                <label class="place-image-field">
                   Image
                   <input name="image" placeholder="Image URL or assets/photo.jpg">
                 </label>
@@ -188,10 +188,11 @@
             <p class="kicker">Headcount</p>
             <h2>RSVP HERE</h2>
             <div class="counts" aria-label="RSVP totals">
-              <div><span>Yes</span><strong id="count-yes">0</strong></div>
-              <div><span>Maybe</span><strong id="count-maybe">0</strong></div>
-              <div><span>No</span><strong id="count-no">0</strong></div>
+              <button class="count-card count-yes" type="button" data-rsvp-filter="yes" aria-expanded="false"><span>Yes</span><strong id="count-yes">0</strong></button>
+              <button class="count-card count-maybe" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span>Maybe</span><strong id="count-maybe">0</strong></button>
+              <button class="count-card count-no" type="button" data-rsvp-filter="no" aria-expanded="false"><span>No</span><strong id="count-no">0</strong></button>
             </div>
+            <div class="rsvp-public-list" id="rsvp-public-list" hidden></div>
           </div>
 
           <form class="panel" id="rsvp-form">

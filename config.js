@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-18-layout-download-fix",
+  contentVersion: "2026-06-18-public-rsvp-places",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -48,7 +48,13 @@ window.GRADUATION_CONFIG = {
 
   food: [],
 
-  more: [],
+  more: [
+    {
+      name: "E&A's Home",
+      address: "8550 SW Ash Meadows, Apartment 433, Wilsonville, OR",
+      image: ""
+    }
+  ],
 
   supabase: {
     enabled: true,

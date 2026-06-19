@@ -248,6 +248,36 @@ as $$
   ) r;
 $$;
 
+create or replace function public.graduation_public_rsvps()
+returns jsonb
+language sql
+security definer
+set search_path = public
+as $$
+  select coalesce(
+    jsonb_agg(to_jsonb(r) - 'response_order' order by r.response_order, lower(r.guest_name)),
+    '[]'::jsonb
+  )
+  from (
+    select
+      id,
+      guest_key,
+      guest_name,
+      party_count,
+      response,
+      created_at,
+      updated_at,
+      case response
+        when 'yes' then 1
+        when 'maybe' then 2
+        else 3
+      end as response_order
+    from public.graduation_rsvps
+    order by response_order, lower(guest_name)
+    limit 300
+  ) r;
+$$;
+
 create or replace function public.graduation_public_memories()
 returns jsonb
 language sql
@@ -469,6 +499,7 @@ $$;
 
 grant execute on function public.graduation_save_rsvp(text, text, integer, text, text, text, text) to anon;
 grant execute on function public.graduation_owned_rsvps(text) to anon;
+grant execute on function public.graduation_public_rsvps() to anon;
 grant execute on function public.graduation_delete_owned_rsvp(text, uuid) to anon;
 grant execute on function public.graduation_public_memories() to anon;
 grant execute on function public.graduation_add_memory(text, text, text) to anon;
@@ -482,6 +513,6 @@ grant execute on function public.graduation_admin_delete_memory(text, uuid) to a
 notify pgrst, 'reload schema';
 
 -- Privacy note:
--- Do not add a public SELECT policy to graduation_rsvps if you want guest names,
--- contact info, and private notes to stay private. The password-protected RPC
--- functions above are used for the admin dashboard.
+-- Do not add a public SELECT policy to graduation_rsvps. Public guests only get
+-- the limited graduation_public_rsvps() list: names, response, party count, and
+-- timing. Contact info/private notes stay behind the admin RPC functions.

@@ -15,12 +15,14 @@
   const maxMemoryImageLength = 1800000;
   const state = {
     rsvps: [],
+    publicRsvps: [],
     ownedRsvps: [],
     messages: [],
     memories: [],
     ownerToken: "",
     ownedMemoryIds: new Set(),
     ownedRsvpPanelOpen: false,
+    openRsvpGroup: "",
     totals: null,
     adminUnlocked: false,
     adminPassword: "",
@@ -55,6 +57,7 @@
   };
 
   const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
   function isObject(value) {
     return value && typeof value === "object" && !Array.isArray(value);
@@ -219,6 +222,11 @@
     return fallback;
   }
 
+  function missingSupabaseFunction(error) {
+    const message = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`;
+    return /PGRST202|42883|schema cache|Could not find the function/i.test(message);
+  }
+
   function table(name) {
     return `${config.supabase?.tablePrefix || "graduation_"}${name}`;
   }
@@ -336,6 +344,31 @@
     localStorage.setItem(localKey, JSON.stringify({ rsvps: state.rsvps, messages: state.messages, memories: state.memories }));
   }
 
+  function normalizeRsvp(row) {
+    return {
+      id: row.id || "",
+      guestKey: row.guest_key || row.guestKey || "",
+      name: row.guest_name || row.name || "Unnamed",
+      partyCount: Math.max(1, Number(row.party_count || row.partyCount || 1)),
+      response: row.response || "yes",
+      updatedAt: row.updated_at || row.updatedAt || row.created_at || row.createdAt || "",
+      createdAt: row.created_at || row.createdAt || row.updated_at || row.updatedAt || ""
+    };
+  }
+
+  function upsertPublicRsvp(rsvp) {
+    if (!rsvp?.name) return;
+    const publicRsvp = normalizeRsvp(rsvp);
+    state.publicRsvps = [
+      publicRsvp,
+      ...state.publicRsvps.filter((item) => {
+        if (publicRsvp.id && item.id === publicRsvp.id) return false;
+        if (publicRsvp.guestKey && item.guestKey === publicRsvp.guestKey) return false;
+        return item.name.trim().toLowerCase() !== publicRsvp.name.trim().toLowerCase();
+      })
+    ];
+  }
+
   function localOwnedRsvps() {
     return state.rsvps.filter((rsvp) => rsvp.ownerToken === state.ownerToken);
   }
@@ -386,6 +419,7 @@
     if (!state.usingSupabase) {
       readLocal();
       state.totals = null;
+      state.publicRsvps = state.rsvps.map(normalizeRsvp);
       state.ownedRsvps = localOwnedRsvps();
       return;
     }
@@ -423,6 +457,13 @@
         createdAt: row.created_at
       }));
     }
+
+    const { data: publicRsvpData, error: publicRsvpError } = await state.supabaseClient.rpc("graduation_public_rsvps");
+    if (!publicRsvpError) {
+      state.publicRsvps = (publicRsvpData || []).map(normalizeRsvp);
+    } else if (!missingSupabaseFunction(publicRsvpError)) {
+      console.error(publicRsvpError);
+    }
   }
 
   async function loadOwnedRsvps() {
@@ -435,7 +476,13 @@
     const { data, error } = await state.supabaseClient.rpc("graduation_owned_rsvps", {
       p_owner_token: state.ownerToken
     });
-    if (error) throw error;
+    if (error) {
+      if (missingSupabaseFunction(error)) {
+        state.ownedRsvps = [];
+        return state.ownedRsvps;
+      }
+      throw error;
+    }
     state.ownedRsvps = (data || []).map((row) => ({
       id: row.id,
       guestKey: row.guest_key,
@@ -531,7 +578,7 @@
 
       const action = document.createElement("strong");
       action.setAttribute("aria-hidden", "true");
-      action.textContent = "Map";
+      action.textContent = "Go to maps";
       link.append(copy, action);
       list.append(link);
     });
@@ -562,6 +609,61 @@
     setText("#count-yes", current.yes);
     setText("#count-maybe", current.maybe);
     setText("#count-no", current.no);
+    $$(".count-card").forEach((button) => {
+      const active = button.dataset.rsvpFilter === state.openRsvpGroup;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-expanded", String(active));
+    });
+    renderPublicRsvps();
+  }
+
+  function renderPublicRsvps() {
+    const list = $("#rsvp-public-list");
+    if (!list) return;
+    const response = state.openRsvpGroup;
+    if (!response) {
+      list.hidden = true;
+      list.innerHTML = "";
+      return;
+    }
+
+    const label = response === "yes" ? "Yes" : response === "maybe" ? "Maybe" : "No";
+    const names = state.publicRsvps
+      .filter((rsvp) => (rsvp.response || "yes") === response)
+      .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+    list.hidden = false;
+    list.innerHTML = "";
+
+    const heading = document.createElement("h3");
+    heading.textContent = `${label} RSVPs`;
+    list.append(heading);
+
+    if (!names.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty small-empty";
+      empty.textContent = state.publicRsvps.length ? `No ${label.toLowerCase()} RSVPs yet.` : "No names to show yet.";
+      list.append(empty);
+      return;
+    }
+
+    const people = document.createElement("div");
+    people.className = "public-rsvp-people";
+    names.forEach((rsvp) => {
+      const person = document.createElement("article");
+      person.className = `public-rsvp-person public-rsvp-${response}`;
+
+      const name = document.createElement("strong");
+      name.textContent = rsvp.name || "Unnamed";
+
+      const meta = document.createElement("span");
+      const count = Math.max(1, Number(rsvp.partyCount || 1));
+      meta.textContent = response === "no" ? "Not attending" : `${count} attending`;
+
+      person.append(name, meta);
+      people.append(person);
+    });
+    list.append(people);
   }
 
   function renderMessages() {
@@ -1005,43 +1107,39 @@
 
   async function saveRsvp(entry) {
     if (state.usingSupabase) {
-      const payload = {
+      const legacyPayload = {
         p_guest_key: entry.guestKey,
         p_guest_name: entry.name,
         p_party_count: entry.partyCount,
         p_response: entry.response,
         p_contact: entry.contact,
-        p_note: entry.note,
+        p_note: entry.note
+      };
+      const payload = {
+        ...legacyPayload,
         p_owner_token: entry.ownerToken || state.ownerToken
       };
-      const { data, error } = await state.supabaseClient.rpc("graduation_save_rsvp", payload);
+      let { data, error } = await state.supabaseClient.rpc("graduation_save_rsvp", payload);
+      let legacyMode = false;
       if (error) {
-        const message = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`;
-        if (/PGRST202|schema cache|Could not find the function/i.test(message)) {
-          const { error: directError } = await state.supabaseClient.from(table("rsvps")).upsert(
-            {
-              guest_key: entry.guestKey,
-              guest_name: entry.name,
-              party_count: entry.partyCount,
-              response: entry.response,
-              contact: entry.contact || null,
-              note: entry.note || null,
-              updated_at: new Date().toISOString()
-            },
-            { onConflict: "guest_key" }
-          );
-          if (directError) throw error;
+        if (missingSupabaseFunction(error)) {
+          const legacyResult = await state.supabaseClient.rpc("graduation_save_rsvp", legacyPayload);
+          if (legacyResult.error) throw legacyResult.error;
+          data = legacyResult.data;
+          legacyMode = true;
         } else {
           throw error;
         }
       }
       await loadPublicData();
-      await loadOwnedRsvps().catch(() => {});
+      if (!legacyMode) await loadOwnedRsvps().catch(() => {});
+      upsertPublicRsvp({ ...entry, id: data?.id || entry.id, guestKey: data?.guest_key || entry.guestKey });
       return {
         id: data?.id || entry.id,
         guestKey: data?.guest_key || entry.guestKey,
         ...entry,
-        ownerToken: entry.ownerToken || state.ownerToken
+        ownerToken: entry.ownerToken || state.ownerToken,
+        legacyMode
       };
     }
 
@@ -1056,6 +1154,7 @@
       state.rsvps.unshift(saved);
     }
     state.ownedRsvps = localOwnedRsvps();
+    upsertPublicRsvp(saved);
     writeLocal();
     return saved;
   }
@@ -1999,11 +2098,16 @@
         if (saved?.id) form.elements.rsvpId.value = saved.id;
         if (saved?.guestKey) form.elements.guestKey.value = saved.guestKey;
         form.elements.ownerToken.value = saved?.ownerToken || existingOwnerToken || state.ownerToken;
-        state.ownedRsvpPanelOpen = true;
-        await loadOwnedRsvps().catch(() => {});
+        state.ownedRsvpPanelOpen = !saved?.legacyMode;
+        if (!saved?.legacyMode) await loadOwnedRsvps().catch(() => {});
         if (state.adminUnlocked) await loadAdmin(state.adminPassword).catch(() => {});
         setRsvpFormMode("edit");
-        setText("#rsvp-feedback", "RSVP saved. You can edit or delete it from this same phone.");
+        setText(
+          "#rsvp-feedback",
+          saved?.legacyMode
+            ? "RSVP saved! If anything needs changing later, admin can fix it while the private edit tools finish setup."
+            : "RSVP saved. You can edit or delete it from this same phone."
+        );
         renderAll();
         burstConfetti(90);
       } catch (error) {
@@ -2028,6 +2132,14 @@
     });
 
     $("#new-rsvp-button")?.addEventListener("click", resetRsvpForm);
+
+    $$(".count-card").forEach((button) => {
+      button.addEventListener("click", () => {
+        const response = button.dataset.rsvpFilter || "";
+        state.openRsvpGroup = state.openRsvpGroup === response ? "" : response;
+        renderCounts();
+      });
+    });
 
     $("#message-form").addEventListener("submit", async (event) => {
       event.preventDefault();

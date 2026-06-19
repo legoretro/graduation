@@ -1184,13 +1184,33 @@ p {
   margin-top: 1.4rem;
 }
 
-.counts div {
+.count-card {
   background: linear-gradient(150deg, var(--oit-blue), #075a86);
   border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: var(--radius);
   box-shadow: 0 12px 28px rgba(0, 31, 63, 0.16);
+  cursor: pointer;
+  font: inherit;
   min-height: 5.2rem;
   padding: 0.8rem;
+  text-align: left;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.count-card:nth-child(2) {
+  background: linear-gradient(150deg, #f4b400, #d99d00);
+}
+
+.count-card:nth-child(3) {
+  background: linear-gradient(150deg, #eef5f8, #ffffff);
+  border-color: rgba(0, 55, 103, 0.26);
+}
+
+.count-card:hover,
+.count-card.is-active {
+  border-color: rgba(244, 180, 0, 0.9);
+  box-shadow: 0 16px 34px rgba(0, 31, 63, 0.2), 0 0 0 4px rgba(244, 180, 0, 0.22);
+  transform: translateY(-2px);
 }
 
 .counts span {
@@ -1205,6 +1225,65 @@ p {
   display: block;
   font-size: 1.8rem;
   margin-top: 0.25rem;
+}
+
+.count-card:nth-child(2) span,
+.count-card:nth-child(2) strong,
+.count-card:nth-child(3) span,
+.count-card:nth-child(3) strong {
+  color: var(--ink);
+}
+
+.rsvp-public-list {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 55, 103, 0.16);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 30px rgba(0, 31, 63, 0.1);
+  margin-top: 0.8rem;
+  padding: 0.85rem;
+}
+
+.rsvp-public-list h3 {
+  color: var(--oit-blue);
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.public-rsvp-people {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.public-rsvp-person {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--oit-blue);
+  border-radius: 6px;
+  display: flex;
+  gap: 0.7rem;
+  justify-content: space-between;
+  padding: 0.65rem 0.75rem;
+}
+
+.public-rsvp-person strong,
+.public-rsvp-person span {
+  display: block;
+}
+
+.public-rsvp-person span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.public-rsvp-maybe {
+  border-left-color: var(--oit-gold);
+}
+
+.public-rsvp-no {
+  border-left-color: #9f2430;
 }
 
 .panel {
@@ -1566,6 +1645,19 @@ textarea:focus,
   display: block;
 }
 
+.resource-card > div {
+  min-width: 0;
+}
+
+.resource-card > strong {
+  color: var(--oit-blue);
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .resource-card span {
   color: var(--muted);
   font-size: 0.9rem;
@@ -1668,7 +1760,7 @@ textarea:focus,
   position: fixed;
   right: 0.75rem;
   top: auto;
-  width: min(620px, calc(100vw - 1.5rem));
+  width: min(840px, calc(100vw - 1.5rem));
   z-index: 30;
 }
 
@@ -1714,7 +1806,7 @@ textarea:focus,
   pointer-events: auto;
   position: absolute;
   right: 0;
-  width: min(620px, calc(100vw - 1.5rem));
+  width: min(840px, calc(100vw - 1.5rem));
 }
 
 .inline {
@@ -1764,15 +1856,32 @@ textarea:focus,
 .admin-place-form {
   display: grid;
   gap: 0.65rem;
-  grid-template-columns: minmax(120px, 0.7fr) repeat(3, minmax(0, 1fr)) auto;
+  grid-template-columns: minmax(140px, 0.55fr) minmax(260px, 1.4fr) minmax(180px, 1fr);
 }
 
 .admin-place-form label {
   margin: 0;
 }
 
+.admin-place-form .place-type-field {
+  grid-column: 1 / 2;
+}
+
+.admin-place-form .place-name-field {
+  grid-column: 2 / 4;
+}
+
+.admin-place-form .place-address-field {
+  grid-column: 1 / 4;
+}
+
+.admin-place-form .place-image-field {
+  grid-column: 1 / 3;
+}
+
 .admin-place-form .button {
   align-self: end;
+  grid-column: 3 / 4;
   min-height: 2.65rem;
 }
 
@@ -2130,7 +2239,7 @@ footer a {
     margin-top: 0.85rem;
   }
 
-  .counts div {
+  .count-card {
     min-height: 3.5rem;
     padding: 0.55rem;
   }
@@ -2333,6 +2442,14 @@ footer a {
 
   .admin-place-form {
     grid-template-columns: 1fr;
+  }
+
+  .admin-place-form .place-type-field,
+  .admin-place-form .place-name-field,
+  .admin-place-form .place-address-field,
+  .admin-place-form .place-image-field,
+  .admin-place-form .button {
+    grid-column: auto;
   }
 
   .admin-card-head {
