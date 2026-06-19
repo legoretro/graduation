@@ -893,7 +893,7 @@
         del.className = "button quiet delete-rsvp";
         del.type = "button";
         del.textContent = "Delete";
-        del.addEventListener("click", () => deleteRsvp(rsvp.id));
+        del.addEventListener("click", () => deleteRsvp(rsvp.id, del));
         action.className = "admin-rsvp-actions";
         action.append(edit, del);
 
@@ -1395,6 +1395,9 @@
       createdAt: row.created_at,
       updatedAt: row.updated_at
     }));
+    if (state.rsvps.length) {
+      state.publicRsvps = state.rsvps.map(normalizeRsvp);
+    }
     state.totals = null;
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
@@ -1510,9 +1513,15 @@
     }
   }
 
-  async function deleteRsvp(rsvpId) {
+  async function deleteRsvp(rsvpId, button) {
     if (!rsvpId) return;
+    const oldText = button?.textContent || "";
     try {
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Deleting...";
+      }
+      setText("#admin-feedback", "Deleting RSVP...");
       if (state.usingSupabase) {
         const endpoint = config.supabase?.adminEndpoint;
         if (endpoint) {
@@ -1527,7 +1536,14 @@
             admin_password: state.adminPassword,
             rsvp_id: rsvpId
           });
-          if (error) throw error;
+          if (error) {
+            if (!missingSupabaseFunction(error)) throw error;
+            const { error: deleteError } = await state.supabaseClient
+              .from(table("rsvps"))
+              .delete()
+              .eq("id", rsvpId);
+            if (deleteError) throw deleteError;
+          }
         }
         await loadAdmin(state.adminPassword);
         await loadOwnedRsvps().catch(() => {});
@@ -1545,6 +1561,11 @@
         ? "Delete needs the small admin update. Paste it once, then try again."
         : "Could not delete that RSVP yet.";
       setText("#admin-feedback", detail);
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = oldText || "Delete";
+      }
     }
   }
 

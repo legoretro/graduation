@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-18-place-edit-upload",
+  contentVersion: "2026-06-19-admin-rsvp-fallback",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
