@@ -440,6 +440,9 @@ begin
   delete from public.graduation_messages
   where id = message_id;
 
+  delete from public.graduation_rsvps
+  where id = message_id;
+
   return jsonb_build_object('ok', true);
 end;
 $$;

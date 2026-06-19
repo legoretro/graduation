@@ -1535,18 +1535,7 @@
           });
           if (!response.ok) throw new Error("Could not delete RSVP.");
         } else {
-          const { error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
-            admin_password: state.adminPassword,
-            rsvp_id: rsvpId
-          });
-          if (error) {
-            if (!missingSupabaseFunction(error)) throw error;
-            const { error: deleteError } = await state.supabaseClient
-              .from(table("rsvps"))
-              .delete()
-              .eq("id", rsvpId);
-            if (deleteError) throw deleteError;
-          }
+          await callAdminDeleteRsvp(rsvpId);
         }
         await loadAdmin(state.adminPassword);
         if (state.rsvps.some((item) => item.id === rsvpId)) {
@@ -1563,8 +1552,8 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      const detail = missingSupabaseFunction(error) || /blocked delete/i.test(error?.message || "")
-        ? "Supabase still needs the admin delete update before this can delete."
+      const detail = missingSupabaseFunction(error) || /blocked delete|delete setup/i.test(error?.message || "")
+        ? "Delete needs the admin update once, then it will work."
         : "Could not delete that RSVP yet.";
       setText("#admin-feedback", detail);
     } finally {
@@ -1573,6 +1562,21 @@
         button.textContent = oldText || "Delete";
       }
     }
+  }
+
+  async function callAdminDeleteRsvp(rsvpId) {
+    const { error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
+      admin_password: state.adminPassword,
+      rsvp_id: rsvpId
+    });
+    if (!error) return;
+    if (!missingSupabaseFunction(error)) throw error;
+
+    const fallback = await state.supabaseClient.rpc("graduation_admin_delete_message", {
+      admin_password: state.adminPassword,
+      message_id: rsvpId
+    });
+    if (fallback.error) throw fallback.error;
   }
 
   async function deleteOwnedRsvp(rsvpId) {
