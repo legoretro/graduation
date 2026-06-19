@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260618-rsvp-delete-nav"></script>
-    <script defer src="config.js?v=20260618-rsvp-delete-nav"></script>
-    <script defer src="app.js?v=20260618-rsvp-delete-nav"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260618-owned-rsvp"></script>
+    <script defer src="config.js?v=20260618-owned-rsvp"></script>
+    <script defer src="app.js?v=20260618-owned-rsvp"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -195,6 +195,9 @@
           </div>
 
           <form class="panel" id="rsvp-form">
+            <input name="rsvpId" type="hidden">
+            <input name="guestKey" type="hidden">
+            <input name="ownerToken" type="hidden">
             <label>
               Name
               <input name="guestName" autocomplete="name" required>
@@ -216,7 +219,12 @@
               <textarea name="note" rows="4" placeholder="Allergy, accessibility note, travel question, or anything we should know"></textarea>
             </label>
             <button class="button primary full" type="submit">Lock in RSVP</button>
+            <button class="button quiet full" id="new-rsvp-button" type="button" hidden>Start a new RSVP</button>
             <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
+            <div class="owned-rsvp-tools">
+              <button class="button secondary full" id="show-owned-rsvps" type="button">Want to change your RSVP?</button>
+              <div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div>
+            </div>
           </form>
         </div>
       </section>

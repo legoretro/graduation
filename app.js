@@ -15,10 +15,12 @@
   const maxMemoryImageLength = 1800000;
   const state = {
     rsvps: [],
+    ownedRsvps: [],
     messages: [],
     memories: [],
     ownerToken: "",
     ownedMemoryIds: new Set(),
+    ownedRsvpPanelOpen: false,
     totals: null,
     adminUnlocked: false,
     adminPassword: "",
@@ -334,6 +336,10 @@
     localStorage.setItem(localKey, JSON.stringify({ rsvps: state.rsvps, messages: state.messages, memories: state.memories }));
   }
 
+  function localOwnedRsvps() {
+    return state.rsvps.filter((rsvp) => rsvp.ownerToken === state.ownerToken);
+  }
+
   function initMemoryOwner() {
     let token = localStorage.getItem(ownerTokenKey);
     if (!token) {
@@ -380,6 +386,7 @@
     if (!state.usingSupabase) {
       readLocal();
       state.totals = null;
+      state.ownedRsvps = localOwnedRsvps();
       return;
     }
 
@@ -416,6 +423,32 @@
         createdAt: row.created_at
       }));
     }
+  }
+
+  async function loadOwnedRsvps() {
+    if (!state.ownerToken) return [];
+    if (!state.usingSupabase) {
+      state.ownedRsvps = localOwnedRsvps();
+      return state.ownedRsvps;
+    }
+
+    const { data, error } = await state.supabaseClient.rpc("graduation_owned_rsvps", {
+      p_owner_token: state.ownerToken
+    });
+    if (error) throw error;
+    state.ownedRsvps = (data || []).map((row) => ({
+      id: row.id,
+      guestKey: row.guest_key,
+      name: row.guest_name,
+      partyCount: row.party_count,
+      response: row.response,
+      ownerToken: row.owner_token,
+      note: row.note,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      ownerToken: state.ownerToken
+    }));
+    return state.ownedRsvps;
   }
 
   function totals() {
@@ -591,6 +624,90 @@
     });
   }
 
+  function setRsvpFormMode(mode) {
+    const form = $("#rsvp-form");
+    if (!form) return;
+    const submit = form.querySelector('button[type="submit"]');
+    const newButton = $("#new-rsvp-button");
+    if (submit) submit.textContent = mode === "edit" ? "Update RSVP" : "Lock in RSVP";
+    if (newButton) newButton.hidden = mode !== "edit";
+  }
+
+  function fillRsvpForm(rsvp, source) {
+    const form = $("#rsvp-form");
+    if (!form || !rsvp) return;
+    form.elements.rsvpId.value = rsvp.id || "";
+    form.elements.guestKey.value = rsvp.guestKey || "";
+    form.elements.ownerToken.value = rsvp.ownerToken || "";
+    form.elements.guestName.value = rsvp.name || "";
+    form.elements.partyCount.value = Math.max(1, Number(rsvp.partyCount || 1));
+    const response = rsvp.response || "yes";
+    const responseInput = form.querySelector(`input[name="response"][value="${response}"]`);
+    if (responseInput) responseInput.checked = true;
+    form.elements.note.value = rsvp.note || "";
+    setRsvpFormMode("edit");
+    if (source === "admin") $("#admin details")?.removeAttribute("open");
+    form.scrollIntoView({ block: "center", behavior: "smooth" });
+    setText("#rsvp-feedback", source === "admin" ? "Admin edit loaded. Update and save." : "Your RSVP is loaded. Make changes and update it.");
+  }
+
+  function resetRsvpForm() {
+    const form = $("#rsvp-form");
+    if (!form) return;
+    form.reset();
+    form.elements.rsvpId.value = "";
+    form.elements.guestKey.value = "";
+    form.elements.ownerToken.value = "";
+    const yes = form.querySelector('input[name="response"][value="yes"]');
+    if (yes) yes.checked = true;
+    setRsvpFormMode("new");
+    setText("#rsvp-feedback", "");
+  }
+
+  function renderOwnedRsvps() {
+    const list = $("#owned-rsvp-list");
+    if (!list) return;
+    const button = $("#show-owned-rsvps");
+    if (button) button.textContent = state.ownedRsvpPanelOpen ? "Hide my RSVP" : "Want to change your RSVP?";
+    list.hidden = !state.ownedRsvpPanelOpen;
+    if (!state.ownedRsvpPanelOpen) return;
+
+    list.innerHTML = "";
+    if (!state.ownedRsvps.length) {
+      list.innerHTML = '<div class="empty small-empty">No RSVP from this phone yet. If you used another phone, Elizabeth can fix it in admin.</div>';
+      return;
+    }
+
+    state.ownedRsvps.forEach((rsvp) => {
+      const item = document.createElement("article");
+      item.className = "owned-rsvp-card";
+
+      const copy = document.createElement("div");
+      const name = document.createElement("strong");
+      name.textContent = rsvp.name || "Unnamed";
+      const meta = document.createElement("span");
+      meta.textContent = `${rsvp.response || "yes"} · ${rsvp.partyCount || 1} attending · ${formatDate(rsvp.updatedAt || rsvp.createdAt) || "saved"}`;
+      copy.append(name, meta);
+
+      const actions = document.createElement("div");
+      actions.className = "owned-rsvp-actions";
+      const edit = document.createElement("button");
+      edit.className = "button secondary";
+      edit.type = "button";
+      edit.textContent = "Edit";
+      edit.addEventListener("click", () => fillRsvpForm(rsvp, "guest"));
+      const del = document.createElement("button");
+      del.className = "button quiet delete-rsvp";
+      del.type = "button";
+      del.textContent = "Delete";
+      del.addEventListener("click", () => deleteOwnedRsvp(rsvp.id));
+      actions.append(edit, del);
+
+      item.append(copy, actions);
+      list.append(item);
+    });
+  }
+
   function renderAdmin() {
     if (!state.adminUnlocked) return;
     const current = totals();
@@ -624,12 +741,18 @@
         updated.textContent = formatDate(rsvp.updatedAt || rsvp.createdAt);
 
         const action = document.createElement("td");
+        const edit = document.createElement("button");
+        edit.className = "button secondary edit-rsvp";
+        edit.type = "button";
+        edit.textContent = "Edit";
+        edit.addEventListener("click", () => fillRsvpForm(rsvp, "admin"));
         const del = document.createElement("button");
         del.className = "button quiet delete-rsvp";
         del.type = "button";
         del.textContent = "Delete";
         del.addEventListener("click", () => deleteRsvp(rsvp.id));
-        action.append(del);
+        action.className = "admin-rsvp-actions";
+        action.append(edit, del);
 
         row.append(name, response, party, note, updated, action);
         rows.append(row);
@@ -854,6 +977,7 @@
     renderCounts();
     renderMessages();
     renderMemories();
+    renderOwnedRsvps();
     renderAdmin();
   }
 
@@ -887,9 +1011,10 @@
         p_party_count: entry.partyCount,
         p_response: entry.response,
         p_contact: entry.contact,
-        p_note: entry.note
+        p_note: entry.note,
+        p_owner_token: entry.ownerToken || state.ownerToken
       };
-      const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", payload);
+      const { data, error } = await state.supabaseClient.rpc("graduation_save_rsvp", payload);
       if (error) {
         const message = `${error?.code || ""} ${error?.message || ""} ${error?.details || ""}`;
         if (/PGRST202|schema cache|Could not find the function/i.test(message)) {
@@ -911,17 +1036,28 @@
         }
       }
       await loadPublicData();
-      return;
+      await loadOwnedRsvps().catch(() => {});
+      return {
+        id: data?.id || entry.id,
+        guestKey: data?.guest_key || entry.guestKey,
+        ...entry,
+        ownerToken: entry.ownerToken || state.ownerToken
+      };
     }
 
     const now = new Date().toISOString();
-    const index = state.rsvps.findIndex((rsvp) => rsvp.guestKey === entry.guestKey);
+    const index = state.rsvps.findIndex((rsvp) => (entry.id && rsvp.id === entry.id) || rsvp.guestKey === entry.guestKey);
+    let saved;
     if (index >= 0) {
-      state.rsvps[index] = { ...state.rsvps[index], ...entry, updatedAt: now };
+      state.rsvps[index] = { ...state.rsvps[index], ...entry, ownerToken: entry.ownerToken || state.ownerToken, updatedAt: now };
+      saved = state.rsvps[index];
     } else {
-      state.rsvps.unshift({ id: crypto.randomUUID?.() || String(Date.now()), ...entry, createdAt: now, updatedAt: now });
+      saved = { ...entry, id: entry.id || crypto.randomUUID?.() || String(Date.now()), ownerToken: entry.ownerToken || state.ownerToken, createdAt: now, updatedAt: now };
+      state.rsvps.unshift(saved);
     }
+    state.ownedRsvps = localOwnedRsvps();
     writeLocal();
+    return saved;
   }
 
   async function saveMessage(body, selectedColor) {
@@ -1177,8 +1313,10 @@
           if (error) throw error;
         }
         await loadAdmin(state.adminPassword);
+        await loadOwnedRsvps().catch(() => {});
       } else {
         state.rsvps = state.rsvps.filter((rsvp) => rsvp.id !== rsvpId);
+        state.ownedRsvps = localOwnedRsvps();
         state.totals = null;
         writeLocal();
       }
@@ -1187,6 +1325,32 @@
     } catch (error) {
       console.error(error);
       setText("#admin-feedback", friendlyError(error, "Could not delete that RSVP yet."));
+    }
+  }
+
+  async function deleteOwnedRsvp(rsvpId) {
+    if (!rsvpId) return;
+    try {
+      if (state.usingSupabase) {
+        const { error } = await state.supabaseClient.rpc("graduation_delete_owned_rsvp", {
+          p_owner_token: state.ownerToken,
+          rsvp_id: rsvpId
+        });
+        if (error) throw error;
+        await loadPublicData();
+        await loadOwnedRsvps();
+      } else {
+        state.rsvps = state.rsvps.filter((rsvp) => !(rsvp.id === rsvpId && rsvp.ownerToken === state.ownerToken));
+        state.ownedRsvps = localOwnedRsvps();
+        state.totals = null;
+        writeLocal();
+      }
+      resetRsvpForm();
+      setText("#rsvp-feedback", "Your RSVP was deleted from this phone.");
+      renderAll();
+    } catch (error) {
+      console.error(error);
+      setText("#rsvp-feedback", guestError(setupError(error, "RSVP changes need the Supabase SQL update first. Run the setup block, then refresh.", "Could not delete that RSVP from this phone.")));
     }
   }
 
@@ -1815,25 +1979,55 @@
   function bindForms() {
     $("#rsvp-form").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const data = new FormData(event.currentTarget);
+      const form = event.currentTarget;
+      const data = new FormData(form);
       const name = String(data.get("guestName") || "").trim();
+      const existingGuestKey = String(data.get("guestKey") || "").trim();
+      const existingId = String(data.get("rsvpId") || "").trim();
+      const existingOwnerToken = String(data.get("ownerToken") || "").trim();
       try {
-        await saveRsvp({
-          guestKey: guestKey(name, ""),
+        const saved = await saveRsvp({
+          id: existingId,
+          guestKey: existingGuestKey || guestKey(name, state.ownerToken),
           name,
           partyCount: Math.max(1, Number(data.get("partyCount") || 1)),
           response: String(data.get("response") || "yes"),
           contact: "",
-          note: String(data.get("note") || "").trim()
+          note: String(data.get("note") || "").trim(),
+          ownerToken: existingOwnerToken || state.ownerToken
         });
-        setText("#rsvp-feedback", "RSVP saved. Submit again with the same name if plans change.");
+        if (saved?.id) form.elements.rsvpId.value = saved.id;
+        if (saved?.guestKey) form.elements.guestKey.value = saved.guestKey;
+        form.elements.ownerToken.value = saved?.ownerToken || existingOwnerToken || state.ownerToken;
+        state.ownedRsvpPanelOpen = true;
+        await loadOwnedRsvps().catch(() => {});
+        if (state.adminUnlocked) await loadAdmin(state.adminPassword).catch(() => {});
+        setRsvpFormMode("edit");
+        setText("#rsvp-feedback", "RSVP saved. You can edit or delete it from this same phone.");
         renderAll();
         burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", guestError(setupError(error, "RSVP needs the Supabase SQL setup first. Run the RSVP setup block, then refresh.", "Could not save that RSVP yet. Try again in a minute.")));
+        setText("#rsvp-feedback", guestError(setupError(error, "RSVP editing needs the Supabase SQL update first. Run the setup block, then refresh.", "Could not save that RSVP yet. Try again in a minute.")));
       }
     });
+
+    $("#show-owned-rsvps")?.addEventListener("click", async () => {
+      state.ownedRsvpPanelOpen = !state.ownedRsvpPanelOpen;
+      if (state.ownedRsvpPanelOpen) {
+        setText("#rsvp-feedback", "Loading RSVP from this phone...");
+        try {
+          await loadOwnedRsvps();
+          setText("#rsvp-feedback", "");
+        } catch (error) {
+          console.error(error);
+          setText("#rsvp-feedback", guestError(setupError(error, "RSVP changes need the Supabase SQL update first. Run the setup block, then refresh.", "Could not load RSVPs from this phone.")));
+        }
+      }
+      renderOwnedRsvps();
+    });
+
+    $("#new-rsvp-button")?.addEventListener("click", resetRsvpForm);
 
     $("#message-form").addEventListener("submit", async (event) => {
       event.preventDefault();

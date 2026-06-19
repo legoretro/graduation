@@ -1137,6 +1137,46 @@ p {
   box-shadow: 0 18px 0 rgba(0, 31, 63, 0.12), 0 22px 55px rgba(0, 31, 63, 0.14);
 }
 
+.owned-rsvp-tools {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 0.9rem;
+}
+
+.owned-rsvp-list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.owned-rsvp-card {
+  align-items: center;
+  background: rgba(231, 241, 248, 0.72);
+  border: 1px solid rgba(0, 55, 103, 0.18);
+  border-radius: var(--radius);
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 0.75rem;
+}
+
+.owned-rsvp-card strong,
+.owned-rsvp-card span {
+  display: block;
+}
+
+.owned-rsvp-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.15rem;
+}
+
+.owned-rsvp-actions,
+.admin-rsvp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+}
+
 .counts {
   display: grid;
   gap: 0.8rem;
@@ -2118,6 +2158,15 @@ footer a {
   textarea {
     min-height: 2.6rem;
     padding: 0.65rem 0.75rem;
+  }
+
+  .owned-rsvp-card {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .owned-rsvp-actions .button {
+    flex: 1;
   }
 
   textarea {

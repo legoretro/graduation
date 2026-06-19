@@ -11,11 +11,28 @@ create table if not exists public.graduation_rsvps (
   guest_name text not null,
   party_count integer not null default 1 check (party_count between 1 and 20),
   response text not null check (response in ('yes', 'maybe', 'no')),
+  owner_token text,
   contact text,
   note text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.graduation_rsvps
+add column if not exists owner_token text;
+
+do $$
+begin
+  if not exists (
+    select 1
+    from pg_constraint
+    where conname = 'graduation_rsvps_owner_token_check'
+  ) then
+    alter table public.graduation_rsvps
+    add constraint graduation_rsvps_owner_token_check
+    check (owner_token is null or char_length(owner_token) between 16 and 128);
+  end if;
+end $$;
 
 create table if not exists public.graduation_messages (
   id uuid primary key default gen_random_uuid(),
@@ -151,19 +168,24 @@ begin
 end;
 $$;
 
+drop function if exists public.graduation_save_rsvp(text, text, integer, text, text, text);
+
 create or replace function public.graduation_save_rsvp(
   p_guest_key text,
   p_guest_name text,
   p_party_count integer,
   p_response text,
   p_contact text default '',
-  p_note text default ''
+  p_note text default '',
+  p_owner_token text default ''
 )
 returns jsonb
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  saved_id uuid;
 begin
   if coalesce(trim(p_guest_key), '') = '' or coalesce(trim(p_guest_name), '') = '' then
     raise exception 'Missing RSVP name';
@@ -178,6 +200,7 @@ begin
     guest_name,
     party_count,
     response,
+    owner_token,
     contact,
     note,
     updated_at
@@ -187,6 +210,7 @@ begin
     trim(p_guest_name),
     least(greatest(coalesce(p_party_count, 1), 1), 20),
     p_response,
+    nullif(trim(coalesce(p_owner_token, '')), ''),
     nullif(trim(coalesce(p_contact, '')), ''),
     nullif(trim(coalesce(p_note, '')), ''),
     now()
@@ -195,12 +219,33 @@ begin
   set guest_name = excluded.guest_name,
       party_count = excluded.party_count,
       response = excluded.response,
+      owner_token = coalesce(public.graduation_rsvps.owner_token, excluded.owner_token),
       contact = excluded.contact,
       note = excluded.note,
-      updated_at = now();
+      updated_at = now()
+  returning id into saved_id;
 
-  return jsonb_build_object('ok', true);
+  return jsonb_build_object('ok', true, 'id', saved_id, 'guest_key', trim(p_guest_key));
 end;
+$$;
+
+create or replace function public.graduation_owned_rsvps(p_owner_token text)
+returns jsonb
+language sql
+security definer
+set search_path = public
+as $$
+  select coalesce(
+    jsonb_agg(to_jsonb(r) order by r.updated_at desc),
+    '[]'::jsonb
+  )
+  from (
+    select id, guest_key, guest_name, party_count, response, note, created_at, updated_at
+    from public.graduation_rsvps
+    where owner_token = nullif(trim(coalesce(p_owner_token, '')), '')
+    order by updated_at desc
+    limit 20
+  ) r;
 $$;
 
 create or replace function public.graduation_public_memories()
@@ -292,7 +337,7 @@ begin
       (
         select jsonb_agg(to_jsonb(r) order by r.updated_at desc)
         from (
-          select id, guest_key, guest_name, party_count, response, contact, note, created_at, updated_at
+          select id, guest_key, guest_name, party_count, response, owner_token, contact, note, created_at, updated_at
           from public.graduation_rsvps
           order by updated_at desc
         ) r
@@ -385,6 +430,27 @@ begin
 end;
 $$;
 
+create or replace function public.graduation_delete_owned_rsvp(
+  p_owner_token text,
+  rsvp_id uuid
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  deleted_count integer;
+begin
+  delete from public.graduation_rsvps
+  where id = rsvp_id
+    and owner_token = nullif(trim(coalesce(p_owner_token, '')), '');
+
+  get diagnostics deleted_count = row_count;
+  return jsonb_build_object('ok', deleted_count > 0);
+end;
+$$;
+
 create or replace function public.graduation_admin_delete_memory(admin_password text, memory_id uuid)
 returns jsonb
 language plpgsql
@@ -401,7 +467,9 @@ begin
 end;
 $$;
 
-grant execute on function public.graduation_save_rsvp(text, text, integer, text, text, text) to anon;
+grant execute on function public.graduation_save_rsvp(text, text, integer, text, text, text, text) to anon;
+grant execute on function public.graduation_owned_rsvps(text) to anon;
+grant execute on function public.graduation_delete_owned_rsvp(text, uuid) to anon;
 grant execute on function public.graduation_public_memories() to anon;
 grant execute on function public.graduation_add_memory(text, text, text) to anon;
 grant execute on function public.graduation_delete_memory(text, uuid) to anon;
