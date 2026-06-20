@@ -465,6 +465,9 @@
       .select("response,total");
     if (error) return false;
     state.totals = totalsFromRows(data);
+    // Old partial Supabase setups counted soft-deleted rows as "no".
+    // The full SQL replaces this fallback with graduation_public_rsvps().
+    state.totals.no = 0;
     return true;
   }
 
