@@ -7,9 +7,9 @@
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260619-confirm-delete"></script>
-    <script defer src="config.js?v=20260619-confirm-delete"></script>
-    <script defer src="app.js?v=20260619-confirm-delete"></script>
+    <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
+    <script defer src="config.js?v=20260619-heic-rsvp-sync"></script>
+    <script defer src="app.js?v=20260619-heic-rsvp-sync"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -133,7 +133,7 @@
                 </label>
                 <label class="place-upload-field">
                   Upload image
-                  <input name="imageFile" type="file" accept="image/*">
+                  <input name="imageFile" type="file" accept="image/*,.heic,.heif">
                 </label>
                 <button class="button secondary place-submit-button" type="submit">Add place</button>
                 <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
@@ -378,7 +378,7 @@
             <form class="panel memory-uploader" id="memory-form">
               <label>
                 Share a memory
-                <input name="memoryImage" type="file" accept="image/*" required>
+                <input name="memoryImage" type="file" accept="image/*,.heic,.heif" required>
               </label>
               <label>
                 Tiny caption

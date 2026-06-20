@@ -14,8 +14,10 @@
     { key: "food", label: "Food" },
     { key: "more", label: "More" }
   ];
+  const heicConverterUrl = "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js";
   const maxMemoryImageLength = 1800000;
   const maxPlaceImageLength = 650000;
+  let heicConverterPromise = null;
   const state = {
     rsvps: [],
     publicRsvps: [],
@@ -232,6 +234,57 @@
     return /PGRST202|42883|schema cache|Could not find the function/i.test(message);
   }
 
+  function isHeicFile(file) {
+    const type = String(file?.type || "").toLowerCase();
+    const name = String(file?.name || "").toLowerCase();
+    return type.includes("heic") || type.includes("heif") || /\.(heic|heif)$/i.test(name);
+  }
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", reject, { once: true });
+        if (window.heic2any) resolve();
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error("Could not load the HEIC converter."));
+      document.head.append(script);
+    });
+  }
+
+  async function heicConverter() {
+    if (window.heic2any) return window.heic2any;
+    if (!heicConverterPromise) {
+      heicConverterPromise = loadScriptOnce(heicConverterUrl).then(() => {
+        if (!window.heic2any) throw new Error("Could not start the HEIC converter.");
+        return window.heic2any;
+      });
+    }
+    return heicConverterPromise;
+  }
+
+  async function canvasReadyImage(file, feedbackSelector) {
+    if (!isHeicFile(file)) return file;
+    setText(feedbackSelector, "Converting HEIC photo...");
+    const convert = await heicConverter();
+    const result = await convert({ blob: file, toType: "image/jpeg", quality: 0.86 });
+    const blob = Array.isArray(result) ? result[0] : result;
+    if (!blob) throw new Error("Could not convert that HEIC photo.");
+    try {
+      return new File([blob], String(file.name || "photo.heic").replace(/\.(heic|heif)$/i, ".jpg"), {
+        type: blob.type || "image/jpeg"
+      });
+    } catch (error) {
+      return new Blob([blob], { type: blob.type || "image/jpeg" });
+    }
+  }
+
   function table(name) {
     return `${config.supabase?.tablePrefix || "graduation_"}${name}`;
   }
@@ -385,6 +438,10 @@
     );
   }
 
+  function syncPublicTotals() {
+    state.totals = totalsFromRsvps(state.publicRsvps);
+  }
+
   function upsertPublicRsvp(rsvp) {
     if (!rsvp?.name) return;
     if (isDeletedRsvp(rsvp)) {
@@ -393,6 +450,7 @@
         if (rsvp.guestKey && item.guestKey === rsvp.guestKey) return false;
         return true;
       });
+      syncPublicTotals();
       return;
     }
     const publicRsvp = normalizeRsvp(rsvp);
@@ -404,6 +462,7 @@
         return item.name.trim().toLowerCase() !== publicRsvp.name.trim().toLowerCase();
       })
     ];
+    syncPublicTotals();
   }
 
   function readOwnedRsvpCache() {
@@ -421,6 +480,20 @@
 
   function writeOwnedRsvpCache(items) {
     localStorage.setItem(ownedRsvpKey, JSON.stringify(items.slice(0, 20)));
+  }
+
+  function forgetOwnedRsvp(rsvp) {
+    const id = typeof rsvp === "string" ? rsvp : rsvp?.id;
+    const guestKey = typeof rsvp === "string" ? "" : rsvp?.guestKey;
+    const name = typeof rsvp === "string" ? "" : normalize(rsvp?.name);
+    const keep = (item) => {
+      if (id && item.id === id) return false;
+      if (guestKey && item.guestKey === guestKey) return false;
+      if (name && normalize(item.name) === name) return false;
+      return true;
+    };
+    state.ownedRsvps = state.ownedRsvps.filter(keep);
+    writeOwnedRsvpCache(readOwnedRsvpCache().filter(keep));
   }
 
   function cacheOwnedRsvp(rsvp) {
@@ -489,13 +562,13 @@
   async function loadPublicData() {
     if (!state.usingSupabase) {
       readLocal();
-      state.totals = null;
       state.publicRsvps = visibleRsvps(state.rsvps).map(normalizeRsvp);
+      syncPublicTotals();
       state.ownedRsvps = localOwnedRsvps();
       return;
     }
 
-    state.totals = { yes: 0, maybe: 0, no: 0 };
+    syncPublicTotals();
 
     const messagesResult = await state.supabaseClient
       .from(table("messages"))
@@ -526,9 +599,11 @@
     const { data: publicRsvpData, error: publicRsvpError } = await state.supabaseClient.rpc("graduation_public_rsvps");
     if (!publicRsvpError) {
       state.publicRsvps = visibleRsvps(publicRsvpData || []).map(normalizeRsvp);
-      state.totals = totalsFromRsvps(state.publicRsvps);
+      syncPublicTotals();
     } else if (!missingSupabaseFunction(publicRsvpError)) {
       console.error(publicRsvpError);
+    } else {
+      syncPublicTotals();
     }
   }
 
@@ -566,8 +641,7 @@
   }
 
   function totals() {
-    if (state.totals) return state.totals;
-    return totalsFromRsvps(state.rsvps);
+    return state.totals || totalsFromRsvps(state.publicRsvps.length ? state.publicRsvps : state.rsvps);
   }
 
   function resourceItems(resources) {
@@ -1302,7 +1376,7 @@
       reader.onerror = () => reject(new Error("Could not read that image."));
       reader.onload = () => {
         const image = new Image();
-        image.onerror = () => reject(new Error("Try a JPG, PNG, or WebP image."));
+        image.onerror = () => reject(new Error("That image did not open. Try JPG, PNG, WebP, or HEIC."));
         image.onload = () => {
           const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
           const width = Math.max(1, Math.round(image.width * scale));
@@ -1321,26 +1395,28 @@
   }
 
   async function compressMemoryImage(file) {
+    const imageFile = await canvasReadyImage(file, "#memory-feedback");
     const attempts = [
       { maxEdge: 1280, quality: 0.78 },
       { maxEdge: 1000, quality: 0.72 },
       { maxEdge: 820, quality: 0.66 }
     ];
     for (const attempt of attempts) {
-      const dataUrl = await canvasDataUrl(file, attempt.maxEdge, attempt.quality);
+      const dataUrl = await canvasDataUrl(imageFile, attempt.maxEdge, attempt.quality);
       if (dataUrl.length <= maxMemoryImageLength) return dataUrl;
     }
     throw new Error("That photo is still too big. Try a smaller image.");
   }
 
   async function compressPlaceImage(file) {
+    const imageFile = await canvasReadyImage(file, "#admin-feedback");
     const attempts = [
       { maxEdge: 760, quality: 0.72 },
       { maxEdge: 620, quality: 0.66 },
       { maxEdge: 520, quality: 0.6 }
     ];
     for (const attempt of attempts) {
-      const dataUrl = await canvasDataUrl(file, attempt.maxEdge, attempt.quality);
+      const dataUrl = await canvasDataUrl(imageFile, attempt.maxEdge, attempt.quality);
       if (dataUrl.length <= maxPlaceImageLength) return dataUrl;
     }
     throw new Error("That place image is too big. Try a smaller one.");
@@ -1414,7 +1490,7 @@
       updatedAt: row.updated_at
     }));
     state.publicRsvps = state.rsvps.map(normalizeRsvp);
-    state.totals = null;
+    syncPublicTotals();
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
       body: row.body,
@@ -1569,10 +1645,12 @@
         await loadOwnedRsvps().catch(() => {});
       } else {
         state.rsvps = state.rsvps.filter((rsvp) => rsvp.id !== rsvpId);
+        state.publicRsvps = state.publicRsvps.filter((rsvp) => rsvp.id !== rsvpId);
         state.ownedRsvps = localOwnedRsvps();
-        state.totals = null;
+        syncPublicTotals();
         writeLocal();
       }
+      forgetOwnedRsvp(rsvp || rsvpId);
       setText("#admin-feedback", "RSVP deleted.");
       renderAll();
     } catch (error) {
@@ -1617,21 +1695,28 @@
 
   async function deleteOwnedRsvp(rsvpId) {
     if (!rsvpId) return;
+    const rsvp = state.ownedRsvps.find((item) => item.id === rsvpId);
+    if (!window.confirm(`Delete ${rsvp?.name || "this RSVP"}? This cannot be undone.`)) return;
     try {
       if (state.usingSupabase) {
         const { error } = await state.supabaseClient.rpc("graduation_delete_owned_rsvp", {
           p_owner_token: state.ownerToken,
           rsvp_id: rsvpId
         });
-        if (error) throw error;
+        if (error) {
+          if (!missingSupabaseFunction(error) || !rsvp) throw error;
+          await softDeleteRsvp(rsvp);
+        }
         await loadPublicData();
         await loadOwnedRsvps();
       } else {
         state.rsvps = state.rsvps.filter((rsvp) => !(rsvp.id === rsvpId && rsvp.ownerToken === state.ownerToken));
+        state.publicRsvps = state.publicRsvps.filter((rsvp) => rsvp.id !== rsvpId);
         state.ownedRsvps = localOwnedRsvps();
-        state.totals = null;
+        syncPublicTotals();
         writeLocal();
       }
+      forgetOwnedRsvp(rsvp || rsvpId);
       resetRsvpForm();
       setText("#rsvp-feedback", "Your RSVP was deleted from this phone.");
       renderAll();
@@ -2368,7 +2453,7 @@
       } catch (error) {
         console.error(error);
         const message = String(error?.message || "");
-        const knownImageIssue = /Choose an image file|Could not read that image|JPG|PNG|WebP|too big|smaller image/i.test(message);
+        const knownImageIssue = /Choose an image file|Could not read that image|JPG|PNG|WebP|HEIC|converter|too big|smaller image/i.test(message);
         const safeMessage = knownImageIssue
           ? message
           : "Could not upload that memory yet. Try again in a minute.";
@@ -2447,7 +2532,9 @@
           if (saved) resetPlaceForm();
         } catch (error) {
           console.error(error);
-          setText("#admin-feedback", friendlyError(error, "Could not save that place yet."));
+          const message = String(error?.message || "");
+          const knownImageIssue = /image|photo|JPG|PNG|WebP|HEIC|converter|too big|smaller/i.test(message);
+          setText("#admin-feedback", knownImageIssue ? message : friendlyError(error, "Could not save that place yet."));
         }
       });
     }
