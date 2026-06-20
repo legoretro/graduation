@@ -91,19 +91,6 @@ alter table public.graduation_rsvps
 create unique index if not exists graduation_rsvps_guest_key_key
 on public.graduation_rsvps (guest_key);
 
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_constraint
-    where conname = 'graduation_rsvps_owner_token_check'
-  ) then
-    alter table public.graduation_rsvps
-    add constraint graduation_rsvps_owner_token_check
-    check (owner_token is null or char_length(owner_token) between 16 and 128);
-  end if;
-end $$;
-
 create table if not exists public.graduation_messages (
   id uuid primary key default extensions.gen_random_uuid(),
   body text not null check (char_length(body) between 1 and 220),
@@ -144,19 +131,6 @@ alter table public.graduation_messages
 alter table public.graduation_messages
   add constraint graduation_messages_body_check check (char_length(body) between 1 and 220),
   add constraint graduation_messages_note_color_check check (note_color in ('pastel-yellow', 'pastel-blue', 'pastel-mint', 'pastel-pink', 'pastel-peach'));
-
-do $$
-begin
-  if not exists (
-    select 1
-    from pg_constraint
-    where conname = 'graduation_messages_note_color_check'
-  ) then
-    alter table public.graduation_messages
-    add constraint graduation_messages_note_color_check
-    check (note_color in ('pastel-yellow', 'pastel-blue', 'pastel-mint', 'pastel-pink', 'pastel-peach'));
-  end if;
-end $$;
 
 create table if not exists public.graduation_memories (
   id uuid primary key default extensions.gen_random_uuid(),
@@ -321,7 +295,7 @@ grant select on public.graduation_site_settings to anon;
 revoke all on public.graduation_rsvps from anon, authenticated;
 revoke all on public.graduation_memories from anon, authenticated;
 
-do $$
+do $do$
 declare
   function_name text;
   function_record record;
@@ -359,7 +333,8 @@ begin
       );
     end loop;
   end loop;
-end $$;
+end;
+$do$;
 
 create or replace function public.graduation_assert_admin(admin_password text)
 returns void
