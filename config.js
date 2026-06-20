@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-19-rsvp-cache-delete-repair",
+  contentVersion: "2026-06-19-arbolito-supabase",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
@@ -54,8 +54,8 @@ window.GRADUATION_CONFIG = {
 
   supabase: {
     enabled: true,
-    url: "https://pjglmsyvcbbxlhkvznuh.supabase.co",
-    anonKey: "sb_publishable_S8jgBZP8N3_7HW9FmY2HSg_ib8Cgmh6",
+    url: "https://grcldjdsotoekttuuwcd.supabase.co",
+    anonKey: "sb_publishable_d2N5MPYCXZK5RyNJNSlZUg_Fsp3nMGw",
     tablePrefix: "graduation_",
     adminEndpoint: ""
   }
