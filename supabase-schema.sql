@@ -1,3 +1,6 @@
+-- RUN THIS WHOLE FILE ONCE in Supabase SQL Editor.
+-- It repairs the graduation RSVP/notes/memories setup in one clean pass.
+--
 -- Graduation invitation tables for a shared Supabase project.
 -- These names are intentionally prefixed with "graduation_" so this can live
 -- beside another app such as Arbolito without table or policy collisions.
@@ -534,6 +537,18 @@ where guest_name ilike '__deleted__%'
    or guest_key like 'codex-button-delete-test-%';
 
 notify pgrst, 'reload schema';
+
+select jsonb_build_object(
+  'ok', true,
+  'rsvp_rows', (select count(*) from public.graduation_rsvps),
+  'messages_table_ready', to_regclass('public.graduation_messages') is not null,
+  'memories_table_ready', to_regclass('public.graduation_memories') is not null,
+  'public_rsvps_ready', to_regprocedure('public.graduation_public_rsvps()') is not null,
+  'save_rsvp_ready', to_regprocedure('public.graduation_save_rsvp(text,text,integer,text,text,text,text)') is not null,
+  'admin_list_ready', to_regprocedure('public.graduation_admin_list(text)') is not null,
+  'admin_delete_rsvp_ready', to_regprocedure('public.graduation_admin_delete_rsvp(text,uuid)') is not null,
+  'owned_delete_rsvp_ready', to_regprocedure('public.graduation_delete_owned_rsvp(text,uuid)') is not null
+) as graduation_setup_status;
 
 -- Privacy note:
 -- Do not add a public SELECT policy to graduation_rsvps. Public guests only get
