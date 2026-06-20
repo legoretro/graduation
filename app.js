@@ -1704,12 +1704,14 @@
   }
 
   async function callAdminDeleteRsvp(rsvpId) {
-    const { error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
+    const { data, error } = await state.supabaseClient.rpc("graduation_admin_delete_rsvp", {
       admin_password: state.adminPassword,
       rsvp_id: rsvpId
     });
-    if (!error) return;
-    throw error;
+    if (error) throw error;
+    if (data?.ok === false || Number(data?.deleted_rsvps ?? 1) < 1 || data?.hard_deleted === false) {
+      throw new Error("Could not verify RSVP delete.");
+    }
   }
 
   async function deleteOwnedRsvp(rsvpId) {

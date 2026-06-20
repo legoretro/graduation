@@ -9,7 +9,7 @@ create schema if not exists extensions;
 create extension if not exists pgcrypto with schema extensions;
 
 create table if not exists public.graduation_rsvps (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key default extensions.gen_random_uuid(),
   guest_key text not null unique,
   guest_name text not null,
   party_count integer not null default 1 check (party_count between 1 and 20),
@@ -22,7 +22,74 @@ create table if not exists public.graduation_rsvps (
 );
 
 alter table public.graduation_rsvps
-add column if not exists owner_token text;
+  add column if not exists guest_key text,
+  add column if not exists guest_name text,
+  add column if not exists party_count integer default 1,
+  add column if not exists response text default 'yes',
+  add column if not exists owner_token text,
+  add column if not exists contact text,
+  add column if not exists note text,
+  add column if not exists created_at timestamptz default now(),
+  add column if not exists updated_at timestamptz default now();
+
+alter table public.graduation_rsvps
+  alter column id set default extensions.gen_random_uuid(),
+  alter column party_count set default 1,
+  alter column response set default 'yes',
+  alter column created_at set default now(),
+  alter column updated_at set default now();
+
+update public.graduation_rsvps
+set guest_key = 'legacy_' || id::text
+where coalesce(trim(guest_key), '') = '';
+
+update public.graduation_rsvps
+set guest_name = 'Unnamed guest'
+where coalesce(trim(guest_name), '') = '';
+
+update public.graduation_rsvps
+set party_count = least(greatest(coalesce(party_count, 1), 1), 20),
+    response = case when lower(coalesce(response, 'yes')) in ('yes', 'maybe', 'no') then lower(response) else 'yes' end,
+    created_at = coalesce(created_at, now()),
+    updated_at = coalesce(updated_at, created_at, now()),
+    owner_token = case
+      when owner_token is null or char_length(owner_token) between 16 and 128 then owner_token
+      else null
+    end;
+
+with duplicate_keys as (
+  select
+    id,
+    guest_key,
+    row_number() over (partition by guest_key order by updated_at desc, id) as duplicate_rank
+  from public.graduation_rsvps
+)
+update public.graduation_rsvps r
+set guest_key = r.guest_key || '-' || r.id::text
+from duplicate_keys d
+where r.id = d.id
+  and d.duplicate_rank > 1;
+
+alter table public.graduation_rsvps
+  alter column guest_key set not null,
+  alter column guest_name set not null,
+  alter column party_count set not null,
+  alter column response set not null,
+  alter column created_at set not null,
+  alter column updated_at set not null;
+
+alter table public.graduation_rsvps
+  drop constraint if exists graduation_rsvps_party_count_check,
+  drop constraint if exists graduation_rsvps_response_check,
+  drop constraint if exists graduation_rsvps_owner_token_check;
+
+alter table public.graduation_rsvps
+  add constraint graduation_rsvps_party_count_check check (party_count between 1 and 20),
+  add constraint graduation_rsvps_response_check check (response in ('yes', 'maybe', 'no')),
+  add constraint graduation_rsvps_owner_token_check check (owner_token is null or char_length(owner_token) between 16 and 128);
+
+create unique index if not exists graduation_rsvps_guest_key_key
+on public.graduation_rsvps (guest_key);
 
 do $$
 begin
@@ -38,7 +105,7 @@ begin
 end $$;
 
 create table if not exists public.graduation_messages (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key default extensions.gen_random_uuid(),
   body text not null check (char_length(body) between 1 and 220),
   note_color text not null default 'pastel-yellow' check (note_color in ('pastel-yellow', 'pastel-blue', 'pastel-mint', 'pastel-pink', 'pastel-peach')),
   is_hidden boolean not null default false,
@@ -46,7 +113,37 @@ create table if not exists public.graduation_messages (
 );
 
 alter table public.graduation_messages
-add column if not exists note_color text not null default 'pastel-yellow';
+  add column if not exists body text,
+  add column if not exists note_color text default 'pastel-yellow',
+  add column if not exists is_hidden boolean default false,
+  add column if not exists created_at timestamptz default now();
+
+update public.graduation_messages
+set body = left(coalesce(nullif(trim(body), ''), 'Message'), 220),
+    note_color = case
+      when note_color in ('pastel-yellow', 'pastel-blue', 'pastel-mint', 'pastel-pink', 'pastel-peach') then note_color
+      else 'pastel-yellow'
+    end,
+    is_hidden = coalesce(is_hidden, false),
+    created_at = coalesce(created_at, now());
+
+alter table public.graduation_messages
+  alter column id set default extensions.gen_random_uuid(),
+  alter column body set not null,
+  alter column note_color set default 'pastel-yellow',
+  alter column note_color set not null,
+  alter column is_hidden set default false,
+  alter column is_hidden set not null,
+  alter column created_at set default now(),
+  alter column created_at set not null;
+
+alter table public.graduation_messages
+  drop constraint if exists graduation_messages_body_check,
+  drop constraint if exists graduation_messages_note_color_check;
+
+alter table public.graduation_messages
+  add constraint graduation_messages_body_check check (char_length(body) between 1 and 220),
+  add constraint graduation_messages_note_color_check check (note_color in ('pastel-yellow', 'pastel-blue', 'pastel-mint', 'pastel-pink', 'pastel-peach'));
 
 do $$
 begin
@@ -62,7 +159,7 @@ begin
 end $$;
 
 create table if not exists public.graduation_memories (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key default extensions.gen_random_uuid(),
   owner_token text not null check (char_length(owner_token) between 16 and 128),
   image_data text not null check (
     char_length(image_data) between 32 and 2200000
@@ -73,17 +170,88 @@ create table if not exists public.graduation_memories (
   created_at timestamptz not null default now()
 );
 
+alter table public.graduation_memories
+  add column if not exists owner_token text,
+  add column if not exists image_data text,
+  add column if not exists caption text,
+  add column if not exists is_hidden boolean default false,
+  add column if not exists created_at timestamptz default now();
+
+update public.graduation_memories
+set owner_token = case
+      when char_length(coalesce(owner_token, '')) between 16 and 128 then owner_token
+      else 'legacy-memory-' || id::text
+    end,
+    caption = nullif(left(trim(coalesce(caption, '')), 100), ''),
+    is_hidden = coalesce(is_hidden, false),
+    created_at = coalesce(created_at, now());
+
+delete from public.graduation_memories
+where coalesce(image_data, '') !~ '^data:image/(jpeg|png|webp);base64,'
+   or char_length(coalesce(image_data, '')) > 2200000;
+
+alter table public.graduation_memories
+  alter column id set default extensions.gen_random_uuid(),
+  alter column owner_token set not null,
+  alter column image_data set not null,
+  alter column is_hidden set default false,
+  alter column is_hidden set not null,
+  alter column created_at set default now(),
+  alter column created_at set not null;
+
+alter table public.graduation_memories
+  drop constraint if exists graduation_memories_owner_token_check,
+  drop constraint if exists graduation_memories_image_data_check,
+  drop constraint if exists graduation_memories_caption_check;
+
+alter table public.graduation_memories
+  add constraint graduation_memories_owner_token_check check (char_length(owner_token) between 16 and 128),
+  add constraint graduation_memories_image_data_check check (
+    char_length(image_data) between 32 and 2200000
+    and image_data ~ '^data:image/(jpeg|png|webp);base64,'
+  ),
+  add constraint graduation_memories_caption_check check (caption is null or char_length(caption) <= 100);
+
 create table if not exists public.graduation_site_settings (
   setting_key text primary key,
   settings jsonb not null default '{}'::jsonb,
   updated_at timestamptz not null default now()
 );
 
+alter table public.graduation_site_settings
+  add column if not exists settings jsonb default '{}'::jsonb,
+  add column if not exists updated_at timestamptz default now();
+
+update public.graduation_site_settings
+set settings = coalesce(settings, '{}'::jsonb),
+    updated_at = coalesce(updated_at, now());
+
+alter table public.graduation_site_settings
+  alter column settings set default '{}'::jsonb,
+  alter column settings set not null,
+  alter column updated_at set default now(),
+  alter column updated_at set not null;
+
 create table if not exists public.graduation_admin_config (
   id boolean primary key default true check (id = true),
   password_hash text not null,
   updated_at timestamptz not null default now()
 );
+
+alter table public.graduation_admin_config
+  add column if not exists id boolean default true,
+  add column if not exists password_hash text,
+  add column if not exists updated_at timestamptz default now();
+
+update public.graduation_admin_config
+set id = true,
+    updated_at = coalesce(updated_at, now());
+
+alter table public.graduation_admin_config
+  alter column id set default true,
+  alter column id set not null,
+  alter column updated_at set default now(),
+  alter column updated_at set not null;
 
 insert into public.graduation_admin_config (id, password_hash)
 values (true, extensions.crypt('cats', extensions.gen_salt('bf')))
@@ -153,6 +321,46 @@ grant select on public.graduation_site_settings to anon;
 revoke all on public.graduation_rsvps from anon, authenticated;
 revoke all on public.graduation_memories from anon, authenticated;
 
+do $$
+declare
+  function_name text;
+  function_record record;
+begin
+  foreach function_name in array array[
+    'graduation_save_rsvp',
+    'graduation_owned_rsvps',
+    'graduation_delete_owned_rsvp',
+    'graduation_public_rsvps',
+    'graduation_admin_list',
+    'graduation_admin_save_settings',
+    'graduation_admin_delete_message',
+    'graduation_public_memories',
+    'graduation_add_memory',
+    'graduation_delete_memory',
+    'graduation_admin_delete_memory',
+    'graduation_admin_delete_rsvp',
+    'graduation_assert_admin'
+  ]
+  loop
+    for function_record in
+      select n.nspname as schema_name,
+             p.proname as routine_name,
+             pg_get_function_identity_arguments(p.oid) as identity_args
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public'
+        and p.proname = function_name
+    loop
+      execute format(
+        'drop function if exists %I.%I(%s)',
+        function_record.schema_name,
+        function_record.routine_name,
+        function_record.identity_args
+      );
+    end loop;
+  end loop;
+end $$;
+
 create or replace function public.graduation_assert_admin(admin_password text)
 returns void
 language plpgsql
@@ -171,9 +379,6 @@ begin
   end if;
 end;
 $$;
-
-drop function if exists public.graduation_save_rsvp(text, text, integer, text, text, text);
-drop function if exists public.graduation_save_rsvp(text, text, text, text, integer, text);
 
 create or replace function public.graduation_save_rsvp(
   p_guest_key text,
@@ -473,8 +678,13 @@ begin
   get diagnostics deleted_rsvps = row_count;
 
   return jsonb_build_object(
-    'ok', true,
-    'deleted_rsvps', deleted_rsvps
+    'ok', deleted_rsvps > 0,
+    'deleted_rsvps', deleted_rsvps,
+    'hard_deleted', not exists (
+      select 1
+      from public.graduation_rsvps
+      where id = rsvp_id
+    )
   );
 end;
 $$;
@@ -496,7 +706,15 @@ begin
     and owner_token = nullif(trim(coalesce(p_owner_token, '')), '');
 
   get diagnostics deleted_count = row_count;
-  return jsonb_build_object('ok', deleted_count > 0);
+  return jsonb_build_object(
+    'ok', deleted_count > 0,
+    'deleted_rsvps', deleted_count,
+    'hard_deleted', not exists (
+      select 1
+      from public.graduation_rsvps
+      where id = rsvp_id
+    )
+  );
 end;
 $$;
 
@@ -532,8 +750,11 @@ grant execute on function public.graduation_admin_delete_memory(text, uuid) to a
 delete from public.graduation_rsvps
 where guest_name ilike '__deleted__%'
    or guest_name ilike 'Codex Delete Legacy Verify%'
+   or guest_name ilike 'Codex Delete Test%'
    or guest_key like 'codex-delete-%'
    or guest_key like 'codex-final-check-%'
+   or guest_key like 'codex-live-flow-%'
+   or guest_key like 'codex-rsvp-test-%'
    or guest_key like 'codex-button-delete-test-%';
 
 notify pgrst, 'reload schema';
@@ -547,7 +768,19 @@ select jsonb_build_object(
   'save_rsvp_ready', to_regprocedure('public.graduation_save_rsvp(text,text,integer,text,text,text,text)') is not null,
   'admin_list_ready', to_regprocedure('public.graduation_admin_list(text)') is not null,
   'admin_delete_rsvp_ready', to_regprocedure('public.graduation_admin_delete_rsvp(text,uuid)') is not null,
-  'owned_delete_rsvp_ready', to_regprocedure('public.graduation_delete_owned_rsvp(text,uuid)') is not null
+  'owned_delete_rsvp_ready', to_regprocedure('public.graduation_delete_owned_rsvp(text,uuid)') is not null,
+  'cleaned_test_rsvps_remaining', (
+    select count(*)
+    from public.graduation_rsvps
+    where guest_name ilike '__deleted__%'
+       or guest_name ilike 'Codex Delete Legacy Verify%'
+       or guest_name ilike 'Codex Delete Test%'
+       or guest_key like 'codex-delete-%'
+       or guest_key like 'codex-final-check-%'
+       or guest_key like 'codex-live-flow-%'
+       or guest_key like 'codex-rsvp-test-%'
+       or guest_key like 'codex-button-delete-test-%'
+  )
 ) as graduation_setup_status;
 
 -- Privacy note:
