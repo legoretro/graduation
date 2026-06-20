@@ -1728,7 +1728,7 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      setText("#admin-feedback", "Could not delete that RSVP yet. Refresh and try again.");
+      setText("#admin-feedback", friendlyError(error, "Could not delete that RSVP yet. Refresh and try again."));
     } finally {
       if (button) {
         button.disabled = false;
