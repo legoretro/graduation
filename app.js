@@ -449,6 +449,25 @@
     state.totals = totalsFromRsvps(state.publicRsvps);
   }
 
+  function totalsFromRows(rows) {
+    const nextTotals = { yes: 0, maybe: 0, no: 0 };
+    (rows || []).forEach((row) => {
+      const response = String(row?.response || "").toLowerCase();
+      if (!(response in nextTotals)) return;
+      nextTotals[response] = Math.max(0, Number(row?.total || 0));
+    });
+    return nextTotals;
+  }
+
+  async function loadPublicTotalsFallback() {
+    const { data, error } = await state.supabaseClient
+      .from(table("rsvp_totals"))
+      .select("response,total");
+    if (error) return false;
+    state.totals = totalsFromRows(data);
+    return true;
+  }
+
   function rsvpSameIdentity(left, right) {
     if (!left || !right) return false;
     const leftId = typeof left === "string" ? left : left.id || "";
@@ -645,8 +664,8 @@
       state.publicRsvpsLoaded = false;
       console.error(publicRsvpError);
     } else {
+      await loadPublicTotalsFallback();
       state.publicRsvpsLoaded = false;
-      syncPublicTotals();
     }
   }
 
