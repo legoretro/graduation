@@ -842,7 +842,7 @@
     if (!names.length) {
       const empty = document.createElement("div");
       empty.className = "empty small-empty";
-      empty.textContent = state.publicRsvps.length ? `No ${label.toLowerCase()} RSVPs yet.` : "No names to show yet.";
+      empty.textContent = state.publicRsvpsLoaded || state.publicRsvps.length ? `No ${label.toLowerCase()} RSVPs yet.` : "No names to show yet.";
       list.append(empty);
       return;
     }
@@ -1019,7 +1019,7 @@
     const rows = $("#admin-rsvp-rows");
     rows.innerHTML = "";
     if (!state.rsvps.length) {
-      rows.innerHTML = `<tr><td colspan="6">${state.usingSupabase ? "No RSVP rows loaded yet. If guests have RSVP'd, run the Supabase admin SQL setup so this private list can load." : "No RSVPs yet."}</td></tr>`;
+      rows.innerHTML = '<tr><td colspan="6">No RSVPs yet.</td></tr>';
     } else {
       state.rsvps.forEach((rsvp) => {
         const row = document.createElement("tr");
