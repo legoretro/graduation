@@ -495,13 +495,7 @@
       return;
     }
 
-    const totalsResult = await state.supabaseClient.from(table("rsvp_totals")).select("*");
-    if (!totalsResult.error) {
-      state.totals = { yes: 0, maybe: 0, no: 0 };
-      totalsResult.data.forEach((row) => {
-        state.totals[row.response] = Number(row.total || 0);
-      });
-    }
+    state.totals = { yes: 0, maybe: 0, no: 0 };
 
     const messagesResult = await state.supabaseClient
       .from(table("messages"))
