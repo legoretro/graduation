@@ -1,5 +1,5 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-19-full-supabase-repair",
+  contentVersion: "2026-06-19-rsvp-cache-delete-repair",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",

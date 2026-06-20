@@ -21,6 +21,7 @@
   const state = {
     rsvps: [],
     publicRsvps: [],
+    publicRsvpsLoaded: false,
     ownedRsvps: [],
     messages: [],
     memories: [],
@@ -272,10 +273,15 @@
   async function canvasReadyImage(file, feedbackSelector) {
     if (!isHeicFile(file)) return file;
     setText(feedbackSelector, "Converting HEIC photo...");
-    const convert = await heicConverter();
-    const result = await convert({ blob: file, toType: "image/jpeg", quality: 0.86 });
-    const blob = Array.isArray(result) ? result[0] : result;
-    if (!blob) throw new Error("Could not convert that HEIC photo.");
+    let blob;
+    try {
+      const convert = await heicConverter();
+      const result = await convert({ blob: file, toType: "image/jpeg", quality: 0.86 });
+      blob = Array.isArray(result) ? result[0] : result;
+    } catch (error) {
+      throw new Error("That HEIC photo could not convert here. Please upload a JPG, PNG, WebP, or a screenshot.");
+    }
+    if (!blob) throw new Error("That HEIC photo could not convert here. Please upload a JPG, PNG, WebP, or a screenshot.");
     try {
       return new File([blob], String(file.name || "photo.heic").replace(/\.(heic|heif)$/i, ".jpg"), {
         type: blob.type || "image/jpeg"
@@ -442,6 +448,36 @@
     state.totals = totalsFromRsvps(state.publicRsvps);
   }
 
+  function rsvpSameIdentity(left, right) {
+    if (!left || !right) return false;
+    const leftId = typeof left === "string" ? left : left.id || "";
+    const rightId = typeof right === "string" ? right : right.id || "";
+    if (leftId && rightId && leftId === rightId) return true;
+
+    const leftGuestKey = typeof left === "string" ? "" : left.guestKey || left.guest_key || "";
+    const rightGuestKey = typeof right === "string" ? "" : right.guestKey || right.guest_key || "";
+    if (leftGuestKey && rightGuestKey && leftGuestKey === rightGuestKey) return true;
+
+    const leftName = typeof left === "string" ? "" : normalize(left.name || left.guest_name);
+    const rightName = typeof right === "string" ? "" : normalize(right.name || right.guest_name);
+    return Boolean(leftName && rightName && leftName === rightName);
+  }
+
+  function pruneOwnedRsvpCacheAgainstPublic() {
+    if (!state.publicRsvpsLoaded) return;
+    const keep = (item) => state.publicRsvps.some((publicItem) => rsvpSameIdentity(item, publicItem));
+    state.ownedRsvps = visibleRsvps(state.ownedRsvps).filter(keep);
+    writeOwnedRsvpCache(readOwnedRsvpCache().filter(keep));
+  }
+
+  function removeRsvpEverywhere(rsvp) {
+    state.rsvps = state.rsvps.filter((item) => !rsvpSameIdentity(item, rsvp));
+    state.publicRsvps = state.publicRsvps.filter((item) => !rsvpSameIdentity(item, rsvp));
+    state.ownedRsvps = state.ownedRsvps.filter((item) => !rsvpSameIdentity(item, rsvp));
+    forgetOwnedRsvp(rsvp);
+    syncPublicTotals();
+  }
+
   function upsertPublicRsvp(rsvp) {
     if (!rsvp?.name) return;
     if (isDeletedRsvp(rsvp)) {
@@ -563,8 +599,10 @@
     if (!state.usingSupabase) {
       readLocal();
       state.publicRsvps = visibleRsvps(state.rsvps).map(normalizeRsvp);
+      state.publicRsvpsLoaded = true;
       syncPublicTotals();
       state.ownedRsvps = localOwnedRsvps();
+      pruneOwnedRsvpCacheAgainstPublic();
       return;
     }
 
@@ -599,10 +637,14 @@
     const { data: publicRsvpData, error: publicRsvpError } = await state.supabaseClient.rpc("graduation_public_rsvps");
     if (!publicRsvpError) {
       state.publicRsvps = visibleRsvps(publicRsvpData || []).map(normalizeRsvp);
+      state.publicRsvpsLoaded = true;
       syncPublicTotals();
+      pruneOwnedRsvpCacheAgainstPublic();
     } else if (!missingSupabaseFunction(publicRsvpError)) {
+      state.publicRsvpsLoaded = false;
       console.error(publicRsvpError);
     } else {
+      state.publicRsvpsLoaded = false;
       syncPublicTotals();
     }
   }
@@ -620,6 +662,7 @@
     if (error) {
       if (missingSupabaseFunction(error)) {
         state.ownedRsvps = readOwnedRsvpCache();
+        pruneOwnedRsvpCacheAgainstPublic();
         return state.ownedRsvps;
       }
       throw error;
@@ -636,6 +679,7 @@
       updatedAt: row.updated_at,
       ownerToken: state.ownerToken
     }));
+    pruneOwnedRsvpCacheAgainstPublic();
     writeOwnedRsvpCache(state.ownedRsvps);
     return state.ownedRsvps;
   }
@@ -1490,7 +1534,9 @@
       updatedAt: row.updated_at
     }));
     state.publicRsvps = state.rsvps.map(normalizeRsvp);
+    state.publicRsvpsLoaded = true;
     syncPublicTotals();
+    pruneOwnedRsvpCacheAgainstPublic();
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
       body: row.body,
@@ -1627,18 +1673,11 @@
           });
           if (!response.ok) throw new Error("Could not delete RSVP.");
         } else {
-          try {
-            await callAdminDeleteRsvp(rsvpId);
-          } catch (hardDeleteError) {
-            console.warn("Admin hard delete failed; using RSVP soft delete.", hardDeleteError);
-            await softDeleteRsvp(rsvp);
-          }
+          await callAdminDeleteRsvp(rsvpId);
         }
+        removeRsvpEverywhere(rsvp || { id: rsvpId });
+        await loadPublicData().catch(() => {});
         await loadAdmin(state.adminPassword);
-        if (state.rsvps.some((item) => item.id === rsvpId)) {
-          await softDeleteRsvp(rsvp);
-          await loadAdmin(state.adminPassword);
-        }
         if (state.rsvps.some((item) => item.id === rsvpId)) {
           throw new Error("Could not verify RSVP delete.");
         }
@@ -1650,7 +1689,7 @@
         syncPublicTotals();
         writeLocal();
       }
-      forgetOwnedRsvp(rsvp || rsvpId);
+      removeRsvpEverywhere(rsvp || { id: rsvpId });
       setText("#admin-feedback", "RSVP deleted.");
       renderAll();
     } catch (error) {
@@ -1670,27 +1709,7 @@
       rsvp_id: rsvpId
     });
     if (!error) return;
-    if (!missingSupabaseFunction(error)) throw error;
-
-    const fallback = await state.supabaseClient.rpc("graduation_admin_delete_message", {
-      admin_password: state.adminPassword,
-      message_id: rsvpId
-    });
-    if (fallback.error) throw fallback.error;
-  }
-
-  async function softDeleteRsvp(rsvp) {
-    if (!rsvp?.guestKey) throw new Error("Cannot soft delete RSVP without a guest key.");
-    const hiddenName = `${deletedRsvpPrefix} ${rsvp.id || rsvp.guestKey || Date.now()}`;
-    const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", {
-      p_guest_key: rsvp.guestKey,
-      p_guest_name: hiddenName,
-      p_party_count: 1,
-      p_response: "no",
-      p_contact: "",
-      p_note: ""
-    });
-    if (error) throw error;
+    throw error;
   }
 
   async function deleteOwnedRsvp(rsvpId) {
@@ -1699,14 +1718,15 @@
     if (!window.confirm(`Delete ${rsvp?.name || "this RSVP"}? This cannot be undone.`)) return;
     try {
       if (state.usingSupabase) {
-        const { error } = await state.supabaseClient.rpc("graduation_delete_owned_rsvp", {
+        const { data, error } = await state.supabaseClient.rpc("graduation_delete_owned_rsvp", {
           p_owner_token: state.ownerToken,
           rsvp_id: rsvpId
         });
         if (error) {
-          if (!missingSupabaseFunction(error) || !rsvp) throw error;
-          await softDeleteRsvp(rsvp);
+          throw error;
         }
+        if (data?.ok === false) throw new Error("RSVP not found on this phone.");
+        removeRsvpEverywhere(rsvp || { id: rsvpId });
         await loadPublicData();
         await loadOwnedRsvps();
       } else {
@@ -1716,7 +1736,7 @@
         syncPublicTotals();
         writeLocal();
       }
-      forgetOwnedRsvp(rsvp || rsvpId);
+      removeRsvpEverywhere(rsvp || { id: rsvpId });
       resetRsvpForm();
       setText("#rsvp-feedback", "Your RSVP was deleted from this phone.");
       renderAll();
@@ -2378,7 +2398,7 @@
         setText(
           "#rsvp-feedback",
           saved?.legacyMode
-            ? "RSVP saved! If anything needs changing later, admin can fix it while the private edit tools finish setup."
+            ? "RSVP saved. Message Elizabeth or Angela if you need to change it later."
             : "RSVP saved. You can edit or delete it from this same phone."
         );
         renderAll();
