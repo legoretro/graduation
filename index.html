@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#003767">
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260619-inline-admin-mode">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
     <script defer src="config.js?v=20260619-rsvp-cache-delete-repair"></script>
-    <script defer src="app.js?v=20260619-public-rsvp-admin-delete-repair"></script>
+    <script defer src="app.js?v=20260619-inline-admin-mode"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -38,115 +38,79 @@
                 <button class="button primary" type="submit">Log in</button>
               </div>
             </label>
-            <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
+            <p class="feedback" id="admin-login-feedback" role="status" aria-live="polite"></p>
           </form>
-
-          <div id="admin-dashboard" hidden>
-            <div class="admin-actions">
-              <button class="button secondary" id="toggle-page-edit" type="button">Edit page</button>
-              <button class="button primary" id="save-inline-edits" type="button" hidden>Save edits</button>
-              <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
-            </div>
-            <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
-
-            <section class="admin-card">
-              <div class="admin-card-head">
-                <div>
-                  <p class="kicker">RSVP List</p>
-                  <h3>Who has RSVP'd</h3>
-                </div>
-                <button class="button secondary" id="export-rsvps" type="button">Save RSVP Image</button>
-              </div>
-              <p class="admin-summary" id="admin-summary"></p>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Answer</th>
-                      <th>People</th>
-                      <th>Private note</th>
-                      <th>Updated</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-rsvp-rows"></tbody>
-                </table>
-              </div>
-              <img class="download-preview admin-download-preview" id="rsvp-image-preview" alt="RSVP list image" hidden>
-            </section>
-
-            <section class="admin-card">
-              <div class="admin-card-head">
-                <div>
-                  <p class="kicker">Photos</p>
-                  <h3>Memory downloads</h3>
-                </div>
-                <div class="admin-actions compact">
-                  <button class="button secondary" id="download-selected-memories" type="button">Download selected</button>
-                  <button class="button quiet" id="download-all-memories" type="button">Download all</button>
-                </div>
-              </div>
-              <div id="admin-memory-list"></div>
-            </section>
-
-            <section class="admin-card">
-              <div class="admin-card-head">
-                <div>
-                  <p class="kicker">Caring Notes</p>
-                  <h3>Posted notes</h3>
-                </div>
-                <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
-              </div>
-              <div id="admin-message-list"></div>
-            </section>
-
-            <section class="admin-card">
-              <div class="admin-card-head">
-                <div>
-                  <p class="kicker">Places Nearby</p>
-                  <h3>Add a place</h3>
-                </div>
-              </div>
-              <form class="admin-place-form" id="place-form">
-                <input name="editCategory" type="hidden">
-                <input name="editIndex" type="hidden">
-                <label class="place-type-field">
-                  Type
-                  <select name="category">
-                    <option value="stay">Hotel</option>
-                    <option value="food">Food</option>
-                    <option value="more">More</option>
-                  </select>
-                </label>
-                <label class="place-name-field">
-                  Place name
-                  <input name="name" placeholder="Hotel, restaurant, or useful stop">
-                </label>
-                <label class="place-address-field">
-                  Address
-                  <input name="address" placeholder="Street address, city, state">
-                </label>
-                <label class="place-image-field">
-                  Image URL
-                  <input name="image" placeholder="Paste image URL or leave blank">
-                </label>
-                <label class="place-upload-field">
-                  Upload image
-                  <input name="imageFile" type="file" accept="image/*,.heic,.heif">
-                </label>
-                <button class="button secondary place-submit-button" type="submit">Add place</button>
-                <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
-              </form>
-              <div id="admin-place-list"></div>
-            </section>
-
-          </div>
         </div>
       </details>
     </section>
 
+    <div class="admin-edit-toolbar" id="admin-edit-toolbar" hidden>
+      <strong>Admin mode</strong>
+      <button class="button secondary" id="toggle-page-edit" type="button">Edit page</button>
+      <button class="button primary" id="save-inline-edits" type="button" hidden>Save edits</button>
+      <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
+      <button class="button secondary" id="toggle-admin-dashboard" type="button">RSVPs & photos</button>
+      <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
+      <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
+    </div>
+
     <main id="home">
+      <section class="section admin-dashboard-section" id="admin-dashboard" hidden>
+        <div class="section-inner">
+          <section class="admin-card">
+            <div class="admin-card-head">
+              <div>
+                <p class="kicker">RSVP List</p>
+                <h3>Who has RSVP'd</h3>
+              </div>
+              <button class="button secondary" id="export-rsvps" type="button">Save RSVP Image</button>
+            </div>
+            <p class="admin-summary" id="admin-summary"></p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Answer</th>
+                    <th>People</th>
+                    <th>Private note</th>
+                    <th>Updated</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-rsvp-rows"></tbody>
+              </table>
+            </div>
+            <img class="download-preview admin-download-preview" id="rsvp-image-preview" alt="RSVP list image" hidden>
+          </section>
+
+          <section class="admin-card">
+            <div class="admin-card-head">
+              <div>
+                <p class="kicker">Photos</p>
+                <h3>Memory downloads</h3>
+              </div>
+              <div class="admin-actions compact">
+                <button class="button secondary" id="download-selected-memories" type="button">Download selected</button>
+                <button class="button quiet" id="download-all-memories" type="button">Download all</button>
+              </div>
+            </div>
+            <div id="admin-memory-list"></div>
+          </section>
+
+          <section class="admin-card">
+            <div class="admin-card-head">
+              <div>
+                <p class="kicker">Caring Notes</p>
+                <h3>Posted notes</h3>
+              </div>
+              <button class="button quiet" id="clear-demo-data" type="button">Clear local demo data</button>
+            </div>
+            <div id="admin-message-list"></div>
+          </section>
+        </div>
+      </section>
+
       <section class="hero">
         <div class="hero-image" id="hero-image" aria-hidden="true"></div>
         <div class="hero-science" aria-hidden="true">
@@ -288,6 +252,45 @@
               <h3>More</h3>
               <div class="resource-list" id="more-list"></div>
             </div>
+          </div>
+          <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
+            <div class="admin-card-head">
+              <div>
+                <p class="kicker">Places Nearby</p>
+                <h3>Add a place</h3>
+              </div>
+            </div>
+            <form class="admin-place-form" id="place-form">
+              <input name="editCategory" type="hidden">
+              <input name="editIndex" type="hidden">
+              <label class="place-type-field">
+                Type
+                <select name="category">
+                  <option value="stay">Hotel</option>
+                  <option value="food">Food</option>
+                  <option value="more">More</option>
+                </select>
+              </label>
+              <label class="place-name-field">
+                Place name
+                <input name="name" placeholder="Hotel, restaurant, or useful stop">
+              </label>
+              <label class="place-address-field">
+                Address
+                <input name="address" placeholder="Street address, city, state">
+              </label>
+              <label class="place-image-field">
+                Image URL
+                <input name="image" placeholder="Paste image URL or leave blank">
+              </label>
+              <label class="place-upload-field">
+                Upload image
+                <input name="imageFile" type="file" accept="image/*,.heic,.heif">
+              </label>
+              <button class="button secondary place-submit-button" type="submit">Add place</button>
+              <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
+            </form>
+            <div id="admin-place-list"></div>
           </div>
         </div>
       </section>

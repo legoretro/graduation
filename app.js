@@ -32,6 +32,7 @@
     totals: null,
     adminUnlocked: false,
     adminPassword: "",
+    adminDashboardOpen: false,
     inlineEditMode: false,
     inlineSnapshot: null,
     confettiFrame: null,
@@ -1265,6 +1266,17 @@
     }
   }
 
+  function setAdminDashboardOpen(open) {
+    state.adminDashboardOpen = Boolean(open);
+    const dashboard = $("#admin-dashboard");
+    const button = $("#toggle-admin-dashboard");
+    if (dashboard) dashboard.hidden = !state.adminDashboardOpen;
+    if (button) button.textContent = state.adminDashboardOpen ? "Hide RSVPs" : "RSVPs & photos";
+    if (state.adminDashboardOpen) {
+      dashboard?.scrollIntoView({ block: "start", behavior: "smooth" });
+    }
+  }
+
   function collectInlineSettings() {
     const settings = {};
 
@@ -2488,17 +2500,20 @@
       const password = $("#admin-password").value.trim();
       const adminPassword = config.admin?.previewPassword || "cats";
       if (password !== adminPassword) {
-        setText("#admin-feedback", "Wrong password.");
+        setText("#admin-login-feedback", "Wrong password.");
         return;
       }
 
       state.adminUnlocked = true;
       state.adminPassword = password;
       $("#admin-password").value = "";
-      $("#admin-dashboard").hidden = false;
+      $("#admin-edit-toolbar").hidden = false;
+      $("#admin details")?.removeAttribute("open");
+      setText("#admin-login-feedback", "");
       document.body.classList.add("admin-unlocked");
       syncInlineInputs();
       fillEditor();
+      setAdminDashboardOpen(false);
 
       try {
         await loadAdmin(password);
@@ -2543,6 +2558,11 @@
       restoreInlineSnapshot();
       setInlineEditing(false);
       setText("#admin-feedback", "Page edits canceled.");
+    });
+
+    $("#toggle-admin-dashboard")?.addEventListener("click", () => {
+      setAdminDashboardOpen(!state.adminDashboardOpen);
+      renderAdmin();
     });
 
     const placeForm = $("#place-form");

@@ -1798,8 +1798,8 @@ textarea:focus,
   position: fixed;
   right: 0.75rem;
   top: auto;
-  width: min(840px, calc(100vw - 1.5rem));
-  z-index: 30;
+  width: min(360px, calc(100vw - 1.5rem));
+  z-index: 32;
 }
 
 .admin-dock details {
@@ -1838,13 +1838,13 @@ textarea:focus,
   display: block;
   gap: 1rem;
   margin-top: 0;
-  max-height: min(76vh, 720px);
+  max-height: calc(100vh - 2rem);
   overflow: auto;
   padding: 0.9rem;
   pointer-events: auto;
   position: absolute;
   right: 0;
-  width: min(840px, calc(100vw - 1.5rem));
+  width: min(360px, calc(100vw - 1.5rem));
 }
 
 .inline {
@@ -1852,7 +1852,68 @@ textarea:focus,
 }
 
 .admin-login {
-  margin: 0 0 0.85rem;
+  margin: 0;
+}
+
+.admin-edit-toolbar {
+  align-items: center;
+  background: rgba(255, 250, 240, 0.96);
+  border: 1px solid rgba(0, 31, 63, 0.13);
+  border-radius: var(--radius);
+  bottom: 0.65rem;
+  box-shadow: 0 16px 36px rgba(10, 31, 51, 0.17);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  left: 50%;
+  max-width: calc(100vw - 1.5rem);
+  padding: 0.52rem;
+  position: fixed;
+  transform: translateX(-50%);
+  width: min(820px, calc(100vw - 1.5rem));
+  z-index: 31;
+}
+
+.admin-edit-toolbar strong {
+  color: var(--oit-gold);
+  font-family: "Chakra Petch", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.admin-edit-toolbar .button {
+  min-height: 2.35rem;
+  padding: 0.42rem 0.62rem;
+}
+
+.admin-edit-toolbar .feedback {
+  color: var(--muted);
+  flex: 1 1 180px;
+  font-size: 0.8rem;
+  margin: 0;
+  min-width: 0;
+}
+
+body.admin-unlocked {
+  padding-bottom: 4.6rem;
+}
+
+body.admin-unlocked .admin-dock {
+  display: none;
+}
+
+.admin-edit-toolbar .feedback:empty {
+  display: none;
+}
+
+.admin-dashboard-section {
+  background:
+    linear-gradient(90deg, rgba(0, 55, 103, 0.08), rgba(217, 162, 26, 0.08)),
+    rgba(255, 250, 240, 0.78);
+  border-bottom: 1px solid rgba(215, 224, 232, 0.8);
+  border-top: 1px solid rgba(215, 224, 232, 0.8);
+  padding-top: 5.25rem;
 }
 
 .admin-card {
@@ -1862,6 +1923,10 @@ textarea:focus,
   box-shadow: 0 10px 26px rgba(10, 31, 51, 0.08);
   margin-top: 0.85rem;
   padding: 0.85rem;
+}
+
+.admin-dashboard-section .admin-card:first-child {
+  margin-top: 0;
 }
 
 .admin-card > summary {
@@ -2356,8 +2421,8 @@ footer a {
   }
 
   .admin-dock-content {
-    max-height: 68vh;
     padding: 0.75rem;
+    width: min(360px, calc(100vw - 1.2rem));
   }
 
   .admin-dock {
@@ -2365,11 +2430,28 @@ footer a {
     max-width: calc(100vw - 1.5rem);
     right: 0.6rem;
     top: auto;
-    width: min(420px, calc(100vw - 1.2rem));
+    width: min(360px, calc(100vw - 1.2rem));
   }
 
   .admin-dock summary {
     font-size: 0.7rem;
+  }
+
+  .admin-edit-toolbar {
+    bottom: 0.5rem;
+    justify-content: stretch;
+  }
+
+  .admin-edit-toolbar strong {
+    flex: 1 0 100%;
+  }
+
+  .admin-edit-toolbar .button {
+    flex: 1 1 auto;
+  }
+
+  .admin-dashboard-section {
+    padding-top: 4rem;
   }
 
   .invite-card {
