@@ -7,6 +7,7 @@
   const ownerTokenKey = "graduation-memory-owner-token";
   const ownedMemoryKey = "graduation-owned-memory-ids";
   const ownedRsvpKey = "graduation-owned-rsvp-cache";
+  const deletedRsvpPrefix = "__deleted__";
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
   const resourceGroups = [
     { key: "stay", label: "Hotels" },
@@ -363,8 +364,37 @@
     };
   }
 
+  function isDeletedRsvp(row) {
+    const name = String(row?.guest_name || row?.name || "").trim().toLowerCase();
+    return name.startsWith(deletedRsvpPrefix);
+  }
+
+  function visibleRsvps(rows) {
+    return (rows || []).filter((row) => !isDeletedRsvp(row));
+  }
+
+  function totalsFromRsvps(rows) {
+    return visibleRsvps(rows).reduce(
+      (sum, rsvp) => {
+        const response = rsvp.response || "yes";
+        const count = Math.max(1, Number(rsvp.partyCount || rsvp.party_count || 1));
+        sum[response] += response === "no" ? 1 : count;
+        return sum;
+      },
+      { yes: 0, maybe: 0, no: 0 }
+    );
+  }
+
   function upsertPublicRsvp(rsvp) {
     if (!rsvp?.name) return;
+    if (isDeletedRsvp(rsvp)) {
+      state.publicRsvps = state.publicRsvps.filter((item) => {
+        if (rsvp.id && item.id === rsvp.id) return false;
+        if (rsvp.guestKey && item.guestKey === rsvp.guestKey) return false;
+        return true;
+      });
+      return;
+    }
     const publicRsvp = normalizeRsvp(rsvp);
     state.publicRsvps = [
       publicRsvp,
@@ -395,6 +425,7 @@
 
   function cacheOwnedRsvp(rsvp) {
     if (!rsvp?.name) return;
+    if (isDeletedRsvp(rsvp)) return;
     const cached = readOwnedRsvpCache().filter((item) => {
       if (rsvp.id && item.id === rsvp.id) return false;
       if (rsvp.guestKey && item.guestKey === rsvp.guestKey) return false;
@@ -410,7 +441,7 @@
   }
 
   function localOwnedRsvps() {
-    return state.rsvps.filter((rsvp) => rsvp.ownerToken === state.ownerToken);
+    return visibleRsvps(state.rsvps).filter((rsvp) => rsvp.ownerToken === state.ownerToken);
   }
 
   function initMemoryOwner() {
@@ -459,7 +490,7 @@
     if (!state.usingSupabase) {
       readLocal();
       state.totals = null;
-      state.publicRsvps = state.rsvps.map(normalizeRsvp);
+      state.publicRsvps = visibleRsvps(state.rsvps).map(normalizeRsvp);
       state.ownedRsvps = localOwnedRsvps();
       return;
     }
@@ -500,7 +531,8 @@
 
     const { data: publicRsvpData, error: publicRsvpError } = await state.supabaseClient.rpc("graduation_public_rsvps");
     if (!publicRsvpError) {
-      state.publicRsvps = (publicRsvpData || []).map(normalizeRsvp);
+      state.publicRsvps = visibleRsvps(publicRsvpData || []).map(normalizeRsvp);
+      state.totals = totalsFromRsvps(state.publicRsvps);
     } else if (!missingSupabaseFunction(publicRsvpError)) {
       console.error(publicRsvpError);
     }
@@ -523,7 +555,7 @@
       }
       throw error;
     }
-    state.ownedRsvps = (data || []).map((row) => ({
+    state.ownedRsvps = visibleRsvps(data || []).map((row) => ({
       id: row.id,
       guestKey: row.guest_key,
       name: row.guest_name,
@@ -541,15 +573,7 @@
 
   function totals() {
     if (state.totals) return state.totals;
-    return state.rsvps.reduce(
-      (sum, rsvp) => {
-        const response = rsvp.response || "yes";
-        const count = Math.max(1, Number(rsvp.partyCount || 1));
-        sum[response] += response === "no" ? 1 : count;
-        return sum;
-      },
-      { yes: 0, maybe: 0, no: 0 }
-    );
+    return totalsFromRsvps(state.rsvps);
   }
 
   function resourceItems(resources) {
@@ -1385,7 +1409,7 @@
       hydrateContent();
     }
 
-    state.rsvps = (payload.rsvps || []).map((row) => ({
+    state.rsvps = visibleRsvps(payload.rsvps || []).map((row) => ({
       id: row.id,
       guestKey: row.guest_key,
       name: row.guest_name,
@@ -1395,9 +1419,7 @@
       createdAt: row.created_at,
       updatedAt: row.updated_at
     }));
-    if (state.rsvps.length) {
-      state.publicRsvps = state.rsvps.map(normalizeRsvp);
-    }
+    state.publicRsvps = state.rsvps.map(normalizeRsvp);
     state.totals = null;
     state.messages = (payload.messages || []).map((row) => ({
       id: row.id,
@@ -1535,11 +1557,20 @@
           });
           if (!response.ok) throw new Error("Could not delete RSVP.");
         } else {
-          await callAdminDeleteRsvp(rsvpId);
+          try {
+            await callAdminDeleteRsvp(rsvpId);
+          } catch (hardDeleteError) {
+            console.warn("Admin hard delete failed; using RSVP soft delete.", hardDeleteError);
+            await softDeleteRsvp(rsvp);
+          }
         }
         await loadAdmin(state.adminPassword);
         if (state.rsvps.some((item) => item.id === rsvpId)) {
-          throw new Error("Supabase blocked delete.");
+          await softDeleteRsvp(rsvp);
+          await loadAdmin(state.adminPassword);
+        }
+        if (state.rsvps.some((item) => item.id === rsvpId)) {
+          throw new Error("Could not verify RSVP delete.");
         }
         await loadOwnedRsvps().catch(() => {});
       } else {
@@ -1552,10 +1583,7 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      const detail = missingSupabaseFunction(error) || /blocked delete|delete setup/i.test(error?.message || "")
-        ? "Delete needs the admin update once, then it will work."
-        : "Could not delete that RSVP yet.";
-      setText("#admin-feedback", detail);
+      setText("#admin-feedback", "Could not delete that RSVP yet. Refresh and try again.");
     } finally {
       if (button) {
         button.disabled = false;
@@ -1577,6 +1605,20 @@
       message_id: rsvpId
     });
     if (fallback.error) throw fallback.error;
+  }
+
+  async function softDeleteRsvp(rsvp) {
+    if (!rsvp?.guestKey) throw new Error("Cannot soft delete RSVP without a guest key.");
+    const hiddenName = `${deletedRsvpPrefix} ${rsvp.id || rsvp.guestKey || Date.now()}`;
+    const { error } = await state.supabaseClient.rpc("graduation_save_rsvp", {
+      p_guest_key: rsvp.guestKey,
+      p_guest_name: hiddenName,
+      p_party_count: 1,
+      p_response: "no",
+      p_contact: "",
+      p_note: ""
+    });
+    if (error) throw error;
   }
 
   async function deleteOwnedRsvp(rsvpId) {
