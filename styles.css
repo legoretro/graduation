@@ -2235,6 +2235,41 @@ footer a {
   width: 1px;
 }
 
+/* Keep the phone layout unchanged while making laptop and desktop views more compact. */
+@media (min-width: 921px) {
+  html {
+    font-size: 14px;
+  }
+
+  .hero {
+    min-height: 58svh;
+    max-height: 540px;
+  }
+
+  .hero-copy,
+  .section-inner {
+    max-width: 1040px;
+  }
+
+  .section {
+    padding-block: 2.5rem;
+  }
+
+  .quick-info article {
+    min-height: 5.6rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .invite-tools {
+    width: min(100%, 760px);
+  }
+
+  .invite-card {
+    max-width: 720px;
+    width: min(100%, 720px);
+  }
+}
+
 @media (max-width: 920px) {
   h1 {
     font-size: 2.75rem;

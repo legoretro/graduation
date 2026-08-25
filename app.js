@@ -10,7 +10,7 @@
   const deletedRsvpPrefix = "__deleted__";
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
   const resourceGroups = [
-    { key: "stay", label: "Hotels" },
+    { key: "stay", label: "Airbnb Location" },
     { key: "food", label: "Food" },
     { key: "more", label: "More" }
   ];
@@ -371,7 +371,7 @@
       $(".hero").classList.remove("custom-hero");
     }
 
-    renderResources("#hotel-list", config.stay || []);
+    renderResources("#airbnb-list", config.stay || []);
     renderResources("#food-list", config.food || []);
     renderResources("#more-list", config.more || []);
     renderPhotos(config.assets?.photos || []);

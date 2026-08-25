@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#003767">
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
-    <link rel="stylesheet" href="styles.css?v=20260619-inline-admin-mode">
+    <link rel="stylesheet" href="styles.css?v=20260824-airbnb-compact-desktop">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
-    <script defer src="config.js?v=20260619-arbolito-supabase"></script>
-    <script defer src="app.js?v=20260619-arbolito-rsvp-empty-copy"></script>
+    <script defer src="config.js?v=20260824-airbnb-compact-desktop"></script>
+    <script defer src="app.js?v=20260824-airbnb-compact-desktop"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -120,7 +120,7 @@
         <div class="hero-copy">
           <p class="kicker" id="event-kicker" data-inline-setting="event.kicker">OIT Medical Laboratory Science</p>
           <h1 id="event-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find nearby hotels and food, and upload graduation-day photos during the celebration.</p>
+          <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find the Airbnb location and nearby food, and upload graduation-day photos during the celebration.</p>
           <div class="actions">
             <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Map to Graduation</a>
@@ -230,7 +230,7 @@
       <section class="section visit-section" id="visit">
         <div class="section-inner">
           <p class="kicker">Places Nearby</p>
-          <h2>Hotels, food, and useful stops.</h2>
+          <h2>Airbnb location, food, and useful stops.</h2>
           <article class="home-place-card">
             <div>
               <span>Home base</span>
@@ -241,8 +241,8 @@
           </article>
           <div class="resource-grid">
             <div>
-              <h3>Hotels</h3>
-              <div class="resource-list" id="hotel-list"></div>
+              <h3>Airbnb Location</h3>
+              <div class="resource-list" id="airbnb-list"></div>
             </div>
             <div>
               <h3>Food</h3>
@@ -266,14 +266,14 @@
               <label class="place-type-field">
                 Type
                 <select name="category">
-                  <option value="stay">Hotel</option>
+                  <option value="stay">Airbnb Location</option>
                   <option value="food">Food</option>
                   <option value="more">More</option>
                 </select>
               </label>
               <label class="place-name-field">
                 Place name
-                <input name="name" placeholder="Hotel, restaurant, or useful stop">
+                <input name="name" placeholder="Airbnb, restaurant, or useful stop">
               </label>
               <label class="place-address-field">
                 Address

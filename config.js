@@ -1,10 +1,10 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-06-19-arbolito-supabase",
+  contentVersion: "2026-08-24-airbnb-compact-desktop",
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",
     kicker: "OIT Medical Laboratory Science",
-    subtitle: "Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find nearby hotels and food, and upload graduation-day photos during the celebration.",
+    subtitle: "Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find the Airbnb location and nearby food, and upload graduation-day photos during the celebration.",
     dateText: "December 2026",
     timeText: "Time TBA",
     locationName: "Graduation at OHSU Auditorium",

@@ -7,7 +7,7 @@ Static GitHub Pages invitation site with:
 - Anonymous pastel message board
 - Guest memory-strip photo uploads
 - Admin login
-- Address, hotel, food, weather, and photos
+- Address, Airbnb location, food, weather, and photos
 - Confetti celebration animation
 - Admin page editor for site text/details
 - Supabase-backed live data for the real site
