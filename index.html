@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#003767">
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
-    <link rel="stylesheet" href="styles.css?v=20260824-airbnb-compact-desktop">
+    <link rel="stylesheet" href="styles.css?v=20260824-invite-top-notes-bottom">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
     <script defer src="config.js?v=20260824-airbnb-compact-desktop"></script>
@@ -133,168 +133,6 @@
         <span></span><span></span><span></span><span></span><span></span><span></span>
       </div>
 
-      <section class="quick-info" aria-label="Event details">
-        <article>
-          <span>When</span>
-          <strong id="event-date" data-inline-setting="event.dateText">December 2026</strong>
-          <p id="event-time" data-inline-setting="event.timeText">Time TBA</p>
-        </article>
-        <article>
-          <span>Graduation</span>
-          <strong id="quick-grad-location" data-inline-setting="event.graduationLocationName">Graduation at OHSU</strong>
-          <p id="quick-grad-address" data-inline-setting="event.graduationAddress">OHSU, Portland, OR - exact room TBA</p>
-          <a class="mini-map" id="quick-grad-map-link" target="_blank" rel="noreferrer">Open map</a>
-        </article>
-        <article>
-          <span>Weather</span>
-          <strong id="weather-temp">⛅</strong>
-          <p><b id="weather-place">Portland-Metro / Wilsonville</b> <span id="weather-summary">Graduation-week forecast coming soon</span></p>
-          <p id="weather-extra">Weather will be updated during the week of graduation once the date is finalized.</p>
-        </article>
-      </section>
-
-      <section class="section rsvp-section" id="rsvp">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">Headcount</p>
-            <h2>RSVP HERE</h2>
-            <div class="counts" aria-label="RSVP totals">
-              <button class="count-card count-yes" type="button" data-rsvp-filter="yes" aria-expanded="false"><span>Yes</span><strong id="count-yes">0</strong></button>
-              <button class="count-card count-maybe" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span>Maybe</span><strong id="count-maybe">0</strong></button>
-              <button class="count-card count-no" type="button" data-rsvp-filter="no" aria-expanded="false"><span>No</span><strong id="count-no">0</strong></button>
-            </div>
-            <div class="rsvp-public-list" id="rsvp-public-list" hidden></div>
-          </div>
-
-          <form class="panel" id="rsvp-form">
-            <input name="rsvpId" type="hidden">
-            <input name="guestKey" type="hidden">
-            <input name="ownerToken" type="hidden">
-            <label>
-              Name
-              <input name="guestName" autocomplete="name" required>
-            </label>
-            <div class="form-grid">
-              <label>
-                Number attending
-                <input name="partyCount" type="number" min="1" max="20" value="1" required>
-              </label>
-            </div>
-            <fieldset class="choice">
-              <legend>Answer</legend>
-              <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
-              <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
-              <label><input type="radio" name="response" value="no"><span>No</span></label>
-            </fieldset>
-            <label>
-              Private note to us
-              <textarea name="note" rows="4" placeholder="Allergy, accessibility note, travel question, or anything we should know"></textarea>
-            </label>
-            <button class="button primary full" type="submit">Lock in RSVP</button>
-            <button class="button quiet full" id="new-rsvp-button" type="button" hidden>Start a new RSVP</button>
-            <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
-            <div class="owned-rsvp-tools">
-              <button class="button secondary full" id="show-owned-rsvps" type="button">Want to change your RSVP?</button>
-              <div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      <section class="section board-section" id="board">
-        <div class="section-inner">
-          <div class="board-head">
-            <div>
-              <p class="kicker">Caring notes</p>
-              <h2>Leave a note!</h2>
-            </div>
-            <form class="message-form" id="message-form">
-              <label class="sr-only" for="message-body">Anonymous message</label>
-              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="So proud of you!" required></textarea>
-              <fieldset class="note-colors" aria-label="Sticky note color">
-                <legend>Pick a pastel</legend>
-                <label><input type="radio" name="noteColor" value="pastel-yellow" checked><span class="swatch pastel-yellow">Yellow</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-blue"><span class="swatch pastel-blue">Blue</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-mint"><span class="swatch pastel-mint">Mint</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-pink"><span class="swatch pastel-pink">Pink</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-peach"><span class="swatch pastel-peach">Peach</span></label>
-              </fieldset>
-              <button class="button secondary" type="submit">Stick it up</button>
-            </form>
-          </div>
-          <div class="note-board" id="note-board" aria-live="polite"></div>
-          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
-        </div>
-      </section>
-
-      <section class="section visit-section" id="visit">
-        <div class="section-inner">
-          <p class="kicker">Places Nearby</p>
-          <h2>Airbnb location, food, and useful stops.</h2>
-          <article class="home-place-card">
-            <div>
-              <span>Home base</span>
-              <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
-              <p id="home-place-address" data-inline-setting="event.homeAddress">8550 SW Ash Meadows, Apartment 433, Wilsonville, OR</p>
-            </div>
-            <a class="button primary" id="home-place-map-link" href="#" target="_blank" rel="noreferrer">Go to maps</a>
-          </article>
-          <div class="resource-grid">
-            <div>
-              <h3>Airbnb Location</h3>
-              <div class="resource-list" id="airbnb-list"></div>
-            </div>
-            <div>
-              <h3>Food</h3>
-              <div class="resource-list" id="food-list"></div>
-            </div>
-            <div>
-              <h3>More</h3>
-              <div class="resource-list" id="more-list"></div>
-            </div>
-          </div>
-          <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
-            <div class="admin-card-head">
-              <div>
-                <p class="kicker">Places Nearby</p>
-                <h3>Add a place</h3>
-              </div>
-            </div>
-            <form class="admin-place-form" id="place-form">
-              <input name="editCategory" type="hidden">
-              <input name="editIndex" type="hidden">
-              <label class="place-type-field">
-                Type
-                <select name="category">
-                  <option value="stay">Airbnb Location</option>
-                  <option value="food">Food</option>
-                  <option value="more">More</option>
-                </select>
-              </label>
-              <label class="place-name-field">
-                Place name
-                <input name="name" placeholder="Airbnb, restaurant, or useful stop">
-              </label>
-              <label class="place-address-field">
-                Address
-                <input name="address" placeholder="Street address, city, state">
-              </label>
-              <label class="place-image-field">
-                Image URL
-                <input name="image" placeholder="Paste image URL or leave blank">
-              </label>
-              <label class="place-upload-field">
-                Upload image
-                <input name="imageFile" type="file" accept="image/*,.heic,.heif">
-              </label>
-              <button class="button secondary place-submit-button" type="submit">Add place</button>
-              <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
-            </form>
-            <div id="admin-place-list"></div>
-          </div>
-        </div>
-      </section>
-
       <section class="section invite-section" id="invite">
         <div class="section-inner invite-card-section">
           <div class="invite-tools">
@@ -373,6 +211,122 @@
         </div>
       </section>
 
+      <section class="section rsvp-section" id="rsvp">
+        <div class="section-inner two-col">
+          <div>
+            <p class="kicker">Headcount</p>
+            <h2>RSVP HERE</h2>
+            <div class="counts" aria-label="RSVP totals">
+              <button class="count-card count-yes" type="button" data-rsvp-filter="yes" aria-expanded="false"><span>Yes</span><strong id="count-yes">0</strong></button>
+              <button class="count-card count-maybe" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span>Maybe</span><strong id="count-maybe">0</strong></button>
+              <button class="count-card count-no" type="button" data-rsvp-filter="no" aria-expanded="false"><span>No</span><strong id="count-no">0</strong></button>
+            </div>
+            <div class="rsvp-public-list" id="rsvp-public-list" hidden></div>
+          </div>
+
+          <form class="panel" id="rsvp-form">
+            <input name="rsvpId" type="hidden">
+            <input name="guestKey" type="hidden">
+            <input name="ownerToken" type="hidden">
+            <label>
+              Name
+              <input name="guestName" autocomplete="name" required>
+            </label>
+            <div class="form-grid">
+              <label>
+                Number attending
+                <input name="partyCount" type="number" min="1" max="20" value="1" required>
+              </label>
+            </div>
+            <fieldset class="choice">
+              <legend>Answer</legend>
+              <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
+              <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
+              <label><input type="radio" name="response" value="no"><span>No</span></label>
+            </fieldset>
+            <label>
+              Private note to us
+              <textarea name="note" rows="4" placeholder="Allergy, accessibility note, travel question, or anything we should know"></textarea>
+            </label>
+            <button class="button primary full" type="submit">Lock in RSVP</button>
+            <button class="button quiet full" id="new-rsvp-button" type="button" hidden>Start a new RSVP</button>
+            <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
+            <div class="owned-rsvp-tools">
+              <button class="button secondary full" id="show-owned-rsvps" type="button">Want to change your RSVP?</button>
+              <div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="section visit-section" id="visit">
+        <div class="section-inner">
+          <p class="kicker">Places Nearby</p>
+          <h2>Airbnb location, food, and useful stops.</h2>
+          <article class="home-place-card">
+            <div>
+              <span>Home base</span>
+              <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
+              <p id="home-place-address" data-inline-setting="event.homeAddress">8550 SW Ash Meadows, Apartment 433, Wilsonville, OR</p>
+            </div>
+            <a class="button primary" id="home-place-map-link" href="#" target="_blank" rel="noreferrer">Go to maps</a>
+          </article>
+          <div class="resource-grid">
+            <div>
+              <h3>Airbnb Location</h3>
+              <div class="resource-list" id="airbnb-list"></div>
+            </div>
+            <div>
+              <h3>Food</h3>
+              <div class="resource-list" id="food-list"></div>
+            </div>
+            <div>
+              <h3>More</h3>
+              <div class="resource-list" id="more-list"></div>
+            </div>
+          </div>
+          <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
+            <div class="admin-card-head">
+              <div>
+                <p class="kicker">Places Nearby</p>
+                <h3>Add a place</h3>
+              </div>
+            </div>
+            <form class="admin-place-form" id="place-form">
+              <input name="editCategory" type="hidden">
+              <input name="editIndex" type="hidden">
+              <label class="place-type-field">
+                Type
+                <select name="category">
+                  <option value="stay">Airbnb Location</option>
+                  <option value="food">Food</option>
+                  <option value="more">More</option>
+                </select>
+              </label>
+              <label class="place-name-field">
+                Place name
+                <input name="name" placeholder="Airbnb, restaurant, or useful stop">
+              </label>
+              <label class="place-address-field">
+                Address
+                <input name="address" placeholder="Street address, city, state">
+              </label>
+              <label class="place-image-field">
+                Image URL
+                <input name="image" placeholder="Paste image URL or leave blank">
+              </label>
+              <label class="place-upload-field">
+                Upload image
+                <input name="imageFile" type="file" accept="image/*,.heic,.heif">
+              </label>
+              <button class="button secondary place-submit-button" type="submit">Add place</button>
+              <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
+            </form>
+            <div id="admin-place-list"></div>
+          </div>
+        </div>
+      </section>
+
       <section class="section gallery-section" id="memories">
         <div class="section-inner">
           <p class="kicker">Memory strip</p>
@@ -394,6 +348,32 @@
               <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section board-section" id="board">
+        <div class="section-inner">
+          <div class="board-head">
+            <div>
+              <p class="kicker">Caring notes</p>
+              <h2>Leave a note!</h2>
+            </div>
+            <form class="message-form" id="message-form">
+              <label class="sr-only" for="message-body">Anonymous message</label>
+              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="So proud of you!" required></textarea>
+              <fieldset class="note-colors" aria-label="Sticky note color">
+                <legend>Pick a pastel</legend>
+                <label><input type="radio" name="noteColor" value="pastel-yellow" checked><span class="swatch pastel-yellow">Yellow</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-blue"><span class="swatch pastel-blue">Blue</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-mint"><span class="swatch pastel-mint">Mint</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-pink"><span class="swatch pastel-pink">Pink</span></label>
+                <label><input type="radio" name="noteColor" value="pastel-peach"><span class="swatch pastel-peach">Peach</span></label>
+              </fieldset>
+              <button class="button secondary" type="submit">Stick it up</button>
+            </form>
+          </div>
+          <div class="note-board" id="note-board" aria-live="polite"></div>
+          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
         </div>
       </section>
 

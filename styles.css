@@ -2261,12 +2261,53 @@ footer a {
   }
 
   .invite-tools {
-    width: min(100%, 760px);
+    width: min(100%, 600px);
   }
 
   .invite-card {
-    max-width: 720px;
-    width: min(100%, 720px);
+    max-width: 560px;
+    width: min(100%, 560px);
+  }
+
+  .invite-card-content {
+    gap: 0.3rem;
+    padding: 1rem;
+  }
+
+  .invite-card h3 {
+    font-size: 2.2rem;
+  }
+
+  .invite-card-title {
+    font-size: 2rem;
+  }
+
+  .invite-card-tagline {
+    font-size: 0.78rem;
+  }
+
+  .invite-card-details {
+    gap: 0.45rem;
+  }
+
+  .invite-card-details div {
+    padding: 0.65rem;
+  }
+
+  .invite-card-details strong {
+    font-size: 0.95rem;
+  }
+
+  .invite-card-details em {
+    font-size: 0.68rem;
+  }
+
+  .invite-card-footer {
+    padding: 0.8rem 0.55rem;
+  }
+
+  .invite-card-footer img {
+    width: 6.3rem;
   }
 }
 
@@ -2491,14 +2532,14 @@ footer a {
 
   .invite-card {
     justify-self: center;
-    max-width: calc(100vw - 2rem);
-    width: calc(100vw - 2rem);
+    max-width: 320px;
+    width: min(calc(100vw - 2rem), 320px);
   }
 
   .invite-download-row {
     grid-template-columns: 1fr;
-    max-width: calc(100vw - 2rem);
-    width: calc(100vw - 2rem);
+    max-width: 280px;
+    width: min(calc(100vw - 2rem), 280px);
   }
 
   .invite-tools {
