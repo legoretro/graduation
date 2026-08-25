@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#003767">
     <title>Elizabeth & Angela's OIT MLS Graduation</title>
-    <link rel="stylesheet" href="styles.css?v=20260824-invite-top-notes-bottom">
+    <link rel="stylesheet" href="styles.css?v=20260824-hero-invite-airbnb-row">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
     <script defer src="config.js?v=20260824-airbnb-compact-desktop"></script>
-    <script defer src="app.js?v=20260824-airbnb-compact-desktop"></script>
+    <script defer src="app.js?v=20260824-hero-invite-airbnb-row"></script>
   </head>
   <body>
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -118,24 +118,18 @@
         </div>
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-copy">
-          <p class="kicker" id="event-kicker" data-inline-setting="event.kicker">OIT Medical Laboratory Science</p>
-          <h1 id="event-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</h1>
-          <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find the Airbnb location and nearby food, and upload graduation-day photos during the celebration.</p>
-          <div class="actions">
-            <a class="button primary" href="#rsvp">RSVP</a>
-            <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Map to Graduation</a>
-            <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
+          <div class="hero-copy-main">
+            <p class="kicker" id="event-kicker" data-inline-setting="event.kicker">OIT Medical Laboratory Science</p>
+            <h1 id="event-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</h1>
+            <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find the Airbnb location and nearby food, and upload graduation-day photos during the celebration.</p>
+            <div class="actions">
+              <a class="button primary" href="#rsvp">RSVP</a>
+              <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Map to Graduation</a>
+              <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <div class="culture-ribbon" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-
-      <section class="section invite-section" id="invite">
-        <div class="section-inner invite-card-section">
-          <div class="invite-tools">
+          <div class="invite-tools hero-invite-panel" id="invite">
             <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Graduation invitation image">
               <div class="invite-card-bar invite-card-top-bar" aria-hidden="true"></div>
               <div class="invite-card-bg" aria-hidden="true"></div>
@@ -198,18 +192,13 @@
                 <input data-inline-input="links.liveSiteUrl" placeholder="https://legoretro.github.io/graduation/">
               </label>
             </div>
-            <div class="qr-share-card">
-              <img id="qr-image" alt="QR code for the graduation website">
-              <div>
-                <strong>Share QR code</strong>
-                <p>For the invitation, family texts, or quick phone scans.</p>
-                <button class="button secondary" id="share-qr-button" type="button">Share QR</button>
-                <p class="qr-feedback" id="qr-feedback" role="status" aria-live="polite"></p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
+
+      <div class="culture-ribbon" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
 
       <section class="section rsvp-section" id="rsvp">
         <div class="section-inner two-col">
@@ -272,7 +261,7 @@
             <a class="button primary" id="home-place-map-link" href="#" target="_blank" rel="noreferrer">Go to maps</a>
           </article>
           <div class="resource-grid">
-            <div>
+            <div class="airbnb-resource">
               <h3>Airbnb Location</h3>
               <div class="resource-list" id="airbnb-list"></div>
             </div>

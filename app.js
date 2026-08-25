@@ -2252,7 +2252,7 @@
 
     let shared = false;
     try {
-      if (navigator.share && typeof File === "function") {
+      if (!options.preferDownload && navigator.share && typeof File === "function") {
         const file = new File([blob], options.fileName, { type: "image/png" });
         if (!navigator.canShare || navigator.canShare({ files: [file] })) {
           await navigator.share({ title: options.shareTitle, files: [file] });
@@ -2285,7 +2285,8 @@
       await showSaveableImage(blob, {
         fileName: "elizabeth-angela-graduation-invite.png",
         feedbackSelector: "#invite-download-feedback",
-        shareTitle: "Elizabeth & Angela graduation invite"
+        shareTitle: "Elizabeth & Angela graduation invite",
+        preferDownload: true
       });
     } catch (error) {
       console.error(error);
@@ -2629,7 +2630,7 @@
       downloadMemoryBatch(state.memories);
     });
 
-    $("#share-qr-button").addEventListener("click", shareQrCode);
+    $("#share-qr-button")?.addEventListener("click", shareQrCode);
     $("#download-invite-png")?.addEventListener("click", downloadInvitationPng);
   }
 

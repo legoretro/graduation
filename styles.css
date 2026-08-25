@@ -2700,3 +2700,199 @@ footer a {
     gap: 0.7rem;
   }
 }
+
+/* Keep the invitation proportional at every rendered size. */
+.invite-card {
+  container-type: inline-size;
+}
+
+.invite-card-content {
+  gap: 1cqw;
+  padding: 3cqw;
+}
+
+.invite-mini {
+  font-size: 1.55cqw;
+}
+
+.invite-card h3,
+.invite-card-title {
+  font-size: 4.8cqw;
+}
+
+.invite-card-tagline {
+  font-size: 1.8cqw;
+}
+
+.invite-card-details {
+  gap: 1cqw;
+}
+
+.invite-card-details div {
+  padding: 1.6cqw;
+}
+
+.invite-card-details span {
+  font-size: 1.25cqw;
+}
+
+.invite-card-details strong {
+  font-size: 1.9cqw;
+}
+
+.invite-card-details em {
+  font-size: 1.3cqw;
+}
+
+.invite-card-footer {
+  gap: 1.2cqw;
+  padding: 2cqw 1.4cqw;
+}
+
+.invite-card-footer::before {
+  font-size: 1.55cqw;
+}
+
+.invite-card-footer img {
+  padding: 0.4cqw;
+  width: 14cqw;
+}
+
+.invite-card-footer p {
+  font-size: 1.4cqw;
+}
+
+/* Airbnb is the primary nearby place, so it gets a full-width horizontal row. */
+.resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.airbnb-resource {
+  align-items: center;
+  background: linear-gradient(100deg, rgba(231, 241, 248, 0.94), rgba(255, 250, 240, 0.98));
+  border: 2px solid rgba(0, 55, 103, 0.28);
+  border-left: 8px solid var(--oit-gold);
+  border-radius: var(--radius);
+  box-shadow: 0 16px 34px rgba(0, 31, 63, 0.12);
+  display: grid;
+  gap: 1rem;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(170px, 0.28fr) minmax(0, 1fr);
+  padding: 1rem;
+}
+
+.airbnb-resource h3 {
+  color: var(--oit-blue);
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.airbnb-resource .resource-list {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.airbnb-resource .empty {
+  background: var(--white);
+  padding: 1.15rem;
+  text-align: left;
+}
+
+@media (min-width: 921px) {
+  .hero {
+    max-height: none;
+    min-height: 620px;
+  }
+
+  .hero-copy {
+    align-items: center;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 0.9fr) minmax(600px, 1.1fr);
+    max-width: 1320px;
+    padding: 6.25rem 1.5rem 2.25rem;
+  }
+
+  .hero-copy-main {
+    min-width: 0;
+  }
+
+  .hero-copy-main h1 {
+    font-size: 3.2rem;
+    max-width: 620px;
+  }
+
+  .hero-copy-main > p {
+    max-width: 590px;
+  }
+
+  .hero-invite-panel {
+    justify-self: end;
+    max-width: 650px;
+    position: relative;
+    width: 100%;
+    z-index: 4;
+  }
+
+  .hero-invite-panel .invite-card {
+    max-width: 650px;
+    width: 100%;
+  }
+
+  .hero-invite-panel .invite-download-row {
+    width: min(100%, 360px);
+  }
+}
+
+@media (max-width: 920px) {
+  .hero {
+    max-height: none;
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 2rem;
+    max-width: 760px;
+  }
+
+  .hero-invite-panel {
+    justify-self: center;
+    max-width: 650px;
+    width: 100%;
+  }
+
+  .hero-invite-panel .invite-card {
+    max-width: 650px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-copy {
+    gap: 1.5rem;
+  }
+
+  .hero-invite-panel {
+    max-width: 360px;
+  }
+
+  .hero-invite-panel .invite-card {
+    max-width: 360px;
+  }
+
+  .hero-invite-panel .invite-download-row {
+    width: min(100%, 300px);
+  }
+
+  .airbnb-resource {
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .airbnb-resource .resource-list {
+    grid-template-columns: 1fr;
+  }
+}
