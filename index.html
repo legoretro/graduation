@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#123a5a">
   <meta name="description" content="Graduation details, RSVP, photos, and directions for Elizabeth and Angela.">
   <title>Elizabeth & Angela's Graduation</title>
-  <link rel="stylesheet" href="styles.css?v=20261102-color-grid">
+  <link rel="stylesheet" href="styles.css?v=20261102-airbnb-link">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/html2canvas.min.js"></script>
-  <script defer src="config.js?v=20261102-simple"></script>
-  <script defer src="app.js?v=20261102-color-grid"></script>
+  <script defer src="config.js?v=20261102-airbnb-link"></script>
+  <script defer src="app.js?v=20261102-airbnb-link"></script>
 </head>
 <body>
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -55,7 +55,7 @@
       <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
       <button class="button secondary" id="toggle-admin-dashboard" type="button">RSVPs & photos</button>
       <button class="button secondary" id="toggle-section-order" type="button">Arrange sections</button>
-      <button class="button secondary" id="open-airbnb-editor" type="button">Set Airbnb address</button>
+      <button class="button secondary" id="open-airbnb-editor" type="button">Set Airbnb details</button>
       <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
       <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
       <div class="section-order-panel" id="section-order-panel" hidden>
@@ -213,12 +213,13 @@
           </article>
         </div>
         <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
-          <h3>Add Airbnb address</h3>
+          <h3>Airbnb details</h3>
           <form class="admin-place-form" id="place-form">
             <input name="editCategory" type="hidden"><input name="editIndex" type="hidden">
             <input name="category" type="hidden" value="stay">
             <label>Place name<input name="name" value="Airbnb" placeholder="Airbnb"></label>
-            <label>Address<input name="address" required placeholder="Street address, city, state"></label>
+            <label>Address (optional)<input name="address" placeholder="Street address, city, state"></label>
+            <label>Airbnb listing link (optional)<input name="url" type="url" inputmode="url" placeholder="https://www.airbnb.com/rooms/…"></label>
             <input name="image" type="hidden"><input name="imageFile" type="hidden">
             <button class="button secondary place-submit-button" type="submit">Save Airbnb</button>
             <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>

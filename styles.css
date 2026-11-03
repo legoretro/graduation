@@ -84,3 +84,10 @@ input[type=file]{width:100%;min-width:0;overflow:hidden}
 @media(min-width:1081px){#sections-container{grid-template-columns:repeat(2,minmax(0,1fr));max-width:1120px}#rsvp,#locations{grid-column:auto}.rsvp-layout{grid-template-columns:minmax(0,1fr) 155px;gap:.5rem}#locations .locations-grid{grid-template-columns:1fr}#locations .location-card{min-height:110px}}
 .hero::before{opacity:.24}
 @media(max-width:700px){.hero::before{opacity:.15}}
+
+/* Keep the Airbnb address and listing as separate, wrapping actions. */
+#airbnb-list{width:100%;min-width:0}
+#airbnb-list .resource-card{min-width:0;gap:.45rem}
+#airbnb-list .resource-card span{min-width:0;overflow-wrap:anywhere}
+#airbnb-list .resource-actions{display:flex;flex-wrap:wrap;gap:.4rem;min-width:0}
+#airbnb-list .resource-actions .button{min-height:38px;padding:.3rem .6rem;font-size:.78rem;max-width:100%;white-space:normal;text-align:center}

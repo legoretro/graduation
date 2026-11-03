@@ -11,9 +11,9 @@
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
   const resourceGroups = [{ key: "stay", label: "Airbnb" }];
   const translations = {
-    en: { navRsvp: "RSVP", navPhotos: "Photos", navLocations: "Locations", languageLabel: "Language", intro: "We would love to celebrate with you. Please RSVP and share your photos here.", rsvpButton: "RSVP here", rsvpTitle: "RSVP", rsvpHelp: "Please let us know if you can join us.", name: "Your name", partyCount: "Number of people", attendance: "Will you attend?", yes: "Yes", maybe: "Maybe", no: "No", note: "Private note (optional)", notePlaceholder: "Anything we should know?", submitRsvp: "Send RSVP", updateRsvp: "Update RSVP", newRsvp: "Start a new RSVP", changeRsvp: "Change your RSVP", hideRsvp: "Hide my RSVP", photosTitle: "Photos", photosHelp: "Share a photo from the celebration.", choosePhoto: "Choose a photo", caption: "Caption (optional)", captionPlaceholder: "A short caption", addPhoto: "Add photo", locationsTitle: "Locations", locationsHelp: "Tap a button for directions.", openMap: "Open map", airbnb: "Airbnb", addressSoon: "Address coming soon", backTop: "Back to top", noPhotos: "No photos yet.", photoSaved: "Photo added.", photoUploading: "Uploading photo…", photoError: "Could not upload the photo. Please try again.", rsvpSaved: "RSVP saved. You can change it from this phone.", rsvpLegacy: "RSVP saved. Message Elizabeth or Angela if you need to change it.", rsvpError: "Message Elizabeth or Angela to update!", rsvpLoading: "Loading RSVP from this phone…", rsvpLoaded: "Your RSVP is ready to change.", deleted: "Photo deleted.", edit: "Edit", delete: "Delete", attending: "attending", notAttending: "Not attending", navNotes: "Notes", shareTitle: "Share this page", shareHelp: "Scan or send the link to family and friends.", shareButton: "Share link", copyButton: "Copy link", copied: "Link copied.", shared: "Shared.", copyError: "Select and copy the website link above.", notesTitle: "Notes", notesHelp: "Leave a message for Elizabeth and Angela.", writeNote: "Your note", noteExample: "So proud of you!", postNote: "Post note", noNotes: "No notes yet.", showNotes: "Show all notes", fewerNotes: "Show fewer notes", showPhotos: "Show all photos", fewerPhotos: "Show fewer photos", noteSaved: "Your note has been posted.", noteLoading: "Posting note…", noteError: "Could not post the note. Try again.", peopleCount: "People by response" },
-    es: { navRsvp: "Confirmar", navPhotos: "Fotos", navLocations: "Ubicaciones", languageLabel: "Idioma", intro: "Nos encantaría celebrar con ustedes. Confirmen su asistencia y compartan sus fotos aquí.", rsvpButton: "Confirmar asistencia", rsvpTitle: "Confirmar asistencia", rsvpHelp: "Díganos si podrá acompañarnos.", name: "Su nombre", partyCount: "Número de personas", attendance: "¿Asistirá?", yes: "Sí", maybe: "Tal vez", no: "No", note: "Nota privada (opcional)", notePlaceholder: "¿Hay algo que debamos saber?", submitRsvp: "Enviar respuesta", updateRsvp: "Actualizar respuesta", newRsvp: "Crear otra respuesta", changeRsvp: "Cambiar su respuesta", hideRsvp: "Ocultar mi respuesta", photosTitle: "Fotos", photosHelp: "Comparta una foto de la celebración.", choosePhoto: "Elija una foto", caption: "Descripción (opcional)", captionPlaceholder: "Descripción breve", addPhoto: "Agregar foto", locationsTitle: "Ubicaciones", locationsHelp: "Toque un botón para obtener indicaciones.", openMap: "Abrir mapa", airbnb: "Airbnb", addressSoon: "Dirección próximamente", backTop: "Volver arriba", noPhotos: "Todavía no hay fotos.", photoSaved: "Foto agregada.", photoUploading: "Subiendo foto…", photoError: "No se pudo subir la foto. Inténtelo de nuevo.", rsvpSaved: "Respuesta guardada. Puede cambiarla desde este teléfono.", rsvpLegacy: "Respuesta guardada. Escriba a Elizabeth o Angela si necesita cambiarla.", rsvpError: "Escriba a Elizabeth o Angela para actualizarla.", rsvpLoading: "Cargando su respuesta desde este teléfono…", rsvpLoaded: "Su respuesta está lista para cambiarse.", deleted: "Foto eliminada.", edit: "Editar", delete: "Eliminar", attending: "asistentes", notAttending: "No asistirá", navNotes: "Notas", shareTitle: "Comparta esta página", shareHelp: "Escanee o envíe el enlace a familiares y amigos.", shareButton: "Compartir enlace", copyButton: "Copiar enlace", copied: "Enlace copiado.", shared: "Compartido.", copyError: "Seleccione y copie el enlace de arriba.", notesTitle: "Notas", notesHelp: "Deje un mensaje para Elizabeth y Angela.", writeNote: "Su nota", noteExample: "¡Estamos muy orgullosos de ustedes!", postNote: "Publicar nota", noNotes: "Todavía no hay notas.", showNotes: "Ver todas las notas", fewerNotes: "Ver menos notas", showPhotos: "Ver todas las fotos", fewerPhotos: "Ver menos fotos", noteSaved: "Su nota se publicó.", noteLoading: "Publicando nota…", noteError: "No se pudo publicar la nota. Inténtelo de nuevo.", peopleCount: "Personas por respuesta" },
-    tl: { navRsvp: "RSVP", navPhotos: "Mga larawan", navLocations: "Mga lokasyon", languageLabel: "Wika", intro: "Masaya kaming makasama kayo sa pagdiriwang. Mangyaring mag-RSVP at ibahagi ang inyong mga larawan dito.", rsvpButton: "Mag-RSVP dito", rsvpTitle: "RSVP", rsvpHelp: "Ipaalam kung makakadalo kayo.", name: "Inyong pangalan", partyCount: "Bilang ng mga tao", attendance: "Dadalo ba kayo?", yes: "Oo", maybe: "Baka", no: "Hindi", note: "Pribadong mensahe (opsyonal)", notePlaceholder: "May kailangan ba kaming malaman?", submitRsvp: "Ipadala ang RSVP", updateRsvp: "Baguhin ang RSVP", newRsvp: "Gumawa ng bagong RSVP", changeRsvp: "Baguhin ang inyong RSVP", hideRsvp: "Itago ang aking RSVP", photosTitle: "Mga larawan", photosHelp: "Magbahagi ng larawan mula sa pagdiriwang.", choosePhoto: "Pumili ng larawan", caption: "Maikling paliwanag (opsyonal)", captionPlaceholder: "Maikling paliwanag", addPhoto: "Magdagdag ng larawan", locationsTitle: "Mga lokasyon", locationsHelp: "Pindutin ang button para sa direksyon.", openMap: "Buksan ang mapa", airbnb: "Airbnb", addressSoon: "Ilalagay ang address sa lalong madaling panahon", backTop: "Bumalik sa itaas", noPhotos: "Wala pang mga larawan.", photoSaved: "Naidagdag ang larawan.", photoUploading: "Ina-upload ang larawan…", photoError: "Hindi ma-upload ang larawan. Subukan muli.", rsvpSaved: "Nai-save ang RSVP. Maaari ninyo itong baguhin sa teleponong ito.", rsvpLegacy: "Nai-save ang RSVP. Kontakin sina Elizabeth o Angela kung kailangan itong baguhin.", rsvpError: "Kontakin sina Elizabeth o Angela para baguhin ito.", rsvpLoading: "Kinukuha ang RSVP mula sa teleponong ito…", rsvpLoaded: "Maaari nang baguhin ang inyong RSVP.", deleted: "Nabura ang larawan.", edit: "Baguhin", delete: "Burahin", attending: "dadalo", notAttending: "Hindi dadalo", navNotes: "Mga mensahe", shareTitle: "Ibahagi ang pahinang ito", shareHelp: "I-scan o ipadala ang link sa pamilya at mga kaibigan.", shareButton: "Ibahagi ang link", copyButton: "Kopyahin ang link", copied: "Nakopya ang link.", shared: "Naibahagi.", copyError: "Piliin at kopyahin ang link sa itaas.", notesTitle: "Mga mensahe", notesHelp: "Mag-iwan ng mensahe para kina Elizabeth at Angela.", writeNote: "Inyong mensahe", noteExample: "Ipinagmamalaki namin kayo!", postNote: "I-post ang mensahe", noNotes: "Wala pang mga mensahe.", showNotes: "Ipakita ang lahat ng mensahe", fewerNotes: "Mas kaunting mensahe", showPhotos: "Ipakita ang lahat ng larawan", fewerPhotos: "Mas kaunting larawan", noteSaved: "Naipost ang inyong mensahe.", noteLoading: "Ipinopost ang mensahe…", noteError: "Hindi maipost ang mensahe. Subukan muli.", peopleCount: "Bilang ng tao ayon sa sagot" },
+    en: { navRsvp: "RSVP", navPhotos: "Photos", navLocations: "Locations", languageLabel: "Language", intro: "We would love to celebrate with you. Please RSVP and share your photos here.", rsvpButton: "RSVP here", rsvpTitle: "RSVP", rsvpHelp: "Please let us know if you can join us.", name: "Your name", partyCount: "Number of people", attendance: "Will you attend?", yes: "Yes", maybe: "Maybe", no: "No", note: "Private note (optional)", notePlaceholder: "Anything we should know?", submitRsvp: "Send RSVP", updateRsvp: "Update RSVP", newRsvp: "Start a new RSVP", changeRsvp: "Change your RSVP", hideRsvp: "Hide my RSVP", photosTitle: "Photos", photosHelp: "Share a photo from the celebration.", choosePhoto: "Choose a photo", caption: "Caption (optional)", captionPlaceholder: "A short caption", addPhoto: "Add photo", locationsTitle: "Locations", locationsHelp: "Tap a button for directions.", openMap: "Open map", viewAirbnb: "Link Here", airbnb: "Airbnb", addressSoon: "Address coming soon", backTop: "Back to top", noPhotos: "No photos yet.", photoSaved: "Photo added.", photoUploading: "Uploading photo…", photoError: "Could not upload the photo. Please try again.", rsvpSaved: "RSVP saved. You can change it from this phone.", rsvpLegacy: "RSVP saved. Message Elizabeth or Angela if you need to change it.", rsvpError: "Message Elizabeth or Angela to update!", rsvpLoading: "Loading RSVP from this phone…", rsvpLoaded: "Your RSVP is ready to change.", deleted: "Photo deleted.", edit: "Edit", delete: "Delete", attending: "attending", notAttending: "Not attending", navNotes: "Notes", shareTitle: "Share this page", shareHelp: "Scan or send the link to family and friends.", shareButton: "Share link", copyButton: "Copy link", copied: "Link copied.", shared: "Shared.", copyError: "Select and copy the website link above.", notesTitle: "Notes", notesHelp: "Leave a message for Elizabeth and Angela.", writeNote: "Your note", noteExample: "So proud of you!", postNote: "Post note", noNotes: "No notes yet.", showNotes: "Show all notes", fewerNotes: "Show fewer notes", showPhotos: "Show all photos", fewerPhotos: "Show fewer photos", noteSaved: "Your note has been posted.", noteLoading: "Posting note…", noteError: "Could not post the note. Try again.", peopleCount: "People by response" },
+    es: { navRsvp: "Confirmar", navPhotos: "Fotos", navLocations: "Ubicaciones", languageLabel: "Idioma", intro: "Nos encantaría celebrar con ustedes. Confirmen su asistencia y compartan sus fotos aquí.", rsvpButton: "Confirmar asistencia", rsvpTitle: "Confirmar asistencia", rsvpHelp: "Díganos si podrá acompañarnos.", name: "Su nombre", partyCount: "Número de personas", attendance: "¿Asistirá?", yes: "Sí", maybe: "Tal vez", no: "No", note: "Nota privada (opcional)", notePlaceholder: "¿Hay algo que debamos saber?", submitRsvp: "Enviar respuesta", updateRsvp: "Actualizar respuesta", newRsvp: "Crear otra respuesta", changeRsvp: "Cambiar su respuesta", hideRsvp: "Ocultar mi respuesta", photosTitle: "Fotos", photosHelp: "Comparta una foto de la celebración.", choosePhoto: "Elija una foto", caption: "Descripción (opcional)", captionPlaceholder: "Descripción breve", addPhoto: "Agregar foto", locationsTitle: "Ubicaciones", locationsHelp: "Toque un botón para obtener indicaciones.", openMap: "Abrir mapa", viewAirbnb: "Enlace aquí", airbnb: "Airbnb", addressSoon: "Dirección próximamente", backTop: "Volver arriba", noPhotos: "Todavía no hay fotos.", photoSaved: "Foto agregada.", photoUploading: "Subiendo foto…", photoError: "No se pudo subir la foto. Inténtelo de nuevo.", rsvpSaved: "Respuesta guardada. Puede cambiarla desde este teléfono.", rsvpLegacy: "Respuesta guardada. Escriba a Elizabeth o Angela si necesita cambiarla.", rsvpError: "Escriba a Elizabeth o Angela para actualizarla.", rsvpLoading: "Cargando su respuesta desde este teléfono…", rsvpLoaded: "Su respuesta está lista para cambiarse.", deleted: "Foto eliminada.", edit: "Editar", delete: "Eliminar", attending: "asistentes", notAttending: "No asistirá", navNotes: "Notas", shareTitle: "Comparta esta página", shareHelp: "Escanee o envíe el enlace a familiares y amigos.", shareButton: "Compartir enlace", copyButton: "Copiar enlace", copied: "Enlace copiado.", shared: "Compartido.", copyError: "Seleccione y copie el enlace de arriba.", notesTitle: "Notas", notesHelp: "Deje un mensaje para Elizabeth y Angela.", writeNote: "Su nota", noteExample: "¡Estamos muy orgullosos de ustedes!", postNote: "Publicar nota", noNotes: "Todavía no hay notas.", showNotes: "Ver todas las notas", fewerNotes: "Ver menos notas", showPhotos: "Ver todas las fotos", fewerPhotos: "Ver menos fotos", noteSaved: "Su nota se publicó.", noteLoading: "Publicando nota…", noteError: "No se pudo publicar la nota. Inténtelo de nuevo.", peopleCount: "Personas por respuesta" },
+    tl: { navRsvp: "RSVP", navPhotos: "Mga larawan", navLocations: "Mga lokasyon", languageLabel: "Wika", intro: "Masaya kaming makasama kayo sa pagdiriwang. Mangyaring mag-RSVP at ibahagi ang inyong mga larawan dito.", rsvpButton: "Mag-RSVP dito", rsvpTitle: "RSVP", rsvpHelp: "Ipaalam kung makakadalo kayo.", name: "Inyong pangalan", partyCount: "Bilang ng mga tao", attendance: "Dadalo ba kayo?", yes: "Oo", maybe: "Baka", no: "Hindi", note: "Pribadong mensahe (opsyonal)", notePlaceholder: "May kailangan ba kaming malaman?", submitRsvp: "Ipadala ang RSVP", updateRsvp: "Baguhin ang RSVP", newRsvp: "Gumawa ng bagong RSVP", changeRsvp: "Baguhin ang inyong RSVP", hideRsvp: "Itago ang aking RSVP", photosTitle: "Mga larawan", photosHelp: "Magbahagi ng larawan mula sa pagdiriwang.", choosePhoto: "Pumili ng larawan", caption: "Maikling paliwanag (opsyonal)", captionPlaceholder: "Maikling paliwanag", addPhoto: "Magdagdag ng larawan", locationsTitle: "Mga lokasyon", locationsHelp: "Pindutin ang button para sa direksyon.", openMap: "Buksan ang mapa", viewAirbnb: "Link dito", airbnb: "Airbnb", addressSoon: "Ilalagay ang address sa lalong madaling panahon", backTop: "Bumalik sa itaas", noPhotos: "Wala pang mga larawan.", photoSaved: "Naidagdag ang larawan.", photoUploading: "Ina-upload ang larawan…", photoError: "Hindi ma-upload ang larawan. Subukan muli.", rsvpSaved: "Nai-save ang RSVP. Maaari ninyo itong baguhin sa teleponong ito.", rsvpLegacy: "Nai-save ang RSVP. Kontakin sina Elizabeth o Angela kung kailangan itong baguhin.", rsvpError: "Kontakin sina Elizabeth o Angela para baguhin ito.", rsvpLoading: "Kinukuha ang RSVP mula sa teleponong ito…", rsvpLoaded: "Maaari nang baguhin ang inyong RSVP.", deleted: "Nabura ang larawan.", edit: "Baguhin", delete: "Burahin", attending: "dadalo", notAttending: "Hindi dadalo", navNotes: "Mga mensahe", shareTitle: "Ibahagi ang pahinang ito", shareHelp: "I-scan o ipadala ang link sa pamilya at mga kaibigan.", shareButton: "Ibahagi ang link", copyButton: "Kopyahin ang link", copied: "Nakopya ang link.", shared: "Naibahagi.", copyError: "Piliin at kopyahin ang link sa itaas.", notesTitle: "Mga mensahe", notesHelp: "Mag-iwan ng mensahe para kina Elizabeth at Angela.", writeNote: "Inyong mensahe", noteExample: "Ipinagmamalaki namin kayo!", postNote: "I-post ang mensahe", noNotes: "Wala pang mga mensahe.", showNotes: "Ipakita ang lahat ng mensahe", fewerNotes: "Mas kaunting mensahe", showPhotos: "Ipakita ang lahat ng larawan", fewerPhotos: "Mas kaunting larawan", noteSaved: "Naipost ang inyong mensahe.", noteLoading: "Ipinopost ang mensahe…", noteError: "Hindi maipost ang mensahe. Subukan muli.", peopleCount: "Bilang ng tao ayon sa sagot" },
   };
   let language = "en";
   function t(key) { return translations[language]?.[key] || translations.en[key] || key; }
@@ -72,7 +72,7 @@
     if (change) change.textContent = t(state.ownedRsvpPanelOpen ? "hideRsvp" : "changeRsvp");
     renderMemories();
     renderOwnedRsvps();
-    renderResources("#airbnb-list", config.stay || []);
+    renderResources("#airbnb-list", airbnbResources());
     renderMessages();
     renderCounts();
   }
@@ -440,7 +440,7 @@
       $(".hero").classList.remove("custom-hero");
     }
 
-    renderResources("#airbnb-list", config.stay || []);
+    renderResources("#airbnb-list", airbnbResources());
     renderPhotos(config.assets?.photos || []);
     applySectionOrder();
     hydrateShareTools();
@@ -805,6 +805,25 @@
     };
   }
 
+  function safeListingUrl(value) {
+    try {
+      const url = new URL(String(value || "").trim());
+      return url.protocol === "https:" || url.protocol === "http:" ? url.href : "";
+    } catch {
+      return "";
+    }
+  }
+
+  function airbnbResources() {
+    const saved = publicResourceItems("stay");
+    const listingUrl = safeListingUrl(config.links?.airbnbListingUrl);
+    const address = normalizeMapQuery(config.links?.airbnbAddress || "");
+    if (!saved.length) return address || listingUrl ? [{ name: "Airbnb", address, url: listingUrl }] : [];
+    return saved.map((resource, index) => index === 0
+      ? { ...resource, address: resource.address || address, url: resource.url || listingUrl }
+      : resource);
+  }
+
   function publicResourceItems(key) {
     return resourceItems(config[key] || []).map(cleanResource).filter((resource) =>
       resource.name || resource.address || resource.image || resource.url
@@ -825,34 +844,47 @@
     }
 
     items.forEach((resource) => {
-      const link = document.createElement("a");
-      link.className = "resource-card";
-      const hasDestination = Boolean(resource.address || resource.url);
-      link.href = hasDestination ? (resource.url || mapsUrl(resource.address)) : "#";
-      if (!hasDestination) { link.removeAttribute("href"); link.classList.add("is-pending"); }
-      link.target = "_blank";
-      link.rel = "noreferrer";
+      const card = document.createElement("div");
+      card.className = "resource-card";
 
       if (resource.image) {
         const image = document.createElement("img");
         image.src = resource.image;
         image.alt = "";
         image.loading = "lazy";
-        link.append(image);
+        card.append(image);
       }
 
-      const copy = document.createElement("span");
-      const name = document.createElement("strong");
-      const meta = document.createElement("span");
-      name.textContent = resource.name || "Helpful place";
-      meta.textContent = resource.address || resource.meta || t("addressSoon");
-      copy.append(name, meta);
+      if (resource.address || resource.meta) {
+        const address = document.createElement("span");
+        address.textContent = resource.address || resource.meta;
+        card.append(address);
+      }
 
-      const action = document.createElement("strong");
-      action.setAttribute("aria-hidden", "true");
-      action.textContent = hasDestination ? t("openMap") : "";
-      link.append(copy, action);
-      list.append(link);
+      const actions = document.createElement("div");
+      actions.className = "resource-actions";
+      if (resource.address) {
+        const map = document.createElement("a");
+        map.className = "button secondary";
+        map.href = mapsUrl(resource.address);
+        map.target = "_blank";
+        map.rel = "noopener noreferrer";
+        map.textContent = t("openMap");
+        actions.append(map);
+      }
+      const listingUrl = safeListingUrl(resource.url);
+      if (listingUrl) {
+        const listing = document.createElement("a");
+        listing.className = "button secondary";
+        listing.href = listingUrl;
+        listing.target = "_blank";
+        listing.rel = "noopener noreferrer";
+        listing.textContent = t("viewAirbnb");
+        listing.setAttribute("aria-label", `${t("airbnb")}: ${t("viewAirbnb")}`);
+        actions.append(listing);
+      }
+      card.append(actions);
+      list.append(card);
     });
   }
 
@@ -1288,7 +1320,7 @@
     form.elements.editIndex.value = "";
     form.elements.image.placeholder = "Paste image URL or leave blank";
     const submit = $(".place-submit-button", form);
-    if (submit) submit.textContent = "Add place";
+    if (submit) submit.textContent = "Save Airbnb";
     const cancel = $("#cancel-place-edit");
     if (cancel) cancel.hidden = true;
   }
@@ -1298,14 +1330,15 @@
     if (!form) return;
     form.elements.category.value = normalizeResourceGroup(resource.group);
     form.elements.name.value = resource.name || "";
-    form.elements.address.value = resource.address || "";
+    form.elements.address.value = resource.address || config.links?.airbnbAddress || "";
+    form.elements.url.value = resource.url || config.links?.airbnbListingUrl || "";
     form.elements.image.value = resource.image && !resource.image.startsWith("data:") ? resource.image : "";
     form.elements.image.placeholder = resource.image ? "Image already saved. Upload another to replace." : "Paste image URL or leave blank";
     if (form.elements.imageFile) form.elements.imageFile.value = "";
     form.elements.editCategory.value = normalizeResourceGroup(resource.group);
     form.elements.editIndex.value = String(resource.index);
     const submit = $(".place-submit-button", form);
-    if (submit) submit.textContent = "Save place";
+    if (submit) submit.textContent = "Save Airbnb";
     const cancel = $("#cancel-place-edit");
     if (cancel) cancel.hidden = false;
     form.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1725,9 +1758,16 @@
     const isEditing = Number.isInteger(editIndex) && editIndex >= 0;
     const existingItems = isEditing ? publicResourceItems(editGroup) : [];
     const existingPlace = isEditing ? existingItems[editIndex] : null;
+    const rawUrl = String(formData.get("url") || "").trim();
+    const listingUrl = safeListingUrl(rawUrl);
+    if (rawUrl && !listingUrl) {
+      setText("#admin-feedback", "Enter a full Airbnb link beginning with https://.");
+      return false;
+    }
     const place = cleanResource({
       name: formData.get("name"),
       address: formData.get("address"),
+      url: listingUrl || (!rawUrl ? safeListingUrl(config.links?.airbnbListingUrl) : ""),
       image: await placeImageFromForm(formData, existingPlace?.image || "")
     });
 
@@ -2737,6 +2777,8 @@
       if (existing) startEditPlace({ ...existing, group: "stay", index: 0 });
       else {
         resetPlaceForm();
+        $("#place-form").elements.address.value = config.links?.airbnbAddress || "";
+        $("#place-form").elements.url.value = config.links?.airbnbListingUrl || "";
         $("#place-form")?.scrollIntoView({ block: "center", behavior: "smooth" });
         $("#place-form input[name=address]")?.focus({ preventScroll: true });
       }

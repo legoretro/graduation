@@ -29,7 +29,9 @@ window.GRADUATION_CONFIG = {
   },
 
   links: {
-    liveSiteUrl: "https://legoretro.github.io/graduation/"
+    liveSiteUrl: "https://legoretro.github.io/graduation/",
+    airbnbListingUrl: "https://www.airbnb.com/rooms/41744719?unique_share_id=63e9478d-b6e4-4294-9a08-5779c0119947&viralityEntryPoint=1&s=76",
+    airbnbAddress: "14568 NW Weible Way, Beaverton, OR 97006"
   },
 
   assets: {
