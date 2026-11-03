@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#123a5a">
   <meta name="description" content="Graduation details, RSVP, photos, and directions for Elizabeth and Angela.">
   <title>Elizabeth & Angela's Graduation</title>
-  <link rel="stylesheet" href="styles.css?v=20261102-share-notes">
+  <link rel="stylesheet" href="styles.css?v=20261102-color-grid">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/html2canvas.min.js"></script>
   <script defer src="config.js?v=20261102-simple"></script>
-  <script defer src="app.js?v=20261102-share-notes"></script>
+  <script defer src="app.js?v=20261102-color-grid"></script>
 </head>
 <body>
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -55,6 +55,7 @@
       <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
       <button class="button secondary" id="toggle-admin-dashboard" type="button">RSVPs & photos</button>
       <button class="button secondary" id="toggle-section-order" type="button">Arrange sections</button>
+      <button class="button secondary" id="open-airbnb-editor" type="button">Set Airbnb address</button>
       <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
       <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
       <div class="section-order-panel" id="section-order-panel" hidden>
@@ -167,6 +168,7 @@
           <div class="owned-rsvp-tools"><button class="button secondary full" id="show-owned-rsvps" type="button" data-i18n="changeRsvp">Change your RSVP</button><div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div></div>
         </form>
           <aside class="rsvp-summary">
+        <p class="totals-label" data-i18n="peopleCount">People by response</p>
         <div class="rsvp-totals" aria-label="RSVP totals">
           <button class="count-card" type="button" data-rsvp-filter="yes" aria-expanded="false"><span data-i18n="yes">Yes</span><strong id="count-yes">0</strong></button>
           <button class="count-card" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span data-i18n="maybe">Maybe</span><strong id="count-maybe">0</strong></button>
@@ -195,13 +197,18 @@
       <div class="section-inner">
         <div class="section-heading"><p class="step">03</p><div><h2 data-i18n="locationsTitle">Locations</h2><p data-i18n="locationsHelp">Tap a button for directions.</p></div></div>
         <div class="locations-grid">
+          <article class="location-card graduation-card">
+            <div class="location-heading"><svg class="place-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#d6e8f6" d="M5 17 24 8l19 9-19 9z"/><path fill="#144a72" d="M24 7 2 17l22 10 18-8v12h3V17L24 7Zm0 4.4L37.5 17 24 22.6 10.5 17 24 11.4Z"/><path fill="#d69b27" d="M12 24v7c3 4 8 6 12 6s9-2 12-6v-7l-12 5-12-5Zm31 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg><h3 id="graduation-place-name">Graduation at OHSU Auditorium</h3></div>
+            <p id="graduation-place-address">3286 SW Research Dr, Portland, OR 97239</p>
+            <a class="button secondary" id="graduation-place-map-link" target="_blank" rel="noopener noreferrer" data-i18n="openMap">Open map</a>
+          </article>
           <article class="location-card">
-            <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
+            <div class="location-heading"><svg class="place-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#d7f0df" d="M6 23 24 8l18 15v19H6z"/><path fill="#1f6850" d="m24 5 21 17-2.6 3.2L40 23v20H8V23l-2.4 2.2L3 22 24 5Zm0 5.4L12 20v19h24V20L24 10.4Z"/><path fill="#d86e76" d="M24 25c-5-5-11 2-5 7l5 5 5-5c6-5 0-12-5-7Z"/></svg><h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3></div>
             <p id="home-place-address" data-inline-setting="event.homeAddress"></p>
             <a class="button secondary" id="home-place-map-link" target="_blank" rel="noopener noreferrer" data-i18n="openMap">Open map</a>
           </article>
           <article class="location-card">
-            <h3 data-i18n="airbnb">Airbnb</h3>
+            <div class="location-heading"><svg class="place-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#fce3df" d="M9 8h30v31H9z"/><path fill="#af4d44" d="M12 6h24a5 5 0 0 1 5 5v27a5 5 0 0 1-5 5H12a5 5 0 0 1-5-5V11a5 5 0 0 1 5-5Zm0 4v29h24V10H12Zm7 6h10v4H19v-4Zm0 8h10v4H19v-4Z"/><path fill="#d69b27" d="M30 23h4v5h-4zM3 44h42v3H3z"/></svg><h3 data-i18n="airbnb">Airbnb</h3></div>
             <div id="airbnb-list"></div>
           </article>
         </div>
@@ -210,8 +217,8 @@
           <form class="admin-place-form" id="place-form">
             <input name="editCategory" type="hidden"><input name="editIndex" type="hidden">
             <input name="category" type="hidden" value="stay">
-            <label>Place name<input name="name" placeholder="Airbnb"></label>
-            <label>Address<input name="address" placeholder="Street address, city, state"></label>
+            <label>Place name<input name="name" value="Airbnb" placeholder="Airbnb"></label>
+            <label>Address<input name="address" required placeholder="Street address, city, state"></label>
             <input name="image" type="hidden"><input name="imageFile" type="hidden">
             <button class="button secondary place-submit-button" type="submit">Save Airbnb</button>
             <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
