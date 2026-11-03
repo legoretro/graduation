@@ -1,5 +1,6 @@
 window.GRADUATION_CONFIG = {
-  contentVersion: "2026-11-02-simple-trilingual",
+  contentVersion: "2026-11-02-share-reorder",
+  sectionOrder: ["rsvp", "notes", "locations", "photos"],
 
   event: {
     title: "Elizabeth & Angela's OIT MLS Graduation",

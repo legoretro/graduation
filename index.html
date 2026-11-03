@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#123a5a">
   <meta name="description" content="Graduation details, RSVP, photos, and directions for Elizabeth and Angela.">
   <title>Elizabeth & Angela's Graduation</title>
-  <link rel="stylesheet" href="styles.css?v=20261102-simple">
+  <link rel="stylesheet" href="styles.css?v=20261102-share-notes">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/html2canvas.min.js"></script>
   <script defer src="config.js?v=20261102-simple"></script>
-  <script defer src="app.js?v=20261102-simple"></script>
+  <script defer src="app.js?v=20261102-share-notes"></script>
 </head>
 <body>
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
@@ -19,6 +19,7 @@
     <nav aria-label="Main navigation">
       <a href="#rsvp" data-i18n="navRsvp">RSVP</a>
       <a href="#photos" data-i18n="navPhotos">Photos</a>
+      <a href="#notes" data-i18n="navNotes">Notes</a>
       <a href="#locations" data-i18n="navLocations">Locations</a>
     </nav>
     <label class="language-control"><span data-i18n="languageLabel">Language</span>
@@ -53,8 +54,14 @@
       <button class="button primary" id="save-inline-edits" type="button" hidden>Save edits</button>
       <button class="button quiet" id="cancel-inline-edits" type="button" hidden>Cancel</button>
       <button class="button secondary" id="toggle-admin-dashboard" type="button">RSVPs & photos</button>
+      <button class="button secondary" id="toggle-section-order" type="button">Arrange sections</button>
       <p class="feedback" id="admin-feedback" role="status" aria-live="polite"></p>
       <p class="feedback" id="editor-feedback" role="status" aria-live="polite"></p>
+      <div class="section-order-panel" id="section-order-panel" hidden>
+        <strong>Guest page order</strong>
+        <ol id="section-order-list"></ol>
+        <button class="button primary" id="save-section-order" type="button">Save order</button>
+      </div>
     </div>
 
     <main id="home">
@@ -123,13 +130,27 @@
           <p id="event-subtitle" data-i18n="intro">We would love to celebrate with you. Please RSVP and share your photos here.</p>
           <a class="button primary" href="#rsvp" data-i18n="rsvpButton">RSVP here</a>
         </div>
-        <div class="hero-photo" id="hero-image" role="img" aria-label="Graduation celebration"></div>
+        <article class="share-card" aria-labelledby="share-title">
+          <img id="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;margin=12&amp;data=https%3A%2F%2Flegoretro.github.io%2Fgraduation%2F" alt="QR code for the graduation website" width="112" height="112">
+          <div class="share-copy">
+            <h2 id="share-title" data-i18n="shareTitle">Share this page</h2>
+            <p data-i18n="shareHelp">Scan or send the link to family and friends.</p>
+            <a id="share-url" href="https://legoretro.github.io/graduation/">legoretro.github.io/graduation</a>
+            <div class="share-actions">
+              <button class="button primary" id="share-qr-button" type="button" data-i18n="shareButton">Share link</button>
+              <button class="button secondary" id="copy-link-button" type="button" data-i18n="copyButton">Copy link</button>
+            </div>
+            <p class="feedback" id="qr-feedback" role="status" aria-live="polite"></p>
+          </div>
+        </article>
       </div>
     </section>
 
+    <div id="sections-container">
     <section class="section rsvp-section" id="rsvp">
       <div class="section-inner">
         <div class="section-heading"><p class="step">01</p><div><h2 data-i18n="rsvpTitle">RSVP</h2><p data-i18n="rsvpHelp">Please let us know if you can join us.</p></div></div>
+        <div class="rsvp-layout">
         <form class="panel" id="rsvp-form">
           <input name="rsvpId" type="hidden"><input name="guestKey" type="hidden"><input name="ownerToken" type="hidden">
           <label><span data-i18n="name">Your name</span><input name="guestName" autocomplete="name" required></label>
@@ -145,19 +166,28 @@
           <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
           <div class="owned-rsvp-tools"><button class="button secondary full" id="show-owned-rsvps" type="button" data-i18n="changeRsvp">Change your RSVP</button><div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div></div>
         </form>
+          <aside class="rsvp-summary">
+        <div class="rsvp-totals" aria-label="RSVP totals">
+          <button class="count-card" type="button" data-rsvp-filter="yes" aria-expanded="false"><span data-i18n="yes">Yes</span><strong id="count-yes">0</strong></button>
+          <button class="count-card" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span data-i18n="maybe">Maybe</span><strong id="count-maybe">0</strong></button>
+          <button class="count-card" type="button" data-rsvp-filter="no" aria-expanded="false"><span data-i18n="no">No</span><strong id="count-no">0</strong></button>
+        </div>
+        <div class="rsvp-public-list" id="rsvp-public-list" hidden></div>
+          </aside>
+        </div>
       </div>
     </section>
 
-    <section class="section gallery-section" id="photos">
+    <section class="section board-section" id="notes">
       <div class="section-inner">
-        <div class="section-heading"><p class="step">02</p><div><h2 data-i18n="photosTitle">Photos</h2><p data-i18n="photosHelp">Share a photo from the celebration.</p></div></div>
-        <form class="panel memory-uploader" id="memory-form">
-          <label><span data-i18n="choosePhoto">Choose a photo</span><input name="memoryImage" type="file" accept="image/*,.heic,.heif" required></label>
-          <label><span data-i18n="caption">Caption (optional)</span><input name="caption" maxlength="100" data-i18n-placeholder="captionPlaceholder" placeholder="A short caption"></label>
-          <button class="button primary full" type="submit" data-i18n="addPhoto">Add photo</button>
-          <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>
+        <div class="section-heading"><p class="step">02</p><div><h2 data-i18n="notesTitle">Notes</h2><p data-i18n="notesHelp">Leave a message for Elizabeth and Angela.</p></div></div>
+        <form class="panel message-form" id="message-form">
+          <label><span data-i18n="writeNote">Your note</span><textarea id="message-body" name="body" rows="2" maxlength="220" required data-i18n-placeholder="noteExample" placeholder="So proud of you!"></textarea></label>
+          <button class="button primary full" type="submit" data-i18n="postNote">Post note</button>
+          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
         </form>
-        <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
+        <div class="note-board" id="note-board" aria-live="polite"></div>
+        <button class="button quiet more-button" id="toggle-more-notes" type="button" hidden></button>
       </div>
     </section>
 
@@ -190,6 +220,21 @@
         </div>
       </div>
     </section>
+    <section class="section gallery-section" id="photos">
+      <div class="section-inner">
+        <div class="section-heading"><p class="step">04</p><div><h2 data-i18n="photosTitle">Photos</h2><p data-i18n="photosHelp">Share a photo from the celebration.</p></div></div>
+        <form class="panel memory-uploader" id="memory-form">
+          <label><span data-i18n="choosePhoto">Choose a photo</span><input name="memoryImage" type="file" accept="image/*,.heic,.heif" required></label>
+          <label><span data-i18n="caption">Caption (optional)</span><input name="caption" maxlength="100" data-i18n-placeholder="captionPlaceholder" placeholder="A short caption"></label>
+          <button class="button primary full" type="submit" data-i18n="addPhoto">Add photo</button>
+          <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>
+        </form>
+        <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
+        <button class="button quiet more-button" id="toggle-more-photos" type="button" hidden></button>
+      </div>
+    </section>
+
+    </div>
   </main>
   <footer><span id="footer-title">Elizabeth & Angela's Graduation</span><a href="#home" data-i18n="backTop">Back to top</a></footer>
 </body>
