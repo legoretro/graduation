@@ -1,31 +1,34 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#003767">
-    <title>Elizabeth & Angela's OIT MLS Graduation</title>
-    <link rel="stylesheet" href="styles.css?v=20260824-hero-invite-airbnb-row">
-    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/html2canvas.min.js?v=20260619-heic-rsvp-sync"></script>
-    <script defer src="config.js?v=20260824-airbnb-compact-desktop"></script>
-    <script defer src="app.js?v=20260824-hero-invite-airbnb-row"></script>
-  </head>
-  <body>
-    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
-    <header class="topbar">
-      <a class="brand" href="#home">
-        <span>OIT</span>
-        <strong>MLS Graduation</strong>
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="#rsvp">RSVP</a>
-        <a href="#board">Leave a Note!</a>
-        <a href="#memories">Share a Memory</a>
-        <a href="#visit">Places Nearby</a>
-      </nav>
-    </header>
-
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123a5a">
+  <meta name="description" content="Graduation details, RSVP, photos, and directions for Elizabeth and Angela.">
+  <title>Elizabeth & Angela's Graduation</title>
+  <link rel="stylesheet" href="styles.css?v=20261102-simple">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/html2canvas.min.js"></script>
+  <script defer src="config.js?v=20261102-simple"></script>
+  <script defer src="app.js?v=20261102-simple"></script>
+</head>
+<body>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+  <header class="topbar">
+    <a class="brand" href="#home">Elizabeth & Angela</a>
+    <nav aria-label="Main navigation">
+      <a href="#rsvp" data-i18n="navRsvp">RSVP</a>
+      <a href="#photos" data-i18n="navPhotos">Photos</a>
+      <a href="#locations" data-i18n="navLocations">Locations</a>
+    </nav>
+    <label class="language-control"><span data-i18n="languageLabel">Language</span>
+      <select id="language-switch" aria-label="Language">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="tl">Tagalog</option>
+      </select>
+    </label>
+  </header>
     <section class="admin-dock" id="admin" aria-label="Admin tools">
       <details>
         <summary>Admin</summary>
@@ -111,266 +114,83 @@
         </div>
       </section>
 
-      <section class="hero">
-        <div class="hero-image" id="hero-image" aria-hidden="true"></div>
-        <div class="hero-science" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
+
+    <section class="hero section">
+      <div class="section-inner hero-inner">
+        <div class="hero-copy-main">
+          <p class="kicker" id="event-kicker">OIT Medical Laboratory Science</p>
+          <h1 id="event-title">Elizabeth & Angela's Graduation</h1>
+          <p id="event-subtitle" data-i18n="intro">We would love to celebrate with you. Please RSVP and share your photos here.</p>
+          <a class="button primary" href="#rsvp" data-i18n="rsvpButton">RSVP here</a>
         </div>
-        <div class="hero-overlay" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <div class="hero-copy-main">
-            <p class="kicker" id="event-kicker" data-inline-setting="event.kicker">OIT Medical Laboratory Science</p>
-            <h1 id="event-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</h1>
-            <p id="event-subtitle" data-inline-setting="event.subtitle">Welcome! RSVP below, grab directions to the OHSU graduation, leave a note, find the Airbnb location and nearby food, and upload graduation-day photos during the celebration.</p>
-            <div class="actions">
-              <a class="button primary" href="#rsvp">RSVP</a>
-              <a class="button secondary" id="hero-map-link" target="_blank" rel="noreferrer">Map to Graduation</a>
-              <button class="button fiesta" id="celebrate-button" type="button">Celebrate</button>
-            </div>
-          </div>
-
-          <div class="invite-tools hero-invite-panel" id="invite">
-            <figure class="invite-card generated-invite-card" id="printable-invite-card" aria-label="Graduation invitation image">
-              <div class="invite-card-bar invite-card-top-bar" aria-hidden="true"></div>
-              <div class="invite-card-bg" aria-hidden="true"></div>
-              <div class="invite-card-bar invite-card-bottom-bar" aria-hidden="true"></div>
-              <div class="mls-card-art" aria-hidden="true">
-                <img class="microscope-art" src="assets/mls-microscope.png" alt="">
-                <img class="cell-art cell-art-a" src="assets/mls-red-cell-sticker.png" alt="">
-                <img class="cell-art cell-art-b" src="assets/mls-smiling-cell.png" alt="">
-                <span class="lab-pill">MLS</span>
-                <span class="lab-pill lab-pill-b">OHSU/OIT</span>
-              </div>
-              <div class="invite-card-content">
-                <p class="invite-mini">OIT / OHSU MLS</p>
-                <h3 id="invite-card-headline" data-inline-setting="event.inviteHeadline">You're invited to</h3>
-                <p class="invite-card-title" id="invite-card-title" data-inline-setting="event.title">Elizabeth & Angela's OIT MLS Graduation</p>
-                <p class="invite-card-tagline" id="invite-card-tagline" data-inline-setting="event.inviteTagline">Medical Laboratory Science Graduation</p>
-
-                <div class="invite-card-details">
-                  <div>
-                    <span>When</span>
-                    <strong id="invite-card-date">December 2026</strong>
-                    <em id="invite-card-time">Time TBA</em>
-                  </div>
-                  <div>
-                    <span>Where</span>
-                    <strong id="invite-card-location">Graduation at OHSU</strong>
-                    <em id="invite-card-address">OHSU, Portland, OR</em>
-                  </div>
-                </div>
-
-                <div class="invite-card-footer">
-                  <img id="invite-card-qr" alt="QR code to RSVP">
-                  <p id="invite-card-footer-copy" data-inline-setting="event.inviteFooter">Scan to RSVP, get directions, leave a note, and share a memory.</p>
-                </div>
-              </div>
-            </figure>
-            <div class="invite-download-row">
-              <button class="button secondary" id="download-invite-png" type="button">Download image here</button>
-            </div>
-            <p class="qr-feedback" id="invite-download-feedback" role="status" aria-live="polite"></p>
-            <div class="inline-admin-card invite-admin-card" data-admin-edit-panel hidden>
-              <label>
-                Card headline
-                <input data-inline-input="event.inviteHeadline" placeholder="You're invited to">
-              </label>
-              <label>
-                Card tagline
-                <input data-inline-input="event.inviteTagline" placeholder="OIT/OHSU Medical Laboratory Science Graduation">
-              </label>
-              <label>
-                Card footer note
-                <input data-inline-input="event.inviteFooter" placeholder="Scan to RSVP and see details">
-              </label>
-              <label>
-                Hero image URL or asset path
-                <input data-inline-input="assets.heroImage" placeholder="assets/hero-celebration.png">
-              </label>
-              <label>
-                Live QR / website URL
-                <input data-inline-input="links.liveSiteUrl" placeholder="https://legoretro.github.io/graduation/">
-              </label>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="culture-ribbon" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <div class="hero-photo" id="hero-image" role="img" aria-label="Graduation celebration"></div>
       </div>
+    </section>
 
-      <section class="section rsvp-section" id="rsvp">
-        <div class="section-inner two-col">
-          <div>
-            <p class="kicker">Headcount</p>
-            <h2>RSVP HERE</h2>
-            <div class="counts" aria-label="RSVP totals">
-              <button class="count-card count-yes" type="button" data-rsvp-filter="yes" aria-expanded="false"><span>Yes</span><strong id="count-yes">0</strong></button>
-              <button class="count-card count-maybe" type="button" data-rsvp-filter="maybe" aria-expanded="false"><span>Maybe</span><strong id="count-maybe">0</strong></button>
-              <button class="count-card count-no" type="button" data-rsvp-filter="no" aria-expanded="false"><span>No</span><strong id="count-no">0</strong></button>
-            </div>
-            <div class="rsvp-public-list" id="rsvp-public-list" hidden></div>
-          </div>
+    <section class="section rsvp-section" id="rsvp">
+      <div class="section-inner">
+        <div class="section-heading"><p class="step">01</p><div><h2 data-i18n="rsvpTitle">RSVP</h2><p data-i18n="rsvpHelp">Please let us know if you can join us.</p></div></div>
+        <form class="panel" id="rsvp-form">
+          <input name="rsvpId" type="hidden"><input name="guestKey" type="hidden"><input name="ownerToken" type="hidden">
+          <label><span data-i18n="name">Your name</span><input name="guestName" autocomplete="name" required></label>
+          <label><span data-i18n="partyCount">Number of people</span><input name="partyCount" type="number" min="1" max="20" value="1" required></label>
+          <fieldset class="choice"><legend data-i18n="attendance">Will you attend?</legend>
+            <label><input type="radio" name="response" value="yes" checked><span data-i18n="yes">Yes</span></label>
+            <label><input type="radio" name="response" value="maybe"><span data-i18n="maybe">Maybe</span></label>
+            <label><input type="radio" name="response" value="no"><span data-i18n="no">No</span></label>
+          </fieldset>
+          <label><span data-i18n="note">Private note (optional)</span><textarea name="note" rows="2" data-i18n-placeholder="notePlaceholder" placeholder="Anything we should know?"></textarea></label>
+          <button class="button primary full" type="submit" data-i18n="submitRsvp">Send RSVP</button>
+          <button class="button quiet full" id="new-rsvp-button" type="button" hidden data-i18n="newRsvp">Start a new RSVP</button>
+          <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
+          <div class="owned-rsvp-tools"><button class="button secondary full" id="show-owned-rsvps" type="button" data-i18n="changeRsvp">Change your RSVP</button><div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div></div>
+        </form>
+      </div>
+    </section>
 
-          <form class="panel" id="rsvp-form">
-            <input name="rsvpId" type="hidden">
-            <input name="guestKey" type="hidden">
-            <input name="ownerToken" type="hidden">
-            <label>
-              Name
-              <input name="guestName" autocomplete="name" required>
-            </label>
-            <div class="form-grid">
-              <label>
-                Number attending
-                <input name="partyCount" type="number" min="1" max="20" value="1" required>
-              </label>
-            </div>
-            <fieldset class="choice">
-              <legend>Answer</legend>
-              <label><input type="radio" name="response" value="yes" checked><span>Yes</span></label>
-              <label><input type="radio" name="response" value="maybe"><span>Maybe</span></label>
-              <label><input type="radio" name="response" value="no"><span>No</span></label>
-            </fieldset>
-            <label>
-              Private note to us
-              <textarea name="note" rows="4" placeholder="Allergy, accessibility note, travel question, or anything we should know"></textarea>
-            </label>
-            <button class="button primary full" type="submit">Lock in RSVP</button>
-            <button class="button quiet full" id="new-rsvp-button" type="button" hidden>Start a new RSVP</button>
-            <p class="feedback" id="rsvp-feedback" role="status" aria-live="polite"></p>
-            <div class="owned-rsvp-tools">
-              <button class="button secondary full" id="show-owned-rsvps" type="button">Want to change your RSVP?</button>
-              <div class="owned-rsvp-list" id="owned-rsvp-list" hidden></div>
-            </div>
-          </form>
-        </div>
-      </section>
+    <section class="section gallery-section" id="photos">
+      <div class="section-inner">
+        <div class="section-heading"><p class="step">02</p><div><h2 data-i18n="photosTitle">Photos</h2><p data-i18n="photosHelp">Share a photo from the celebration.</p></div></div>
+        <form class="panel memory-uploader" id="memory-form">
+          <label><span data-i18n="choosePhoto">Choose a photo</span><input name="memoryImage" type="file" accept="image/*,.heic,.heif" required></label>
+          <label><span data-i18n="caption">Caption (optional)</span><input name="caption" maxlength="100" data-i18n-placeholder="captionPlaceholder" placeholder="A short caption"></label>
+          <button class="button primary full" type="submit" data-i18n="addPhoto">Add photo</button>
+          <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>
+        </form>
+        <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
+      </div>
+    </section>
 
-      <section class="section visit-section" id="visit">
-        <div class="section-inner">
-          <p class="kicker">Places Nearby</p>
-          <h2>Airbnb location, food, and useful stops.</h2>
-          <article class="home-place-card">
-            <div>
-              <span>Home base</span>
-              <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
-              <p id="home-place-address" data-inline-setting="event.homeAddress">8550 SW Ash Meadows, Apartment 433, Wilsonville, OR</p>
-            </div>
-            <a class="button primary" id="home-place-map-link" href="#" target="_blank" rel="noreferrer">Go to maps</a>
+    <section class="section visit-section" id="locations">
+      <div class="section-inner">
+        <div class="section-heading"><p class="step">03</p><div><h2 data-i18n="locationsTitle">Locations</h2><p data-i18n="locationsHelp">Tap a button for directions.</p></div></div>
+        <div class="locations-grid">
+          <article class="location-card">
+            <h3 id="home-place-name" data-inline-setting="event.homeLocationName">Elizabeth & Angela's Place</h3>
+            <p id="home-place-address" data-inline-setting="event.homeAddress"></p>
+            <a class="button secondary" id="home-place-map-link" target="_blank" rel="noopener noreferrer" data-i18n="openMap">Open map</a>
           </article>
-          <div class="resource-grid">
-            <div class="airbnb-resource">
-              <h3>Airbnb Location</h3>
-              <div class="resource-list" id="airbnb-list"></div>
-            </div>
-            <div>
-              <h3>Food</h3>
-              <div class="resource-list" id="food-list"></div>
-            </div>
-            <div>
-              <h3>More</h3>
-              <div class="resource-list" id="more-list"></div>
-            </div>
-          </div>
-          <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
-            <div class="admin-card-head">
-              <div>
-                <p class="kicker">Places Nearby</p>
-                <h3>Add a place</h3>
-              </div>
-            </div>
-            <form class="admin-place-form" id="place-form">
-              <input name="editCategory" type="hidden">
-              <input name="editIndex" type="hidden">
-              <label class="place-type-field">
-                Type
-                <select name="category">
-                  <option value="stay">Airbnb Location</option>
-                  <option value="food">Food</option>
-                  <option value="more">More</option>
-                </select>
-              </label>
-              <label class="place-name-field">
-                Place name
-                <input name="name" placeholder="Airbnb, restaurant, or useful stop">
-              </label>
-              <label class="place-address-field">
-                Address
-                <input name="address" placeholder="Street address, city, state">
-              </label>
-              <label class="place-image-field">
-                Image URL
-                <input name="image" placeholder="Paste image URL or leave blank">
-              </label>
-              <label class="place-upload-field">
-                Upload image
-                <input name="imageFile" type="file" accept="image/*,.heic,.heif">
-              </label>
-              <button class="button secondary place-submit-button" type="submit">Add place</button>
-              <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
-            </form>
-            <div id="admin-place-list"></div>
-          </div>
+          <article class="location-card">
+            <h3 data-i18n="airbnb">Airbnb</h3>
+            <div id="airbnb-list"></div>
+          </article>
         </div>
-      </section>
-
-      <section class="section gallery-section" id="memories">
-        <div class="section-inner">
-          <p class="kicker">Memory strip</p>
-          <h2>Proof we made it! Share the graduation moments.</h2>
-          <div class="memory-layout">
-            <form class="panel memory-uploader" id="memory-form">
-              <label>
-                Share a memory
-                <input name="memoryImage" type="file" accept="image/*,.heic,.heif" required>
-              </label>
-              <label>
-                Tiny caption
-                <input name="caption" maxlength="100" placeholder="family moment, cap toss, big smiles">
-              </label>
-              <button class="button fiesta full" type="submit">Add to strip</button>
-              <p class="feedback" id="memory-feedback" role="status" aria-live="polite"></p>
-            </form>
-            <div class="memory-strip">
-              <div class="memory-grid" id="memory-grid" aria-live="polite"></div>
-            </div>
-          </div>
+        <div class="inline-admin-card visit-admin-card" data-admin-edit-panel hidden>
+          <h3>Add Airbnb address</h3>
+          <form class="admin-place-form" id="place-form">
+            <input name="editCategory" type="hidden"><input name="editIndex" type="hidden">
+            <input name="category" type="hidden" value="stay">
+            <label>Place name<input name="name" placeholder="Airbnb"></label>
+            <label>Address<input name="address" placeholder="Street address, city, state"></label>
+            <input name="image" type="hidden"><input name="imageFile" type="hidden">
+            <button class="button secondary place-submit-button" type="submit">Save Airbnb</button>
+            <button class="button quiet place-cancel-button" id="cancel-place-edit" type="button" hidden>Cancel edit</button>
+          </form>
+          <div id="admin-place-list"></div>
         </div>
-      </section>
-
-      <section class="section board-section" id="board">
-        <div class="section-inner">
-          <div class="board-head">
-            <div>
-              <p class="kicker">Caring notes</p>
-              <h2>Leave a note!</h2>
-            </div>
-            <form class="message-form" id="message-form">
-              <label class="sr-only" for="message-body">Anonymous message</label>
-              <textarea id="message-body" name="body" rows="3" maxlength="220" placeholder="So proud of you!" required></textarea>
-              <fieldset class="note-colors" aria-label="Sticky note color">
-                <legend>Pick a pastel</legend>
-                <label><input type="radio" name="noteColor" value="pastel-yellow" checked><span class="swatch pastel-yellow">Yellow</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-blue"><span class="swatch pastel-blue">Blue</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-mint"><span class="swatch pastel-mint">Mint</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-pink"><span class="swatch pastel-pink">Pink</span></label>
-                <label><input type="radio" name="noteColor" value="pastel-peach"><span class="swatch pastel-peach">Peach</span></label>
-              </fieldset>
-              <button class="button secondary" type="submit">Stick it up</button>
-            </form>
-          </div>
-          <div class="note-board" id="note-board" aria-live="polite"></div>
-          <p class="feedback" id="message-feedback" role="status" aria-live="polite"></p>
-        </div>
-      </section>
-
-    </main>
-
-    <footer>
-      <span id="footer-title">Elizabeth & Angela's OIT MLS Graduation</span>
-      <a href="#home">Back to top</a>
-    </footer>
-  </body>
+      </div>
+    </section>
+  </main>
+  <footer><span id="footer-title">Elizabeth & Angela's Graduation</span><a href="#home" data-i18n="backTop">Back to top</a></footer>
+</body>
 </html>

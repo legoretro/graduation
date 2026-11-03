@@ -9,11 +9,25 @@
   const ownedRsvpKey = "graduation-owned-rsvp-cache";
   const deletedRsvpPrefix = "__deleted__";
   const allowedNoteColors = new Set(["pastel-yellow", "pastel-blue", "pastel-mint", "pastel-pink", "pastel-peach"]);
-  const resourceGroups = [
-    { key: "stay", label: "Airbnb Location" },
-    { key: "food", label: "Food" },
-    { key: "more", label: "More" }
-  ];
+  const resourceGroups = [{ key: "stay", label: "Airbnb" }];
+  const translations = {
+    en: { navRsvp: "RSVP", navPhotos: "Photos", navLocations: "Locations", languageLabel: "Language", intro: "We would love to celebrate with you. Please RSVP and share your photos here.", rsvpButton: "RSVP here", rsvpTitle: "RSVP", rsvpHelp: "Please let us know if you can join us.", name: "Your name", partyCount: "Number of people", attendance: "Will you attend?", yes: "Yes", maybe: "Maybe", no: "No", note: "Private note (optional)", notePlaceholder: "Anything we should know?", submitRsvp: "Send RSVP", updateRsvp: "Update RSVP", newRsvp: "Start a new RSVP", changeRsvp: "Change your RSVP", hideRsvp: "Hide my RSVP", photosTitle: "Photos", photosHelp: "Share a photo from the celebration.", choosePhoto: "Choose a photo", caption: "Caption (optional)", captionPlaceholder: "A short caption", addPhoto: "Add photo", locationsTitle: "Locations", locationsHelp: "Tap a button for directions.", openMap: "Open map", airbnb: "Airbnb", addressSoon: "Address coming soon", backTop: "Back to top", noPhotos: "No photos yet.", photoSaved: "Photo added.", photoUploading: "Uploading photo…", photoError: "Could not upload the photo. Please try again.", rsvpSaved: "RSVP saved. You can change it from this phone.", rsvpLegacy: "RSVP saved. Message Elizabeth or Angela if you need to change it.", rsvpError: "Message Elizabeth or Angela to update!", rsvpLoading: "Loading RSVP from this phone…", rsvpLoaded: "Your RSVP is ready to change.", deleted: "Photo deleted.", edit: "Edit", delete: "Delete", attending: "attending", notAttending: "Not attending" },
+    es: { navRsvp: "Confirmar", navPhotos: "Fotos", navLocations: "Ubicaciones", languageLabel: "Idioma", intro: "Nos encantaría celebrar con ustedes. Confirmen su asistencia y compartan sus fotos aquí.", rsvpButton: "Confirmar asistencia", rsvpTitle: "Confirmar asistencia", rsvpHelp: "Díganos si podrá acompañarnos.", name: "Su nombre", partyCount: "Número de personas", attendance: "¿Asistirá?", yes: "Sí", maybe: "Tal vez", no: "No", note: "Nota privada (opcional)", notePlaceholder: "¿Hay algo que debamos saber?", submitRsvp: "Enviar respuesta", updateRsvp: "Actualizar respuesta", newRsvp: "Crear otra respuesta", changeRsvp: "Cambiar su respuesta", hideRsvp: "Ocultar mi respuesta", photosTitle: "Fotos", photosHelp: "Comparta una foto de la celebración.", choosePhoto: "Elija una foto", caption: "Descripción (opcional)", captionPlaceholder: "Descripción breve", addPhoto: "Agregar foto", locationsTitle: "Ubicaciones", locationsHelp: "Toque un botón para obtener indicaciones.", openMap: "Abrir mapa", airbnb: "Airbnb", addressSoon: "Dirección próximamente", backTop: "Volver arriba", noPhotos: "Todavía no hay fotos.", photoSaved: "Foto agregada.", photoUploading: "Subiendo foto…", photoError: "No se pudo subir la foto. Inténtelo de nuevo.", rsvpSaved: "Respuesta guardada. Puede cambiarla desde este teléfono.", rsvpLegacy: "Respuesta guardada. Escriba a Elizabeth o Angela si necesita cambiarla.", rsvpError: "Escriba a Elizabeth o Angela para actualizarla.", rsvpLoading: "Cargando su respuesta desde este teléfono…", rsvpLoaded: "Su respuesta está lista para cambiarse.", deleted: "Foto eliminada.", edit: "Editar", delete: "Eliminar", attending: "asistentes", notAttending: "No asistirá" },
+    tl: { navRsvp: "RSVP", navPhotos: "Mga larawan", navLocations: "Mga lokasyon", languageLabel: "Wika", intro: "Masaya kaming makasama kayo sa pagdiriwang. Mangyaring mag-RSVP at ibahagi ang inyong mga larawan dito.", rsvpButton: "Mag-RSVP dito", rsvpTitle: "RSVP", rsvpHelp: "Ipaalam kung makakadalo kayo.", name: "Inyong pangalan", partyCount: "Bilang ng mga tao", attendance: "Dadalo ba kayo?", yes: "Oo", maybe: "Baka", no: "Hindi", note: "Pribadong mensahe (opsyonal)", notePlaceholder: "May kailangan ba kaming malaman?", submitRsvp: "Ipadala ang RSVP", updateRsvp: "Baguhin ang RSVP", newRsvp: "Gumawa ng bagong RSVP", changeRsvp: "Baguhin ang inyong RSVP", hideRsvp: "Itago ang aking RSVP", photosTitle: "Mga larawan", photosHelp: "Magbahagi ng larawan mula sa pagdiriwang.", choosePhoto: "Pumili ng larawan", caption: "Maikling paliwanag (opsyonal)", captionPlaceholder: "Maikling paliwanag", addPhoto: "Magdagdag ng larawan", locationsTitle: "Mga lokasyon", locationsHelp: "Pindutin ang button para sa direksyon.", openMap: "Buksan ang mapa", airbnb: "Airbnb", addressSoon: "Ilalagay ang address sa lalong madaling panahon", backTop: "Bumalik sa itaas", noPhotos: "Wala pang mga larawan.", photoSaved: "Naidagdag ang larawan.", photoUploading: "Ina-upload ang larawan…", photoError: "Hindi ma-upload ang larawan. Subukan muli.", rsvpSaved: "Nai-save ang RSVP. Maaari ninyo itong baguhin sa teleponong ito.", rsvpLegacy: "Nai-save ang RSVP. Kontakin sina Elizabeth o Angela kung kailangan itong baguhin.", rsvpError: "Kontakin sina Elizabeth o Angela para baguhin ito.", rsvpLoading: "Kinukuha ang RSVP mula sa teleponong ito…", rsvpLoaded: "Maaari nang baguhin ang inyong RSVP.", deleted: "Nabura ang larawan.", edit: "Baguhin", delete: "Burahin", attending: "dadalo", notAttending: "Hindi dadalo" }
+  };
+  let language = "en";
+  function t(key) { return translations[language]?.[key] || translations.en[key] || key; }
+  function applyLanguage() {
+    document.documentElement.lang = language === "tl" ? "tl" : language;
+    document.querySelectorAll("[data-i18n]").forEach((node) => { node.textContent = t(node.dataset.i18n); });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => { node.placeholder = t(node.dataset.i18nPlaceholder); });
+    setRsvpFormMode($("#rsvp-form")?.elements.rsvpId.value ? "edit" : "new");
+    const change = $("#show-owned-rsvps");
+    if (change) change.textContent = t(state.ownedRsvpPanelOpen ? "hideRsvp" : "changeRsvp");
+    renderMemories();
+    renderOwnedRsvps();
+    renderResources("#airbnb-list", config.stay || []);
+  }
   const heicConverterUrl = "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js";
   const maxMemoryImageLength = 1800000;
   const maxPlaceImageLength = 650000;
@@ -372,8 +386,6 @@
     }
 
     renderResources("#airbnb-list", config.stay || []);
-    renderResources("#food-list", config.food || []);
-    renderResources("#more-list", config.more || []);
     renderPhotos(config.assets?.photos || []);
     hydrateShareTools();
     syncInlineInputs();
@@ -750,14 +762,16 @@
     );
 
     if (!items.length) {
-      list.innerHTML = '<div class="empty small-empty">Coming soon.</div>';
+      list.innerHTML = `<div class="empty small-empty">${t("addressSoon")}</div>`;
       return;
     }
 
     items.forEach((resource) => {
       const link = document.createElement("a");
       link.className = "resource-card";
-      link.href = resource.url || (resource.address ? mapsUrl(resource.address) : "#");
+      const hasDestination = Boolean(resource.address || resource.url);
+      link.href = hasDestination ? (resource.url || mapsUrl(resource.address)) : "#";
+      if (!hasDestination) { link.removeAttribute("href"); link.classList.add("is-pending"); }
       link.target = "_blank";
       link.rel = "noreferrer";
 
@@ -773,12 +787,12 @@
       const name = document.createElement("strong");
       const meta = document.createElement("span");
       name.textContent = resource.name || "Helpful place";
-      meta.textContent = resource.address || resource.meta || "Add an address in admin";
+      meta.textContent = resource.address || resource.meta || t("addressSoon");
       copy.append(name, meta);
 
       const action = document.createElement("strong");
       action.setAttribute("aria-hidden", "true");
-      action.textContent = "Go to maps";
+      action.textContent = hasDestination ? t("openMap") : "";
       link.append(copy, action);
       list.append(link);
     });
@@ -868,6 +882,7 @@
 
   function renderMessages() {
     const board = $("#note-board");
+    if (!board) return;
     board.innerHTML = "";
     const visibleMessages = state.messages.filter((message) => !message.isHidden);
     if (!visibleMessages.length) {
@@ -895,7 +910,7 @@
     if (!grid) return;
     grid.innerHTML = "";
     if (!state.memories.length) {
-      grid.innerHTML = '<div class="empty">No shared memories yet.</div>';
+      grid.innerHTML = `<div class="empty">${t("noPhotos")}</div>`;
       return;
     }
 
@@ -918,7 +933,7 @@
         const button = document.createElement("button");
         button.className = "memory-delete";
         button.type = "button";
-        button.textContent = "Delete";
+        button.textContent = t("delete");
         button.addEventListener("click", () => deleteMemory(memory.id, false));
         card.append(button);
       }
@@ -931,7 +946,7 @@
     if (!form) return;
     const submit = form.querySelector('button[type="submit"]');
     const newButton = $("#new-rsvp-button");
-    if (submit) submit.textContent = mode === "edit" ? "Update RSVP" : "Lock in RSVP";
+    if (submit) submit.textContent = t(mode === "edit" ? "updateRsvp" : "submitRsvp");
     if (newButton) newButton.hidden = mode !== "edit";
   }
 
@@ -950,7 +965,7 @@
     setRsvpFormMode("edit");
     if (source === "admin") $("#admin details")?.removeAttribute("open");
     form.scrollIntoView({ block: "center", behavior: "smooth" });
-    setText("#rsvp-feedback", source === "admin" ? "Admin edit loaded. Update and save." : "Your RSVP is loaded. Make changes and update it.");
+    setText("#rsvp-feedback", source === "admin" ? "Admin edit loaded. Update and save." : t("rsvpLoaded"));
   }
 
   function resetRsvpForm() {
@@ -970,13 +985,13 @@
     const list = $("#owned-rsvp-list");
     if (!list) return;
     const button = $("#show-owned-rsvps");
-    if (button) button.textContent = state.ownedRsvpPanelOpen ? "Hide my RSVP" : "Want to change your RSVP?";
+    if (button) button.textContent = t(state.ownedRsvpPanelOpen ? "hideRsvp" : "changeRsvp");
     list.hidden = !state.ownedRsvpPanelOpen;
     if (!state.ownedRsvpPanelOpen) return;
 
     list.innerHTML = "";
     if (!state.ownedRsvps.length) {
-      list.innerHTML = '<div class="empty small-empty">Message Elizabeth or Angela to update!</div>';
+      list.innerHTML = `<div class="empty small-empty">${t("rsvpError")}</div>`;
       return;
     }
 
@@ -988,7 +1003,7 @@
       const name = document.createElement("strong");
       name.textContent = rsvp.name || "Unnamed";
       const meta = document.createElement("span");
-      meta.textContent = `${rsvp.response || "yes"} · ${rsvp.partyCount || 1} attending · ${formatDate(rsvp.updatedAt || rsvp.createdAt) || "saved"}`;
+      meta.textContent = `${t(rsvp.response || "yes")} · ${rsvp.partyCount || 1} ${t("attending")} · ${formatDate(rsvp.updatedAt || rsvp.createdAt) || ""}`;
       copy.append(name, meta);
 
       const actions = document.createElement("div");
@@ -996,12 +1011,12 @@
       const edit = document.createElement("button");
       edit.className = "button secondary";
       edit.type = "button";
-      edit.textContent = "Edit";
+      edit.textContent = t("edit");
       edit.addEventListener("click", () => fillRsvpForm(rsvp, "guest"));
       const del = document.createElement("button");
       del.className = "button quiet delete-rsvp";
       del.type = "button";
-      del.textContent = "Delete";
+      del.textContent = t("delete");
       del.addEventListener("click", () => deleteOwnedRsvp(rsvp.id));
       actions.append(edit, del);
 
@@ -1778,7 +1793,7 @@
       renderAll();
     } catch (error) {
       console.error(error);
-      setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
+      setText("#rsvp-feedback", t("rsvpError"));
     }
   }
 
@@ -1849,7 +1864,7 @@
         forgetOwnedMemory(memoryId);
         writeLocal();
       }
-      setText(adminMode ? "#admin-feedback" : "#memory-feedback", "Memory deleted.");
+      setText(adminMode ? "#admin-feedback" : "#memory-feedback", t("deleted"));
       renderAll();
     } catch (error) {
       console.error(error);
@@ -2435,27 +2450,27 @@
         setText(
           "#rsvp-feedback",
           saved?.legacyMode
-            ? "RSVP saved. Message Elizabeth or Angela if you need to change it later."
-            : "RSVP saved. You can edit or delete it from this same phone."
+            ? t("rsvpLegacy")
+            : t("rsvpSaved")
         );
         renderAll();
         burstConfetti(90);
       } catch (error) {
         console.error(error);
-        setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
+        setText("#rsvp-feedback", t("rsvpError"));
       }
     });
 
     $("#show-owned-rsvps")?.addEventListener("click", async () => {
       state.ownedRsvpPanelOpen = !state.ownedRsvpPanelOpen;
       if (state.ownedRsvpPanelOpen) {
-        setText("#rsvp-feedback", "Loading RSVP from this phone...");
+        setText("#rsvp-feedback", t("rsvpLoading"));
         try {
           await loadOwnedRsvps();
           setText("#rsvp-feedback", "");
         } catch (error) {
           console.error(error);
-          setText("#rsvp-feedback", "Message Elizabeth or Angela to update!");
+          setText("#rsvp-feedback", t("rsvpError"));
         }
       }
       renderOwnedRsvps();
@@ -2471,7 +2486,7 @@
       });
     });
 
-    $("#message-form").addEventListener("submit", async (event) => {
+    $("#message-form")?.addEventListener("submit", async (event) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const body = String(data.get("body") || "").trim();
@@ -2501,10 +2516,10 @@
       const caption = String(data.get("caption") || "").trim().slice(0, 100);
       if (!(file instanceof File) || !file.size) return;
       try {
-        setText("#memory-feedback", "Uploading memory...");
+        setText("#memory-feedback", t("photoUploading"));
         await saveMemory(file, caption);
         form.reset();
-        setText("#memory-feedback", "Memory added to the strip.");
+        setText("#memory-feedback", t("photoSaved"));
         renderAll();
         burstConfetti(100);
       } catch (error) {
@@ -2513,7 +2528,7 @@
         const knownImageIssue = /Choose an image file|Could not read that image|JPG|PNG|WebP|HEIC|converter|too big|smaller image/i.test(message);
         const safeMessage = knownImageIssue
           ? message
-          : "Could not upload that memory yet. Try again in a minute.";
+          : t("photoError");
         setText("#memory-feedback", guestError(safeMessage));
       }
     });
@@ -2770,7 +2785,17 @@
     initConfetti();
     startAutoRefresh();
     renderAll();
-    loadWeather();
+    try { language = ["en", "es", "tl"].includes(localStorage.getItem("graduation-language")) ? localStorage.getItem("graduation-language") : "en"; } catch (_) {}
+    const switcher = $("#language-switch");
+    if (switcher) {
+      switcher.value = language;
+      switcher.addEventListener("change", () => {
+        language = switcher.value;
+        try { localStorage.setItem("graduation-language", language); } catch (_) {}
+        applyLanguage();
+      });
+    }
+    applyLanguage();
   }
 
   if (document.readyState === "loading") {
